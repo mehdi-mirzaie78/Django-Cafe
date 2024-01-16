@@ -1,2 +1,2 @@
-# Django-Cafe
+# Django-Cafe (Cuppa Cloud)
 Online Cafe with Django
