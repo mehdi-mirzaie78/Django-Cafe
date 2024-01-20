@@ -19,8 +19,8 @@ ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split()
 
 # Application definition
 
-LOCAL_APPS = []
-THIRD_PARTY_APPS = []
+LOCAL_APPS = ['core', 'home', 'accounts', 'actions', 'products', 'orders']
+THIRD_PARTY_APPS = ['storages']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -96,7 +96,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tehran'
 
 USE_I18N = True
 
@@ -105,9 +105,24 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+MEDIA_URL = '/media/'
+STATIC_URL = '/static/'
+MEDIA_ROOT = BASE_DIR / "media"
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [BASE_DIR / 'static']
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Arvan cloud boto3 settings
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+AWS_S3_ENDPOINT_URL = os.getenv('AWS_S3_ENDPOINT_URL')
+AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
+AWS_SERVICE_NAME = os.getenv('AWS_SERVICE_NAME', 's3')
+AWS_S3_FILE_OVERWRITE = False if os.getenv('AWS_S3_FILE_OVERWRITE') == 'False' else True
+AWS_LOCAL_STORAGE = BASE_DIR / os.getenv('AWS_LOCAL_STORAGE', 'aws')
