@@ -119,6 +119,12 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # USER
 AUTH_USER_MODEL = "accounts.User"
 
+# AUTHENTICATION BACKENDS
+AUTHENTICATION_BACKENDS = [
+    "accounts.auth.PhoneAuthBackend",
+    "accounts.auth.EmailAuthBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
 
 # Arvan cloud boto3 settings
 
