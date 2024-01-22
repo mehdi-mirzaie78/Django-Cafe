@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.utils.translation import gettext_lazy as _
+from django.utils.html import mark_safe
 from core.validators import phone_regex_validator
 from .managers import MyUserManager
 
@@ -12,9 +13,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         validators=[phone_regex_validator],
         verbose_name=_("Phone Number"),
     )
-    email = models.EmailField(
-        max_length=255, unique=True, verbose_name=_("Email"), null=True, blank=True
-    )
+    email = models.EmailField(max_length=255, unique=True, verbose_name=_("Email"))
     first_name = models.CharField(max_length=20, verbose_name=_("First Name"))
     last_name = models.CharField(max_length=20, verbose_name=_("Last Name"))
     image = models.ImageField(null=True, blank=True, verbose_name=_("Image"))
@@ -55,10 +54,18 @@ class User(AbstractBaseUser, PermissionsMixin):
         return f"{self.full_name} - {self.email}"
 
     def save(self, *args, **kwargs):
-        self.phone = "0" + self.phone[3:] if len(self.phone) == 13 else self.phone
+        if len(self.phone) != 11:
+            self.phone = "0" + self.phone[3:] if len(self.phone) == 13 else self.phone
+        if not self.image:
+            self.image = "default.png"
         super(User, self).save(*args, **kwargs)
 
     def role(self):
         return "Super User" if self.is_superuser else self.groups.get()
 
     role.short_description = _("Role")
+
+    def image_tag(self):
+        return mark_safe(f'<img src="{self.image.url}" width="150" height="150" />')
+
+    image_tag.short_description = _("Image")
