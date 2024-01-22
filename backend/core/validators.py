@@ -9,3 +9,10 @@ phone_regex_validator = RegexValidator(
         "Invalid Phone number. Phone number must be like: +989XXXXXXXXX or 09XXXXXXXXX"
     ),
 )
+
+name_regex = r"([a-zA-Z]+)"
+
+name_regex_validator = RegexValidator(
+    regex=name_regex,
+    message=_("Invalid name. name must only contain alphabet letters."),
+)
