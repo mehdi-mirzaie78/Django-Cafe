@@ -465,3 +465,4 @@ GitHub.sublime-settings
 
 
 /Documentation/
+*backend/*/migrations/*
