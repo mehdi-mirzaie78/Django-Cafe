@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.utils.translation import gettext_lazy as _
 from django.utils.html import mark_safe
 from core.validators import phone_regex_validator
+from core.models import BaseModel
 from .managers import MyUserManager
 
 
@@ -19,10 +20,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     image = models.ImageField(null=True, blank=True, verbose_name=_("Image"))
 
     class GenderChoices(models.TextChoices):
-        MALE = "male", "Male"
-        FEMALE = "female", "Female"
-        OTHER = "other", "Other"
-        NOT_SPECIFIED = "not_specified", "Not Specified"
+        MALE = "male", _("Male")
+        FEMALE = "female", _("Female")
+        OTHER = "other", _("Other")
+        NOT_SPECIFIED = "not_specified", _("Not Specified")
 
     gender = models.CharField(
         max_length=20,
@@ -69,3 +70,19 @@ class User(AbstractBaseUser, PermissionsMixin):
         return mark_safe(f'<img src="{self.image.url}" width="150" height="150" />')
 
     image_tag.short_description = _("Image")
+
+
+class Address(BaseModel):
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="addresses", verbose_name=_("User")
+    )
+    city = models.CharField(max_length=50, verbose_name=_("City"))
+    detail = models.TextField(verbose_name=_("Detail"))
+    zip_code = models.CharField(max_length=10, verbose_name=_("Zip Code"))
+
+    class Meta:
+        verbose_name = _("Address")
+        verbose_name_plural = _("Addresses")
+
+    def __str__(self) -> str:
+        return f"{self.user.full_name} - {self.city}"
