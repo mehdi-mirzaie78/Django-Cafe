@@ -4,6 +4,10 @@ from django.utils.translation import gettext_lazy as _
 
 
 class Cafe(BaseModel, SingletonModel):
+    class Meta:
+        verbose_name = _("Cafe")
+        verbose_name_plural = _("Cafe")
+
     title = models.CharField(max_length=255, verbose_name=_("Title"))
     motto = models.CharField(
         max_length=255, null=True, blank=True, verbose_name=_("Motto")
@@ -17,6 +21,10 @@ class Cafe(BaseModel, SingletonModel):
 
 
 class Contact(BaseModel, SingletonModel):
+    class Meta:
+        verbose_name = _("Contact")
+        verbose_name_plural = _("Contact")
+
     cafe = models.OneToOneField(
         Cafe, on_delete=models.CASCADE, related_name="contact", verbose_name=_("Cafe")
     )
@@ -42,11 +50,16 @@ class Contact(BaseModel, SingletonModel):
 
 
 class Menu(BaseModel):
+    class Meta:
+        verbose_name = _("Menu")
+        verbose_name_plural = _("Menus")
+
     title = models.CharField(max_length=255, verbose_name=_("Title"))
     description = models.TextField(null=True, blank=True, verbose_name=_("Description"))
     products = models.ManyToManyField(
         "products.Product",
         related_name="menus",
+        related_query_name="menu",
         verbose_name=_("Products"),
     )
     image = models.ImageField(verbose_name=_("Image"), default="default.png")
