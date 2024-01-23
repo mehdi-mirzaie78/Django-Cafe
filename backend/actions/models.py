@@ -5,6 +5,10 @@ from core.models import BaseModel
 
 
 class Like(BaseModel):
+    class Meta:
+        verbose_name = _("Like")
+        verbose_name_plural = _("Likes")
+
     user = models.ForeignKey(
         "accounts.User",
         on_delete=models.CASCADE,
@@ -28,6 +32,11 @@ class Like(BaseModel):
 
 
 class Review(BaseModel):
+    class Meta:
+        ordering = ["is_approved", "-created_at"]
+        verbose_name = _("Review")
+        verbose_name_plural = _("Reviews")
+
     user = models.ForeignKey(
         "accounts.User",
         on_delete=models.CASCADE,
