@@ -9,6 +9,11 @@ from core.models import BaseModel
 
 
 class Category(BaseModel):
+    class Meta:
+        ordering = ["is_parent", "name"]
+        verbose_name = _("Category")
+        verbose_name_plural = _("Categories")
+
     parent_category = models.ForeignKey(
         "self",
         on_delete=models.CASCADE,
@@ -21,11 +26,7 @@ class Category(BaseModel):
     name = models.CharField(max_length=255, verbose_name=_("Name"))
     slug = models.SlugField(max_length=255, unique=True, verbose_name=_("Slug"))
     description = models.TextField(null=True, blank=True, verbose_name=_("Description"))
-
-    class Meta:
-        ordering = ["is_parent", "name"]
-        verbose_name = _("Category")
-        verbose_name_plural = _("Categories")
+    image = models.ImageField(verbose_name=_("Image"), default="default.png")
 
     def __str__(self) -> str:
         return (
@@ -36,11 +37,15 @@ class Category(BaseModel):
 
 
 class Product(BaseModel):
+    class Meta:
+        verbose_name = _("Product")
+        verbose_name_plural = _("Products")
+
     categories = models.ManyToManyField(
         Category, related_name="products", verbose_name=_("Categories")
     )
     name = models.CharField(max_length=255, verbose_name=_("Name"))
-    slug = models.SlugField(max_length=255, verbose_name=_("Slug"))
+    slug = models.SlugField(max_length=255, unique=True, verbose_name=_("Slug"))
     description = models.TextField(null=True, blank=True, verbose_name=_("Description"))
     unit_price = models.PositiveIntegerField(verbose_name=_("Unit Price"))
     discount = models.PositiveIntegerField(
@@ -55,10 +60,6 @@ class Product(BaseModel):
     def is_available(self):
         return self.stock > 0
 
-    class Meta:
-        verbose_name = _("Product")
-        verbose_name_plural = _("Products")
-
     def save(self, *args, **kwargs):
         self.price = self.unit_price - (self.unit_price * self.discount / 100)
         super().save(*args, **kwargs)
@@ -68,6 +69,10 @@ class Product(BaseModel):
 
 
 class Media(BaseModel):
+    class Meta:
+        verbose_name = _("Media")
+        verbose_name_plural = _("Medias")
+
     product = models.ForeignKey(
         Product,
         on_delete=models.CASCADE,
