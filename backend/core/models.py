@@ -12,14 +12,24 @@ class BaseModel(models.Model):
 
     objects = BaseManager()
 
-    created_at = models.DateTimeField(auto_now_add=True, editable=False)
-    updated_at = models.DateTimeField(auto_now=True, editable=False)
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        editable=False,
+        verbose_name=_("Created Datetime"),
+        help_text=_("This is the datetime when the object was created."),
+    )
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        editable=False,
+        verbose_name=_("Updated Datetime"),
+        help_text=_("This is the datetime when the object was last updated."),
+    )
     deleted_at = models.DateTimeField(
         null=True,
         blank=True,
         editable=False,
         verbose_name=_("Deleted Datetime"),
-        help_text=_("This is datetime when the object was deleted."),
+        help_text=_("This is the datetime when the object was deleted."),
     )
 
     restored_at = models.DateTimeField(
@@ -27,7 +37,7 @@ class BaseModel(models.Model):
         blank=True,
         editable=False,
         verbose_name=_("Restored Datetime"),
-        help_text=_("This is datetime when the objects was restored"),
+        help_text=_("This is the datetime when the object was restored."),
     )
 
     is_deleted = models.BooleanField(
@@ -35,14 +45,14 @@ class BaseModel(models.Model):
         editable=False,
         db_index=True,
         verbose_name=_("Deleted status"),
-        help_text=_("This is deleted status"),
+        help_text=_("This indicates whether the object is deleted or not."),
     )
 
     is_active = models.BooleanField(
         default=True,
         editable=False,
         verbose_name=_("Active status"),
-        help_text=_("This is active status"),
+        help_text=_("This indicates whether the object is active or not."),
     )
 
     created_by = models.ForeignKey(
@@ -51,6 +61,8 @@ class BaseModel(models.Model):
         related_name="%(class)s_created_by",
         null=True,
         blank=True,
+        verbose_name=_("Created by"),
+        help_text=_("This is the user who created the object."),
     )
 
     updated_by = models.ForeignKey(
@@ -59,6 +71,8 @@ class BaseModel(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
+        verbose_name=_("Updated by"),
+        help_text=_("This is the user who last updated the object."),
     )
 
     def logical_delete(self, using=None, keep_parents=False):
