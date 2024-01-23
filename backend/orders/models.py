@@ -1,12 +1,19 @@
-from uuid import uuid4
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import MaxValueValidator as Max, MinValueValidator as Min
+from django.utils import timezone
 from core.models import BaseModel
+from core.validators import phone_regex_validator
 from products.models import Product
+from .utils import generate_code
 
 
 class Table(BaseModel):
+    class Meta:
+        ordering = ["name"]
+        verbose_name = _("Table")
+        verbose_name_plural = _("Tables")
+
     name = models.CharField(max_length=255, verbose_name=_("Name"))
     capacity = models.PositiveIntegerField(verbose_name=_("Capacity"))
     is_available = models.BooleanField(default=True, verbose_name=_("Is Available"))
@@ -15,7 +22,41 @@ class Table(BaseModel):
         return f"{self.name} - {self.capacity}"
 
 
+class Reservation(BaseModel):
+    class Meta:
+        ordering = ["reservation_datetime"]
+        verbose_name = _("Reservation")
+        verbose_name_plural = _("Reservations")
+
+    user = models.ForeignKey(
+        "accounts.User",
+        related_name="reservations",
+        related_query_name="reservation",
+        on_delete=models.CASCADE,
+        verbose_name=_("User"),
+    )
+    table = models.ForeignKey(
+        Table,
+        related_name="reservations",
+        related_query_name="reservation",
+        on_delete=models.CASCADE,
+        verbose_name=_("Table"),
+    )
+
+    reservation_datetime = models.DateTimeField(
+        null=True, blank=True, verbose_name=_("Date Time Reservation")
+    )
+
+    def __str__(self):
+        return f"Reservation #{self.pk} - {self.user} - {self.table}"
+
+
 class Status(BaseModel):
+    class Meta:
+        ordering = ["id"]
+        verbose_name = _("Status")
+        verbose_name_plural = _("Statuses")
+
     name = models.CharField(max_length=255, verbose_name=_("Name"))
     description = models.TextField(null=True, blank=True, verbose_name=_("Description"))
 
@@ -24,6 +65,10 @@ class Status(BaseModel):
 
 
 class Order(BaseModel):
+    class Meta:
+        verbose_name = _("Order")
+        verbose_name_plural = _("Orders")
+
     user = models.ForeignKey(
         "accounts.User",
         related_name="orders",
@@ -51,7 +96,9 @@ class Order(BaseModel):
     is_paid = models.BooleanField(default=False, verbose_name=_("Is Paid"))
     discount = models.PositiveIntegerField(default=0, verbose_name=_("Discount"))
     address = models.TextField(null=True, blank=True, verbose_name=_("Address"))
-    phone = models.CharField(max_length=30, verbose_name=_("Phone"))
+    phone = models.CharField(
+        max_length=13, verbose_name=_("Phone"), validators=[phone_regex_validator]
+    )
     transaction_code = models.CharField(
         max_length=255, null=True, blank=True, verbose_name=_("Transaction Code")
     )
@@ -73,6 +120,10 @@ class Order(BaseModel):
 
 
 class OrderItem(BaseModel):
+    class Meta:
+        verbose_name = _("Order Item")
+        verbose_name_plural = _("Order Items")
+
     product = models.ForeignKey(
         Product,
         related_name="order_items",
@@ -99,11 +150,11 @@ class OrderItem(BaseModel):
         return f"{self.pk}-{self.product}-{self.quantity}'s Order Item"
 
 
-def generate_code():
-    return uuid4().hex()[:8]
-
-
 class Coupon(BaseModel):
+    class Meta:
+        verbose_name = _("Coupon")
+        verbose_name_plural = _("Coupons")
+
     order = models.OneToOneField(
         Order,
         related_name="coupon",
@@ -125,6 +176,10 @@ class Coupon(BaseModel):
 
 
 class Delivery(BaseModel):
+    class Meta:
+        verbose_name = _("Delivery")
+        verbose_name_plural = _("Deliveries")
+
     order = models.OneToOneField(
         Order,
         related_name="delivery",
@@ -139,9 +194,23 @@ class Delivery(BaseModel):
         on_delete=models.CASCADE,
         verbose_name=_("Courier"),
     )
-    is_delivered = models.BooleanField(default=False, verbose_name=_("Is Delivered"))
-    arrival_time = models.DateTimeField(verbose_name=_("Arrival Time"))
-    departure_time = models.DateTimeField(verbose_name=_("Departure Time"))
+    is_delivered = models.BooleanField(
+        default=False, verbose_name=_("Is Delivered"), help_text=_("Delivery status")
+    )
+    arrival_time = models.DateTimeField(
+        null=True, verbose_name=_("Arrival Time"), help_text=_("Time of arrival")
+    )
+    departure_time = models.DateTimeField(
+        null=True,
+        verbose_name=_("Departure Time"),
+        auto_now_add=True,
+        help_text=_("Time of departure"),
+    )
+
+    def save(self, *args, **kwargs):
+        if not self.arrival_time and self.is_delivered:
+            self.arrival_time = timezone.now()
+        super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         return f"Delivery #{self.pk}-{self.order}-{self.courier}"
