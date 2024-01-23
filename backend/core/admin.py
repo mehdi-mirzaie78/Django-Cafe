@@ -9,7 +9,7 @@ class BaseAdmin(admin.ModelAdmin):
         queryset.update(updated_by=request.user)
 
     @admin.action(description="Logical Restore")
-    def logic_restore(self, request, queryset):
+    def logical_restore(self, request, queryset):
         queryset.update(restored_at=timezone.now(), is_deleted=False, is_active=True)
         queryset.update(updated_by=request.user)
 
@@ -22,3 +22,23 @@ class BaseAdmin(admin.ModelAdmin):
     def activate(self, request, queryset):
         queryset.update(is_active=True)
         queryset.update(updated_by=request.user)
+
+    def save_model(self, request, obj, form, change):
+        if not obj.pk:
+            obj.created_by = request.user
+        if change:
+            obj.updated_by = request.user
+        super().save_model(request, obj, form, change)
+
+    readonly_fields = [
+        "created_at",
+        "deleted_at",
+        "restored_at",
+        "updated_at",
+        "is_deleted",
+        "is_active",
+        "created_by",
+        "updated_by",
+    ]
+
+    actions = ["logical_delete", "logical_restore", "deactivate", "activate"]
