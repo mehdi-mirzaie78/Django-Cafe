@@ -70,6 +70,11 @@ class JWTAuthentication(BaseAuthentication):
             raise InActiveUserError
         return user
 
+    def get_user_by_refresh_token(self, refresh_token):
+        payload = self.JWT.decode(refresh_token)
+        user = self.get_user(payload)
+        return user
+
     # def enforce_csrf(self, request):
     #     """
     #     Enforce CSRF validation
