@@ -1,6 +1,5 @@
 import jwt
 from django.conf import settings
-from django.middleware.csrf import CsrfViewMiddleware
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth import get_user_model
 from django.contrib.auth.base_user import AbstractBaseUser
@@ -20,24 +19,17 @@ from .exceptions import (
 )
 
 
-# class CSRFCheck(CsrfViewMiddleware):
-#     def _reject(self, request, reason):
-#         # Return the failure reason instead of an HttpResponse
-#         return reason
-
-
 class JWTAuthentication(BaseAuthentication):
     AUTH_HEADER_NAME = settings.AUTH_HEADER_NAME
+    AUTH_HEADER_TYPES = settings.AUTH_HEADER_TYPES
     JWT = JWTHandler
 
     def authenticate(self, request: Request):
         header = self.get_header(request)
-        if header is None:
-            raise AuthorizationHeaderError
+        header = self.validate_header(header)
         payload = self.get_payload(header)
         payload = self.validate_payload(payload)
         user = self.get_user(payload)
-        # self.enforce_csrf(request)
         return user, None
 
     def get_header(self, request):
@@ -55,6 +47,13 @@ class JWTAuthentication(BaseAuthentication):
         except IndexError:
             raise NotFoundPrefixError
         return payload
+
+    def validate_header(self, header):
+        if header is None:
+            raise AuthorizationHeaderError
+        if not any(header.startswith(prefix) for prefix in self.AUTH_HEADER_TYPES):
+            raise NotFoundPrefixError
+        return header
 
     def validate_payload(self, payload):
         if payload["type"] != "access":
@@ -74,19 +73,6 @@ class JWTAuthentication(BaseAuthentication):
         payload = self.JWT.decode(refresh_token)
         user = self.get_user(payload)
         return user
-
-    # def enforce_csrf(self, request):
-    #     """
-    #     Enforce CSRF validation
-    #     """
-    #     check = CSRFCheck()
-    #     # populates request.META['CSRF_COOKIE'], which is used in process_view()
-    #     check.process_request(request)
-    #     reason = check.process_view(request, None, (), {})
-    #     print(reason)
-    #     if reason:
-    #         # CSRF failed, bail with explicit error message
-    #         raise PermissionDenied("CSRF Failed: %s" % reason)
 
 
 class PhoneEmailAuthBackend(ModelBackend):
