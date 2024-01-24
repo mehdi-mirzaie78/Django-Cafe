@@ -44,8 +44,15 @@ class JWTHandler:
 
     @classmethod
     def encode(cls, payload):
-        return jwt.encode(payload, cls.SECRET_KEY, algorithm=cls.ALGORITHM).decode()
+        return jwt.encode(payload, cls.SECRET_KEY, algorithm=cls.ALGORITHM)
 
     @classmethod
     def decode(cls, token):
         return jwt.decode(token, cls.SECRET_KEY, algorithms=[cls.ALGORITHM])
+
+    @classmethod
+    def generate_access_refresh_token(cls, user) -> dict:
+        access_token = cls.generate_access_token(user)
+        refresh_token = cls.generate_refresh_token(user)
+        data = {"access_token": access_token, "refresh_token": refresh_token}
+        return data
