@@ -25,7 +25,7 @@ ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split()
 # Application definition
 
 LOCAL_APPS = ["core", "home", "accounts", "actions", "products", "orders"]
-THIRD_PARTY_APPS = ["storages"]
+THIRD_PARTY_APPS = ["storages", "rest_framework", "corsheaders"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -38,15 +38,19 @@ INSTALLED_APPS = [
 INSTALLED_APPS += LOCAL_APPS
 INSTALLED_APPS += THIRD_PARTY_APPS
 
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    # corsheaders middleware
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
 
 ROOT_URLCONF = "config.urls"
 
@@ -127,8 +131,26 @@ AUTH_USER_MODEL = "accounts.User"
 # AUTHENTICATION BACKENDS
 AUTHENTICATION_BACKENDS = ["accounts.auth.PhoneEmailAuthBackend"]
 
-# Arvan cloud boto3 settings
 
+# CORS SETTINGS
+CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS").split()
+CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS").split()
+
+# JWT SETTINGS
+ALGORITHM = os.getenv("ALGORITHM")
+ACCESS_TOKEN_EXPIRATION_MINUTES = os.getenv("ACCESS_TOKEN_EXPIRATION_MINUTES")
+REFRESH_TOKEN_EXPIRATION_MINUTES = os.getenv("REFRESH_TOKEN_EXPIRATION_MINUTES")
+
+# JWT AUTHENTICATION SETTINGS
+AUTH_HEADER_NAME = os.getenv("AUTH_HEADER_NAME")
+
+# REST FRAMEWORK SETTINGS
+# REST_FRAMEWORK = {
+#     "DEFAULT_AUTHENTICATION_CLASSES": ("accounts.auth.JWTAuthentication",),
+#     # "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+# }
+
+# Arvan cloud boto3 settings
 DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
