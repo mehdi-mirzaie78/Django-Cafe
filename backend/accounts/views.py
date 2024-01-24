@@ -9,6 +9,7 @@ from .serializers import (
     UserRegisterSerializer,
     UserLoginSerializer,
     RefreshTokenSerializer,
+    UserSerializer,
 )
 from .utils import JWTHandler as JWT
 from .auth import JWTAuthentication
@@ -40,9 +41,6 @@ class LoginView(APIView):
 
 
 class RefreshTokenView(APIView):
-    permission_classes = [IsAuthenticated]
-    authentication_classes = [JWTAuthentication]
-
     def post(self, request):
         serialized_data = RefreshTokenSerializer(data=request.data)
         serialized_data.is_valid(raise_exception=True)
@@ -57,3 +55,17 @@ class RefreshTokenView(APIView):
 
 class LogoutView(APIView):
     pass
+
+
+class ProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+
+    def get(self, request):
+        user = request.user
+        serialized_data = UserSerializer(instance=user)
+        return Response(
+            {"msg": _("Profile fetched successfully"), "data": serialized_data.data},
+            status=status.HTTP_200_OK,
+        )
+    
