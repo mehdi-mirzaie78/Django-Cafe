@@ -3,7 +3,7 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 from accounts.models import User
 from core.validators import phone_regex_validator
-from .utils import OTPHandler as OTP
+from .utils import OTPHandler
 
 
 class UserRegisterSerializer(serializers.Serializer):
@@ -22,15 +22,16 @@ class VerifyRegisterSerializer(UserRegisterSerializer):
 
     def validate(self, data):
         phone, otp = data["phone"], data["otp"]
-        if OTP.is_verified(phone):
+        otp_handler = OTPHandler(phone)
+        if otp_handler.is_verified():
             raise serializers.ValidationError(_("Phone is already verified."))
-        if not OTP.check_otp(phone, otp):
+        if not otp_handler.check_otp(otp):
             raise serializers.ValidationError(_("Expired or Wrong OTP code."))
         return data
 
     def save(self):
-        phone = self.validated_data["phone"]
-        OTP.save_verified_phone(phone)
+        otp_handler = OTPHandler(self.validated_data["phone"])
+        otp_handler.save_verified_phone()
 
 
 class CompleteRegistrationSerializer(serializers.ModelSerializer):
@@ -51,10 +52,10 @@ class CompleteRegistrationSerializer(serializers.ModelSerializer):
         )
 
     def validate(self, data):
-        phone = data["phone"]
-        if not OTP.is_verified(phone):
+        otp_handler = OTPHandler(data["phone"])
+        if not otp_handler.is_verified():
             raise serializers.ValidationError(_("Phone number is not verified"))
-        OTP.clean_cache(phone)
+        otp_handler.clean_cache()
         return data
 
     def save(self, **kwargs):
