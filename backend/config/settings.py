@@ -166,16 +166,25 @@ AWS_LOCAL_STORAGE = BASE_DIR / os.getenv("AWS_LOCAL_STORAGE", "aws")
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": os.getenv("REDIS_URL", "redis://localhost:6379/"),
+        "LOCATION": os.getenv("REDIS_DEFAULT_URL", "redis://localhost:6379/1"),
         "KEY_PREFIX": "cafe",
         "TIMEOUT": 60 * 15,  # in seconds: 15 minutes
-    }
+    },
+    "auth": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": os.getenv("REDIS_AUTH_URL", "redis://localhost:6379/2"),
+        "KEY_PREFIX": "auth",
+        "TIMEOUT": 60 * 60,  # in seconds: 60 minutes
+    },
 }
 
 # OTP SETTINGS
 OTP_MAX_DIGIT = 6
-OTP_TIMEOUT = 60
-
+OTP_TIMEOUT = 60 * 2
+VERIFICATION_KEY_PREFIX = "verification"
+OTP_KEY_PREFIX = "otp"
+OTP_API_KEY = os.getenv("OTP_API_KEY")
+OTP_LINE_NUMBER = os.getenv("OTP_LINE_NUMBER")
 
 # SUPERUSER SETTINGS
 SUPERUSER_PHONE = str(os.getenv("SUPERUSER_PHONE"))
