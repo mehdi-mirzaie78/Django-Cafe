@@ -13,19 +13,18 @@ from .serializers import (
     VerifyRegisterSerializer,
     CompleteRegistrationSerializer,
 )
-from .utils import JWTHandler as JWT, OTPHandler as OTP
+from .utils import JWTHandler as JWT, OTPHandler
 from .auth import JWTAuthentication
 
 
 class RegisterView(APIView):
-    parser_classes = [JSONParser, MultiPartParser]
     serializer_class = UserRegisterSerializer
 
     def post(self, request):
         serialized_data = self.serializer_class(data=request.data)
         serialized_data.is_valid(raise_exception=True)
         phone = serialized_data.validated_data["phone"]
-        OTP.send_otp(phone)
+        OTPHandler(phone).send_otp()
         return Response(
             {"message": _("OTP code has been sent.")}, status=status.HTTP_200_OK
         )
@@ -37,13 +36,14 @@ class VerifyRegisterView(APIView):
     def post(self, request):
         serialized_data = self.serializer_class(data=request.data)
         serialized_data.is_valid(raise_exception=True)
-        serialized_data.save()  # saves in redis => phone: {is_verified: True}
+        serialized_data.save()
         return Response(
             {"message": _("Verified successfully.")}, status=status.HTTP_200_OK
         )
 
 
 class CompleteRegistrationView(APIView):
+    parser_classes = [MultiPartParser]
     serializer_class = CompleteRegistrationSerializer
 
     def post(self, request):
