@@ -10,6 +10,10 @@ lint:
 	# flake8 or Pylint
 	pylint --disable=R,C *.py
 
+check:
+    # checking project
+	python3 manage.py check
+
 makemigrations:
 	# make migrations
 	python3 manage.py makemigrations
