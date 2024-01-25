@@ -161,6 +161,22 @@ AWS_SERVICE_NAME = os.getenv("AWS_SERVICE_NAME", "s3")
 AWS_S3_FILE_OVERWRITE = False if os.getenv("AWS_S3_FILE_OVERWRITE") == "False" else True
 AWS_LOCAL_STORAGE = BASE_DIR / os.getenv("AWS_LOCAL_STORAGE", "aws")
 
+
+# REDIS SETTINGS
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": os.getenv("REDIS_URL", "redis://localhost:6379/"),
+        "KEY_PREFIX": "cafe",
+        "TIMEOUT": 60 * 15,  # in seconds: 15 minutes
+    }
+}
+
+# OTP SETTINGS
+OTP_MAX_DIGIT = 6
+OTP_TIMEOUT = 60
+
+
 # SUPERUSER SETTINGS
 SUPERUSER_PHONE = str(os.getenv("SUPERUSER_PHONE"))
 SUPERUSER_EMAIL = str(os.getenv("SUPERUSER_EMAIL"))
