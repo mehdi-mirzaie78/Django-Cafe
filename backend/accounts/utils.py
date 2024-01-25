@@ -2,7 +2,9 @@ import jwt
 from uuid import uuid4
 from datetime import datetime, timedelta
 from django.conf import settings
-from django.core.cache import cache
+from django.core.cache import caches
+from django.utils.translation import gettext_lazy as _
+from sms_ir import SmsIr
 
 
 class JWTHandler:
@@ -62,60 +64,58 @@ class JWTHandler:
 class OTPHandler:
     MAX_DIGIT = settings.OTP_MAX_DIGIT
     TIMEOUT = settings.OTP_TIMEOUT
-    VERIFICATION_KEY = "is_verified"
-    OTP_KEY = "otp"
+    VERIFICATION_KEY_PREFIX = settings.VERIFICATION_KEY_PREFIX
+    OTP_KEY_PREFIX = settings.OTP_KEY_PREFIX
+    DATABASE_NAME = "auth"
+    OTP_API_KEY = settings.OTP_API_KEY
+    OTP_LINE_NUMBER = settings.OTP_LINE_NUMBER
 
-    @classmethod
-    def get_otp_key(cls, phone):
-        return f"{phone}-{cls.OTP_KEY}"
+    def __init__(self, phone):
+        self.cache = caches[self.DATABASE_NAME]
+        self.phone = phone
+        self.otp_key = f"{self.OTP_KEY_PREFIX}:{self.phone}"
+        self.verification_key = f"{self.VERIFICATION_KEY_PREFIX}:{self.phone}"
+        self.sms = SmsIr(self.OTP_API_KEY, self.OTP_LINE_NUMBER)
 
-    @classmethod
-    def get_verification_key(cls, phone):
-        return f"{phone}-is_verified"
+    def send_verification_code(self, code):
+        response = self.sms.send_verify_code(
+            number=self.phone,
+            template_id=100000,
+            parameters=[
+                {
+                    "name": "code",
+                    "value": code,
+                },
+            ],
+        )
+        if response.status_code != 200:
+            raise Exception(_("The code didn't send successfully"))
 
-    @classmethod
-    def generate_random_otp(cls):
-        return str(uuid4().node)[: cls.MAX_DIGIT]
+    def generate_random_otp(self):
+        return str(uuid4().node)[: self.MAX_DIGIT]
 
-    @classmethod
-    def save(cls, key, value, timeout=None):
-        if timeout is None:
-            cache.set(key, value)
-        else:
-            cache.set(key, value, timeout)
+    def save_otp(self, otp):
+        key = self.otp_key
+        self.cache.set(key, otp, self.TIMEOUT)
 
-    @classmethod
-    def save_otp(cls, phone, otp):
-        key = cls.get_otp_key(phone)
-        cls.save(key, otp, cls.TIMEOUT)
-
-    @classmethod
-    def send_otp(cls, phone):
-        # some steps
-        otp = cls.generate_random_otp()
-        cls.save_otp(phone, otp)
-        print(f"{phone} - {otp}")
+    def send_otp(self):
+        otp = self.generate_random_otp()
+        self.save_otp(otp)
+        self.send_verification_code(otp)
+        print(f"{self.phone} - {otp}")
         return otp
 
-    @classmethod
-    def is_verified(cls, phone):
-        key = cls.get_verification_key(phone)
-        return cache.get(key)
+    def is_verified(self):
+        return self.cache.get(self.verification_key) == "yes"
 
-    @classmethod
-    def check_otp(cls, phone, otp):
-        key = cls.get_otp_key(phone)
-        stored_otp = cache.get(key)
-        return stored_otp == otp
+    def check_otp(self, user_otp):
+        stored_otp = self.cache.get(self.otp_key)
+        return stored_otp == user_otp
 
-    @classmethod
-    def save_verified_phone(cls, phone):
-        key = cls.get_verification_key(phone)
-        cache.set(key, True)
+    def save_verified_phone(self):
+        key = self.verification_key
+        self.cache.set(key, "yes")
 
-    @classmethod
-    def clean_cache(cls, phone):
-        otp_key = cls.get_otp_key(phone)
-        verification_key = cls.get_verification_key(phone)
-        cache.delete(otp_key)
-        cache.delete(verification_key)
+    def clean_cache(self):
+        self.cache.delete(self.otp_key)
+        self.cache.delete(self.verification_key)
