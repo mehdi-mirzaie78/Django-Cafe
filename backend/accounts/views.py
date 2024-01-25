@@ -10,45 +10,81 @@ from .serializers import (
     UserLoginSerializer,
     RefreshTokenSerializer,
     UserSerializer,
+    VerifyRegisterSerializer,
+    CompleteRegistrationSerializer,
 )
-from .utils import JWTHandler as JWT
+from .utils import JWTHandler as JWT, OTPHandler as OTP
 from .auth import JWTAuthentication
 
 
 class RegisterView(APIView):
     parser_classes = [JSONParser, MultiPartParser]
+    serializer_class = UserRegisterSerializer
 
     def post(self, request):
-        serialized_data = UserRegisterSerializer(data=request.data)
+        serialized_data = self.serializer_class(data=request.data)
+        serialized_data.is_valid(raise_exception=True)
+        phone = serialized_data.validated_data["phone"]
+        OTP.send_otp(phone)
+        return Response(
+            {"message": _("OTP code has been sent.")}, status=status.HTTP_200_OK
+        )
+
+
+class VerifyRegisterView(APIView):
+    serializer_class = VerifyRegisterSerializer
+
+    def post(self, request):
+        serialized_data = self.serializer_class(data=request.data)
+        serialized_data.is_valid(raise_exception=True)
+        serialized_data.save()  # saves in redis => phone: {is_verified: True}
+        return Response(
+            {"message": _("Verified successfully.")}, status=status.HTTP_200_OK
+        )
+
+
+class CompleteRegistrationView(APIView):
+    serializer_class = CompleteRegistrationSerializer
+
+    def post(self, request):
+        serialized_data = self.serializer_class(data=request.data)
         serialized_data.is_valid(raise_exception=True)
         serialized_data.save()
-        return Response(serialized_data.data, status=status.HTTP_201_CREATED)
+        return Response(
+            {"message": _("Registration has completed successfully.")},
+            status=status.HTTP_201_CREATED,
+        )
 
 
 class LoginView(APIView):
+    serializer_class = UserLoginSerializer
+
     def post(self, request):
-        serialized_data = UserLoginSerializer(data=request.data)
+        serialized_data = self.serializer_class(data=request.data)
         serialized_data.is_valid(raise_exception=True)
         user = authenticate(request, **serialized_data.validated_data)
         if user is not None:
             data = JWT.generate_access_refresh_token(user)
             return Response(
-                {"msg": _("Logged in successfully"), **data}, status=status.HTTP_200_OK
+                {"message": _("Logged in successfully"), **data},
+                status=status.HTTP_200_OK,
             )
         return Response(
-            {"msg": _("Invalid credentials")}, status=status.HTTP_400_BAD_REQUEST
+            {"message": _("Invalid credentials")}, status=status.HTTP_400_BAD_REQUEST
         )
 
 
 class RefreshTokenView(APIView):
+    serializer_class = RefreshTokenSerializer
+
     def post(self, request):
-        serialized_data = RefreshTokenSerializer(data=request.data)
+        serialized_data = self.serializer_class(data=request.data)
         serialized_data.is_valid(raise_exception=True)
         refresh_token = serialized_data.validated_data["refresh_token"]
         user = JWTAuthentication().get_user_by_refresh_token(refresh_token)
         data = JWT.generate_access_refresh_token(user)
         return Response(
-            {"msg": _("Access token refreshed successfully"), **data},
+            {"message": _("Access token refreshed successfully"), **data},
             status=status.HTTP_200_OK,
         )
 
@@ -65,7 +101,9 @@ class ProfileView(APIView):
         user = request.user
         serialized_data = UserSerializer(instance=user)
         return Response(
-            {"msg": _("Profile fetched successfully"), "data": serialized_data.data},
+            {
+                "message": _("Profile fetched successfully"),
+                "data": serialized_data.data,
+            },
             status=status.HTTP_200_OK,
         )
-    
