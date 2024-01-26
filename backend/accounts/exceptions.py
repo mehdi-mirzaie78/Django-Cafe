@@ -10,6 +10,12 @@ class ExpiredAccessTokenError(APIException):
 
 
 class ExpiredRefreshTokenError(APIException):
+    status_code = status.HTTP_401_UNAUTHORIZED
+    default_detail = _("Refresh Token Has Been Expired")
+    default_code = "expired_refresh_token"
+
+
+class ExpiredRefreshTokenError(APIException):
     status_code = status.HTTP_403_FORBIDDEN
     default_detail = _("Refresh Token Has Been Expired, Please Login Again")
     default_code = "expired_refresh_token"
@@ -54,4 +60,16 @@ class NotFoundPrefixError(APIException):
 class CommonError(APIException):
     status_code = status.HTTP_400_BAD_REQUEST
     default_detail = _("An error occurred")
+    default_code = "error"
+
+
+class TokenError(APIException):
+    status_code = status.HTTP_400_BAD_REQUEST
+    default_detail = _("Token not found in header")
+    default_code = "error"
+
+
+class NotLoggedInError(APIException):
+    status_code = status.HTTP_400_BAD_REQUEST
+    default_detail = _("You are not logged in.")
     default_code = "error"
