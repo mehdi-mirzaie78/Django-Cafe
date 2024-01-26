@@ -16,6 +16,13 @@ class UserRegisterSerializer(serializers.Serializer):
             )
         return value
 
+    def validate(self, data):
+        if not OTPHandler(data["phone"]).is_code_available():
+            raise serializers.ValidationError(
+                _("We have already sent you an otp code. Try again later")
+            )
+        return data
+
 
 class VerifyRegisterSerializer(UserRegisterSerializer):
     otp = serializers.CharField(max_length=settings.OTP_MAX_DIGIT)
@@ -30,8 +37,7 @@ class VerifyRegisterSerializer(UserRegisterSerializer):
         return data
 
     def save(self):
-        otp_handler = OTPHandler(self.validated_data["phone"])
-        otp_handler.save_verified_phone()
+        OTPHandler(self.validated_data["phone"]).save_verified_phone()
 
 
 class CompleteRegistrationSerializer(serializers.ModelSerializer):
@@ -71,6 +77,10 @@ class UserLoginSerializer(serializers.Serializer):
 
 
 class RefreshTokenSerializer(serializers.Serializer):
+    refresh_token = serializers.CharField(max_length=255, required=True)
+
+
+class LogoutSerializer(serializers.Serializer):
     refresh_token = serializers.CharField(max_length=255, required=True)
 
 
