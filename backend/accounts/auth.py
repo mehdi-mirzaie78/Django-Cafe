@@ -7,15 +7,17 @@ from django.db.models import Q
 from django.http.request import HttpRequest
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.request import Request
-from rest_framework.exceptions import PermissionDenied
 from .utils import JWTHandler
 from .exceptions import (
     ExpiredAccessTokenError,
     InActiveUserError,
     InvalidTokenError,
     NotFoundPrefixError,
+    NotLoggedInError,
     UserNotFoundError,
     AuthorizationHeaderError,
+    ExpiredRefreshTokenError,
+    TokenError,
 )
 
 
@@ -25,37 +27,44 @@ class JWTAuthentication(BaseAuthentication):
     JWT = JWTHandler
 
     def authenticate(self, request: Request):
-        header = self.get_header(request)
-        header = self.validate_header(header)
-        payload = self.get_payload(header)
-        payload = self.validate_payload(payload)
+        header = self.get_and_validate_header(request)
+        payload = self.validate_access_token(header)
         user = self.get_user(payload)
-        return user, None
+        return user, payload
 
-    def get_header(self, request):
+    def get_and_validate_header(self, request):
         header = request.headers.get(self.AUTH_HEADER_NAME)
-        if not header:
-            return None
-        return header
-
-    def get_payload(self, header):
+        self._validate_header(header)
         try:
-            access_token = header.split()[1]
-            payload = self.JWT.decode(access_token)
-        except jwt.ExpiredSignatureError:
-            raise ExpiredAccessTokenError
+            header = header.split()[1]
         except IndexError:
             raise NotFoundPrefixError
+        if len(header) < 6:
+            raise TokenError
+        return header
+
+    def get_payload(self, token):
+        payload = self.JWT.decode(token)
         return payload
 
-    def validate_header(self, header):
+    def validate_access_token(self, header):
+        try:
+            payload = self.get_payload(header)
+            if self.JWT.cache.get(self.JWT.access_key(payload)) is None:
+                raise ExpiredAccessTokenError
+        except jwt.ExpiredSignatureError:
+            raise ExpiredAccessTokenError
+        payload = self._validate_access_payload(payload)
+        return payload
+
+    def _validate_header(self, header):
         if header is None:
             raise AuthorizationHeaderError
         if not any(header.startswith(prefix) for prefix in self.AUTH_HEADER_TYPES):
             raise NotFoundPrefixError
-        return header
 
-    def validate_payload(self, payload):
+    @staticmethod
+    def _validate_access_payload(payload):
         if payload["type"] != "access":
             raise InvalidTokenError
         return payload
@@ -69,10 +78,25 @@ class JWTAuthentication(BaseAuthentication):
             raise InActiveUserError
         return user
 
+    def _get_payload_of_refresh_token(self, refresh_token):
+        try:
+            payload = self.JWT.decode(refresh_token)
+        except jwt.ExpiredSignatureError:
+            raise ExpiredRefreshTokenError
+        except jwt.DecodeError:
+            raise TokenError
+        return payload
+
     def get_user_by_refresh_token(self, refresh_token):
-        payload = self.JWT.decode(refresh_token)
+        payload = self._get_payload_of_refresh_token(refresh_token)
+        if self.JWT.cache.get(self.JWT.refresh_key(payload)) is None:
+            raise NotLoggedInError
         user = self.get_user(payload)
         return user
+
+    def logout(self, refresh_token):
+        payload = self._get_payload_of_refresh_token(refresh_token)
+        self.JWT.cache.delete(self.JWT.refresh_key(payload))
 
 
 class PhoneEmailAuthBackend(ModelBackend):
