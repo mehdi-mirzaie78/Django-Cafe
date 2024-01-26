@@ -10,7 +10,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SITE_HEADER = "Cuppa Cloud"
 INDEX_TITLE = "Management Panel"
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -38,7 +37,6 @@ INSTALLED_APPS = [
 INSTALLED_APPS += LOCAL_APPS
 INSTALLED_APPS += THIRD_PARTY_APPS
 
-
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -50,7 +48,6 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
-
 
 ROOT_URLCONF = "config.urls"
 
@@ -131,15 +128,14 @@ AUTH_USER_MODEL = "accounts.User"
 # AUTHENTICATION BACKENDS
 AUTHENTICATION_BACKENDS = ["accounts.auth.PhoneEmailAuthBackend"]
 
-
 # CORS SETTINGS
 CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS").split()
 CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS").split()
 
 # JWT SETTINGS
 ALGORITHM = os.getenv("ALGORITHM")
-ACCESS_TOKEN_EXPIRATION_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRATION_MINUTES"))
-REFRESH_TOKEN_EXPIRATION_MINUTES = int(os.getenv("REFRESH_TOKEN_EXPIRATION_MINUTES"))
+ACCESS_TOKEN_EXPIRATION_MINUTES = 60 * 10
+REFRESH_TOKEN_EXPIRATION_MINUTES = 60 * 24 * 7
 
 # JWT AUTHENTICATION SETTINGS
 AUTH_HEADER_NAME = os.getenv("AUTH_HEADER_NAME")
@@ -161,7 +157,6 @@ AWS_SERVICE_NAME = os.getenv("AWS_SERVICE_NAME", "s3")
 AWS_S3_FILE_OVERWRITE = False if os.getenv("AWS_S3_FILE_OVERWRITE") == "False" else True
 AWS_LOCAL_STORAGE = BASE_DIR / os.getenv("AWS_LOCAL_STORAGE", "aws")
 
-
 # REDIS SETTINGS
 CACHES = {
     "default": {
@@ -174,15 +169,16 @@ CACHES = {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
         "LOCATION": os.getenv("REDIS_AUTH_URL", "redis://localhost:6379/2"),
         "KEY_PREFIX": "auth",
-        "TIMEOUT": 60 * 60,  # in seconds: 60 minutes
     },
 }
 
 # OTP SETTINGS
-OTP_MAX_DIGIT = 6
-OTP_TIMEOUT = 60 * 2
+OTP_MAX_DIGIT = 6  # number of digits for an otp code
+OTP_TIMEOUT = 60 * 2  # 2 minutes
 VERIFICATION_KEY_PREFIX = "verification"
 OTP_KEY_PREFIX = "otp"
+
+# OTP SERVICE SETTINGS
 OTP_API_KEY = os.getenv("OTP_API_KEY")
 OTP_LINE_NUMBER = os.getenv("OTP_LINE_NUMBER")
 
