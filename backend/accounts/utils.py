@@ -12,10 +12,19 @@ class JWTHandler:
     ALGORITHM = settings.ALGORITHM
     ACCESS_TOKEN_EXPIRATION_MINUTES = settings.ACCESS_TOKEN_EXPIRATION_MINUTES
     REFRESH_TOKEN_EXPIRATION_MINUTES = settings.REFRESH_TOKEN_EXPIRATION_MINUTES
+    cache = caches["auth"]
 
     @staticmethod
     def generate_jti():
         return uuid4().hex
+
+    @staticmethod
+    def access_key(payload):
+        return f"{payload['id']}:access:{payload['jti']}"
+
+    @staticmethod
+    def refresh_key(payload):
+        return f"{payload['id']}:refresh:{payload['jti']}"
 
     @classmethod
     def generate_access_token(cls, user):
@@ -30,6 +39,11 @@ class JWTHandler:
             "jti": cls.generate_jti(),
         }
         access_token = cls.encode(payload)
+        cls.cache.set(
+            cls.access_key(payload),
+            access_token,
+            cls.ACCESS_TOKEN_EXPIRATION_MINUTES * 2,
+        )
         return access_token
 
     @classmethod
@@ -43,6 +57,11 @@ class JWTHandler:
             "jti": cls.generate_jti(),
         }
         refresh_token = cls.encode(payload)
+        cls.cache.set(
+            cls.refresh_key(payload),
+            refresh_token,
+            cls.REFRESH_TOKEN_EXPIRATION_MINUTES * 2,
+        )
         return refresh_token
 
     @classmethod
@@ -119,3 +138,6 @@ class OTPHandler:
     def clean_cache(self):
         self.cache.delete(self.otp_key)
         self.cache.delete(self.verification_key)
+
+    def is_code_available(self):
+        return self.cache.get(self.otp_key) is None
