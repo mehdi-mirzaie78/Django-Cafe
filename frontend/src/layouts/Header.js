@@ -153,6 +153,18 @@ const Header = () => {
                 <li>
                   <Link href="contacts">Contacts</Link>
                 </li>
+                <li>
+                  <Link href="/">
+                    Register
+                    <i className="las" />
+                  </Link>
+                </li>
+                <li>
+                  <Link href="login">
+                    Login
+                    <i className="las" />
+                  </Link>
+                </li>
               </ul>
             </div>
           </div>
@@ -166,9 +178,9 @@ const Header = () => {
               <span />
             </a>
             {/* btn */}
-              {/*<Link href="reservation" className="kf-btn h-btn">*/}
-              {/*  <span>Book a table</span>*/}
-              {/*</Link>*/}
+              <Link href="reservation" className="kf-btn h-btn">
+               <span>Book a table</span>
+              </Link>
           </div>
         </div>
       </div>

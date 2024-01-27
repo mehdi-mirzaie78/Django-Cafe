@@ -1,0 +1,175 @@
+// import InstaCarousel from "@/src/components/sliders/InstaCarousel";
+import Layouts from "@/src/layouts/Layouts";
+import { redirect } from "next/navigation";
+import { FormEvent } from "react";
+import { useRouter } from "next/router";
+
+const Login = () => {
+  const router = useRouter();
+  async function handleSubmit(event) {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const username = formData.get("username");
+    const password = formData.get("password");
+
+    const response = await fetch("http://127.0.0.1:8000/accounts/auth/login/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      sessionStorage.setItem("accessToken", data["access_token"]);
+      sessionStorage.setItem("refreshToken", data["refresh_token"]);
+      router.push("/");
+    } else {
+      const resp = await response.json();
+      console.log(resp);
+    }
+  }
+
+  return (
+    <Layouts>
+      {/* Section Started Inner */}
+      {/* <section className="section kf-started-inner">
+        <div
+          className="kf-parallax-bg js-parallax"
+          style={{
+            backgroundImage: "url(images/menu_reservation_inner_bg2.jpg)",
+          }}
+        />
+        <div className="container">
+          <h1
+            className="kf-h-title text-anim-1 scroll-animate"
+            data-splitting="chars"
+            data-animate="active"
+          >
+            Reservation
+          </h1>
+        </div>
+      </section> */}
+      {/* Section Reservation */}
+      <section className="section kf-reservation">
+        <div className="container">
+          <div
+            className="kf-reservation-form element-anim-1 scroll-animate"
+            data-animate="active"
+          >
+            <div className="kf-titles align-center">
+              <div className="kf-subtitle">Login</div>
+              <h3 className="kf-title">Enter Your Credentials</h3>
+            </div>
+            <form id="lform" method="post" onSubmit={handleSubmit}>
+              <div className="row">
+                <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                  <div className="kf-field">
+                    <input
+                      type="text"
+                      name="username"
+                      placeholder="Phone or Email"
+                    />
+                    <i className="far fa-user" />
+                  </div>
+                </div>
+                <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                  <div className="kf-field">
+                    <input
+                      type="password"
+                      name="password"
+                      placeholder="Password"
+                    />
+                    <i className="fas fa-at" />
+                  </div>
+                </div>
+                <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                  <div className="kf-bts mt-4">
+                    <button className="kf-btn" type="submit">
+                      <span>
+                        Login
+                        <i className="fas fa-chevron-right" />
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+            <div className="alert-success" style={{ display: "none" }}>
+              <p>Thanks, your message is sent successfully.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+      {/* Section Insta Carousel */}
+      {/* <InstaCarousel /> */}
+      {/* Section Brands */}
+      {/* <div className="section kf-brands">
+        <div className="container">
+          <div className="kf-brands-items row">
+            <div className="col-xs-12 col-sm-12 col-md-3 col-lg-2">
+              <div
+                className="kf-brands-item element-anim-1 scroll-animate"
+                data-animate="active"
+              >
+                <div className="image">
+                  <img src="images/brand1.png" alt="image" />
+                </div>
+              </div>
+            </div>
+            <div className="col-xs-12 col-sm-12 col-md-3 col-lg-2">
+              <div
+                className="kf-brands-item element-anim-1 scroll-animate"
+                data-animate="active"
+              >
+                <div className="image">
+                  <img src="images/brand2.png" alt="image" />
+                </div>
+              </div>
+            </div>
+            <div className="col-xs-12 col-sm-12 col-md-3 col-lg-2">
+              <div
+                className="kf-brands-item element-anim-1 scroll-animate"
+                data-animate="active"
+              >
+                <div className="image">
+                  <img src="images/brand3.png" alt="image" />
+                </div>
+              </div>
+            </div>
+            <div className="col-xs-12 col-sm-12 col-md-3 col-lg-2">
+              <div
+                className="kf-brands-item element-anim-1 scroll-animate"
+                data-animate="active"
+              >
+                <div className="image">
+                  <img src="images/brand4.png" alt="image" />
+                </div>
+              </div>
+            </div>
+            <div className="col-xs-12 col-sm-12 col-md-3 col-lg-2">
+              <div
+                className="kf-brands-item element-anim-1 scroll-animate"
+                data-animate="active"
+              >
+                <div className="image">
+                  <img src="images/brand5.png" alt="image" />
+                </div>
+              </div>
+            </div>
+            <div className="col-xs-12 col-sm-12 col-md-3 col-lg-2">
+              <div
+                className="kf-brands-item element-anim-1 scroll-animate"
+                data-animate="active"
+              >
+                <div className="image">
+                  <img src="images/brand6.png" alt="image" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> */}
+    </Layouts>
+  );
+};
+export default Login;
