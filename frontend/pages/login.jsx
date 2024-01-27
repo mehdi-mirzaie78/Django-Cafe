@@ -1,30 +1,45 @@
 // import InstaCarousel from "@/src/components/sliders/InstaCarousel";
 import Layouts from "@/src/layouts/Layouts";
-import { redirect } from "next/navigation";
-import { FormEvent } from "react";
 import { useRouter } from "next/router";
 
 const Login = () => {
   const router = useRouter();
+  const redirect = () => {
+    router.push("/");
+  };
+
+  const changeDisplay = (className, displayStyle) => {
+    var elems = document.getElementsByClassName(className);
+    for (var i = 0; i < elems.length; i += 1) {
+      elems[i].style.display = displayStyle;
+    }
+  };
+
   async function handleSubmit(event) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const username = formData.get("username");
     const password = formData.get("password");
 
-    const response = await fetch("http://127.0.0.1:8000/accounts/auth/login/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
-    });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/accounts/auth/login/`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      }
+    );
 
     if (response.ok) {
       const data = await response.json();
       sessionStorage.setItem("accessToken", data["access_token"]);
       sessionStorage.setItem("refreshToken", data["refresh_token"]);
-      router.push("/");
+      changeDisplay("alert-success", "block");
+      setTimeout(redirect, 3000);
     } else {
       const resp = await response.json();
+      changeDisplay("alert-danger", "block");
+      setTimeout(() => changeDisplay("alert-danger", "none"), 5000);
       console.log(resp);
     }
   }
@@ -32,7 +47,7 @@ const Login = () => {
   return (
     <Layouts>
       {/* Section Started Inner */}
-      {/* <section className="section kf-started-inner">
+      <section className="section kf-started-inner">
         <div
           className="kf-parallax-bg js-parallax"
           style={{
@@ -45,11 +60,11 @@ const Login = () => {
             data-splitting="chars"
             data-animate="active"
           >
-            Reservation
+            Login
           </h1>
         </div>
-      </section> */}
-      {/* Section Reservation */}
+      </section>
+      {/* Section Login */}
       <section className="section kf-reservation">
         <div className="container">
           <div
@@ -68,6 +83,7 @@ const Login = () => {
                       type="text"
                       name="username"
                       placeholder="Phone or Email"
+                      required
                     />
                     <i className="far fa-user" />
                   </div>
@@ -78,6 +94,7 @@ const Login = () => {
                       type="password"
                       name="password"
                       placeholder="Password"
+                      required
                     />
                     <i className="fas fa-at" />
                   </div>
@@ -94,81 +111,18 @@ const Login = () => {
                 </div>
               </div>
             </form>
-            <div className="alert-success" style={{ display: "none" }}>
-              <p>Thanks, your message is sent successfully.</p>
+            <div className="alert-success mt-5" style={{ display: "none" }}>
+              <p className="m-0">You logged in successfuly</p>
+            </div>
+            <div
+              className="alert alert-danger mt-5"
+              style={{ display: "none" }}
+            >
+              <p className="m-0"> Login Error. Check your credentials.</p>
             </div>
           </div>
         </div>
       </section>
-      {/* Section Insta Carousel */}
-      {/* <InstaCarousel /> */}
-      {/* Section Brands */}
-      {/* <div className="section kf-brands">
-        <div className="container">
-          <div className="kf-brands-items row">
-            <div className="col-xs-12 col-sm-12 col-md-3 col-lg-2">
-              <div
-                className="kf-brands-item element-anim-1 scroll-animate"
-                data-animate="active"
-              >
-                <div className="image">
-                  <img src="images/brand1.png" alt="image" />
-                </div>
-              </div>
-            </div>
-            <div className="col-xs-12 col-sm-12 col-md-3 col-lg-2">
-              <div
-                className="kf-brands-item element-anim-1 scroll-animate"
-                data-animate="active"
-              >
-                <div className="image">
-                  <img src="images/brand2.png" alt="image" />
-                </div>
-              </div>
-            </div>
-            <div className="col-xs-12 col-sm-12 col-md-3 col-lg-2">
-              <div
-                className="kf-brands-item element-anim-1 scroll-animate"
-                data-animate="active"
-              >
-                <div className="image">
-                  <img src="images/brand3.png" alt="image" />
-                </div>
-              </div>
-            </div>
-            <div className="col-xs-12 col-sm-12 col-md-3 col-lg-2">
-              <div
-                className="kf-brands-item element-anim-1 scroll-animate"
-                data-animate="active"
-              >
-                <div className="image">
-                  <img src="images/brand4.png" alt="image" />
-                </div>
-              </div>
-            </div>
-            <div className="col-xs-12 col-sm-12 col-md-3 col-lg-2">
-              <div
-                className="kf-brands-item element-anim-1 scroll-animate"
-                data-animate="active"
-              >
-                <div className="image">
-                  <img src="images/brand5.png" alt="image" />
-                </div>
-              </div>
-            </div>
-            <div className="col-xs-12 col-sm-12 col-md-3 col-lg-2">
-              <div
-                className="kf-brands-item element-anim-1 scroll-animate"
-                data-animate="active"
-              >
-                <div className="image">
-                  <img src="images/brand6.png" alt="image" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> */}
     </Layouts>
   );
 };
