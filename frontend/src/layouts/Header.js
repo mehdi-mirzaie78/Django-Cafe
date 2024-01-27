@@ -154,7 +154,7 @@ const Header = () => {
                   <Link href="contacts">Contacts</Link>
                 </li>
                 <li>
-                  <Link href="/">
+                  <Link href="/register">
                     Register
                     <i className="las" />
                   </Link>
