@@ -26,7 +26,11 @@ class Contact(BaseModel, SingletonModel):
         verbose_name_plural = _("Contact")
 
     cafe = models.OneToOneField(
-        Cafe, on_delete=models.CASCADE, related_name="contact", verbose_name=_("Cafe")
+        Cafe,
+        on_delete=models.CASCADE,
+        related_name="contact",
+        verbose_name=_("Cafe"),
+        default=1,
     )
     email = models.EmailField(null=True, blank=True, verbose_name=_("Email"))
     instagram = models.CharField(
