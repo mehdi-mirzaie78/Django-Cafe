@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
-from rest_framework.parsers import MultiPartParser
+from rest_framework.parsers import MultiPartParser, JSONParser
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import authenticate
 from django.utils.translation import gettext_lazy as _
@@ -44,7 +44,7 @@ class VerifyRegisterView(APIView):
 
 
 class CompleteRegistrationView(APIView):
-    parser_classes = [MultiPartParser]
+    parser_classes = [MultiPartParser, JSONParser]
     serializer_class = CompleteRegistrationSerializer
 
     def post(self, request):

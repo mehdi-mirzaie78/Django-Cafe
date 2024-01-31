@@ -120,7 +120,7 @@ class OTPHandler:
     def send_otp(self):
         otp = self.generate_random_otp()
         self.save_otp(otp)
-        self.send_verification_code(otp)
+        # self.send_verification_code(otp)
         print(f"{self.phone} - {otp}")
         return otp
 

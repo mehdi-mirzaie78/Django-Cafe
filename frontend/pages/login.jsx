@@ -1,6 +1,6 @@
 // import InstaCarousel from "@/src/components/sliders/InstaCarousel";
 import Layouts from "@/src/layouts/Layouts";
-import { useRouter } from "next/router";
+import {useRouter} from "next/router";
 
 const Login = () => {
   const router = useRouter();
@@ -25,15 +25,15 @@ const Login = () => {
       `${process.env.NEXT_PUBLIC_API_URL}/accounts/auth/login/`,
       {
         method: "POST",
-        headers: { "Content-Type": "application/json" },  
-        body: JSON.stringify({ username, password }),
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({username, password}),
       }
     );
 
     if (response.ok) {
       const data = await response.json();
-      sessionStorage.setItem("accessToken", data["access_token"]);
-      sessionStorage.setItem("refreshToken", data["refresh_token"]);
+      localStorage.setItem("accessToken", data["access_token"]);
+      localStorage.setItem("refreshToken", data["refresh_token"]);
       changeDisplay("alert-success", "block");
       setTimeout(redirect, 3000);
     } else {
@@ -85,7 +85,7 @@ const Login = () => {
                       placeholder="Phone or Email"
                       required
                     />
-                    <i className="far fa-user" />
+                    <i className="far fa-user"/>
                   </div>
                 </div>
                 <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6">
@@ -96,7 +96,7 @@ const Login = () => {
                       placeholder="Password"
                       required
                     />
-                    <i className="fas fa-at" />
+                    <i className="fa fa-hashtag"/>
                   </div>
                 </div>
                 <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -104,19 +104,19 @@ const Login = () => {
                     <button className="kf-btn" type="submit">
                       <span>
                         Login
-                        <i className="fas fa-chevron-right" />
+                        <i className="fas fa-chevron-right"/>
                       </span>
                     </button>
                   </div>
                 </div>
               </div>
             </form>
-            <div className="alert-success mt-5" style={{ display: "none" }}>
+            <div className="alert-success mt-5" style={{display: "none"}}>
               <p className="m-0">You logged in successfuly</p>
             </div>
             <div
               className="alert alert-danger mt-5"
-              style={{ display: "none" }}
+              style={{display: "none"}}
             >
               <p className="m-0"> Login Error. Check your credentials.</p>
             </div>

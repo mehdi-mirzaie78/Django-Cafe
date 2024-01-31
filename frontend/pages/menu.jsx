@@ -8,7 +8,7 @@ const Products = () => {
   const [menu, setMenu] = useState({});
   async function getProducts() {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/menu/`,
+      `${process.env.NEXT_PUBLIC_API_URL}/menu/`,
       { method: "GET", headers: { "Content-Type": "application/json" } }
     );
 

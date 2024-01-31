@@ -79,33 +79,33 @@ const Header = () => {
                 <li>
                   <Link href="/">
                     Home
-                    <i className="las la-angle-down" />
+                    {/*<i className="las la-angle-down" />*/}
                   </Link>
-                  <ul>
-                    <li>
-                      <Link href="/">Coffee House</Link>
-                    </li>
-                    <li>
-                      <Link href="index-2">Restaurant</Link>
-                    </li>
-                  </ul>
+                  {/*<ul>*/}
+                  {/*  <li>*/}
+                  {/*    <Link href="/">Coffee House</Link>*/}
+                  {/*  </li>*/}
+                  {/*  <li>*/}
+                  {/*    <Link href="index-2">Restaurant</Link>*/}
+                  {/*  </li>*/}
+                  {/*</ul>*/}
                 </li>
                 <li>
                   <Link href="about">About</Link>
                 </li>
                 <li>
-                  <Link href="menu-coffee">
+                  <Link href="menu">
                     Menu
-                    <i className="las la-angle-down" />
+                    {/*<i className="las la-angle-down" />*/}
                   </Link>
-                  <ul>
-                    <li>
-                      <Link href="menu-coffee">Menu Coffee</Link>
-                    </li>
-                    <li>
-                      <Link href="menu-restaurant">Menu Restaurant</Link>
-                    </li>
-                  </ul>
+                  {/*<ul>*/}
+                  {/*  <li>*/}
+                  {/*    <Link href="menu-coffee">Menu Coffee</Link>*/}
+                  {/*  </li>*/}
+                  {/*  <li>*/}
+                  {/*    <Link href="menu-restaurant">Menu Restaurant</Link>*/}
+                  {/*  </li>*/}
+                  {/*</ul>*/}
                 </li>
                 <li>
                   <a href="#">
