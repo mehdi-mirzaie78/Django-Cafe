@@ -466,3 +466,4 @@ GitHub.sublime-settings
 
 /Documentation/
 *backend/*/migrations/*
+/frontend/.env.local
