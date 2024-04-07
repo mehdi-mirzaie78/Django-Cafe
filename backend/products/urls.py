@@ -3,4 +3,4 @@ from . import views
 
 app_name = "products"
 
-urlpatterns = []
+urlpatterns = [path("/", views.Product)]
