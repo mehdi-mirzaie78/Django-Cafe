@@ -8,6 +8,7 @@ import {
   Heading,
   Image,
   Text,
+  useColorModeValue
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import Product from "../entities/Product";
@@ -18,10 +19,14 @@ interface Props {
 
 const ProductCard = ({ product }: Props) => {
   return (
-    <Card p={2}>
+    <Card
+      p={2}
+      bg={useColorModeValue("gray.100", "gray.700")}
+      color={useColorModeValue("gray.900", "gray.50")}
+    >
       <Image
         src={product.media[0].file}
-        height={"sm"}
+        height="18rem"
         objectFit={"cover"}
         borderRadius={10}
       />
@@ -37,9 +42,13 @@ const ProductCard = ({ product }: Props) => {
           </Heading>
         </HStack>
 
-        <Text>{product.description}</Text>
+        <Text>
+          {product.description.length >= 100
+            ? product.description.substring(0, 100) + "..."
+            : product.description}
+        </Text>
         <HStack marginTop={5} justifyContent="center">
-          <Button>
+          <Button bg="none">
             <AddIcon color="blue.300" />
           </Button>
         </HStack>
