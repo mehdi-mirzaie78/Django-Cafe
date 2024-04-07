@@ -6,7 +6,7 @@ export interface FetchResponse<T> {
   results: T[];
 }
 
-const axiosInstance = axios.create({ baseURL: "http:127.0.0.1:8000" });
+const axiosInstance = axios.create({ baseURL: "http://127.0.0.1:8000/api/v1" });
 
 class APIClient<T> {
   endpoint: string;
@@ -15,8 +15,8 @@ class APIClient<T> {
     this.endpoint = endpoint;
   }
 
-  getAll = (config: AxiosRequestConfig) => {
-    return axiosInstance
+  getAll = async (config: AxiosRequestConfig) => {
+    return await axiosInstance
       .get<FetchResponse<T>>(this.endpoint, config)
       .then((res) => res.data);
   };
