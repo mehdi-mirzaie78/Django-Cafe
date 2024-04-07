@@ -6,7 +6,7 @@ from core.serializers import BaseModelSerializer
 class MediaSerializer(BaseModelSerializer):
     class Meta(BaseModelSerializer.Meta):
         model = Media
-        exclude = BaseModelSerializer.Meta.exclude + ["product"]    
+        exclude = BaseModelSerializer.Meta.exclude + ["product"]
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -14,7 +14,18 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ["id", "name", "description", "price", "media"]
+        fields = [
+            "id",
+            "name",
+            "slug",
+            "description",
+            "unit_price",
+            "discount",
+            "price",
+            "media",
+            "categories",
+            "stock",
+        ]
 
     def get_media(self, obj):
         return MediaSerializer(obj.medias.all(), many=True).data
