@@ -51,22 +51,3 @@ class Contact(BaseModel, SingletonModel):
 
     def __str__(self) -> str:
         return f"{self.email}'s Contact"
-
-
-class Menu(BaseModel):
-    class Meta:
-        verbose_name = _("Menu")
-        verbose_name_plural = _("Menus")
-
-    title = models.CharField(max_length=255, verbose_name=_("Title"))
-    description = models.TextField(null=True, blank=True, verbose_name=_("Description"))
-    products = models.ManyToManyField(
-        "products.Product",
-        related_name="menus",
-        related_query_name="menu",
-        verbose_name=_("Products"),
-    )
-    image = models.ImageField(verbose_name=_("Image"), default="default.png")
-
-    def __str__(self) -> str:
-        return f"{self.title}'s Menu"
