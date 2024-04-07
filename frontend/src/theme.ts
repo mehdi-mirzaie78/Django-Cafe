@@ -7,6 +7,8 @@ const config: ThemeConfig = {
 const theme = extendTheme({
   config,
   colors: {
+    black: "#000",
+    white: "#FFF5F5",
     gray: {
       50: "#f9f9f9",
       100: "#ededed",
@@ -18,6 +20,7 @@ const theme = extendTheme({
       700: "#202020",
       800: "#121212",
       900: "#111",
+      1000: "#1A202C",
     },
   },
 });
