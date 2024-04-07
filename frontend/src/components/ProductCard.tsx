@@ -25,7 +25,7 @@ const ProductCard = ({ product }: Props) => {
         objectFit={"cover"}
         borderRadius={10}
       />
-      <CardBody>  
+      <CardBody>
         <HStack justifyContent="space-between" marginBottom={3}>
           <Heading fontSize="2xl">
             <Link to={"/products/" + product.slug}>{product.name}</Link>
