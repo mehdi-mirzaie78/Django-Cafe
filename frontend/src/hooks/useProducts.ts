@@ -1,12 +1,24 @@
+import { useQuery } from "@tanstack/react-query";
+import products from "../data/products";
 import Product from "../entities/Product";
 import APIClient from "../services/apiClient";
-import { useQuery } from "@tanstack/react-query";
+import useProductQueryStore from "../store";
 const apiClient = new APIClient<Product>("/products/");
 
-const useProducts = () =>
-  useQuery({
-    queryKey: ["products"],
-    queryFn: () => apiClient.getAll(),
+const useProducts = () => {
+  const { productQuery } = useProductQueryStore();
+
+  return useQuery({
+    queryKey: ["products", productQuery],
+    queryFn: () =>
+      apiClient.getAll({
+        params: {
+          search: productQuery.searchText,
+          ordering: productQuery.ordering,
+        },
+      }),
+    initialData: products,
   });
+};
 
 export default useProducts;
