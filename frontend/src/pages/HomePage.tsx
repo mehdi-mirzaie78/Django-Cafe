@@ -1,16 +1,30 @@
 import { SimpleGrid } from "@chakra-ui/react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import ProductCard from "../components/ProductCard";
 import ProductCardContainer from "../components/ProductCardContainer";
-import products from "../data/products";
+import { getProducts } from "../store/actions";
+import { RootState } from "../store/rootReducer";
 
 const HomePage = () => {
+  const dispatch = useDispatch<any>();
+  const { data, isLoading, error } = useSelector(
+    (state: RootState) => state.products
+  );
+
+  useEffect(() => {
+    dispatch(getProducts());
+  }, [dispatch]);
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
   return (
     <SimpleGrid
-      columns={{ sm: 1, md: 2, lg: 3, xl: 4 }}
+      columns={{ sm: 1, md: 2, lg: 3, xl: 5 }}
       spacing={6}
       padding="10px"
     >
-      {products.results.map((product) => (
+      {data.results.map((product) => (
         <ProductCardContainer key={product.id}>
           <ProductCard product={product} />
         </ProductCardContainer>
