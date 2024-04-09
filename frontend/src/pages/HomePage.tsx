@@ -6,7 +6,11 @@ import SortingOrder from "../components/SortingOrder";
 const HomePage = () => {
   return (
     <Box padding="10px">
-      <HStack marginBottom={8} justifyContent="space-between">
+      <HStack
+        marginBottom={8}
+        justifyContent="space-between"
+        alignItems={"start"}
+      >
         <Categories />
         <SortingOrder />
       </HStack>

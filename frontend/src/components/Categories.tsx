@@ -21,8 +21,9 @@ const Categories = () => {
       </Message>
     );
   return (
-    <HStack>
+    <HStack flexWrap={"wrap"}>
       <Button
+        size={{ base: "xs", md: "sm", xl: "md" }}
         colorScheme="blue"
         variant="outline"
         onClick={() => {
@@ -34,6 +35,7 @@ const Categories = () => {
       </Button>
       {data?.results.map((category) => (
         <Button
+          size={{ base: "xs", md: "sm", xl: "md" }}
           colorScheme="blue"
           variant="outline"
           onClick={() => {

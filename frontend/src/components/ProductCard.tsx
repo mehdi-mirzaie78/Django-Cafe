@@ -8,7 +8,7 @@ import {
   Heading,
   Image,
   Text,
-  useColorModeValue
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import Product from "../entities/Product";
@@ -20,6 +20,8 @@ interface Props {
 const ProductCard = ({ product }: Props) => {
   return (
     <Card
+      maxW="sm"
+      maxH="lg"
       p={2}
       bg={useColorModeValue("gray.100", "gray.700")}
       color={useColorModeValue("gray.900", "gray.50")}
@@ -30,25 +32,32 @@ const ProductCard = ({ product }: Props) => {
         objectFit={"cover"}
         borderRadius={10}
       />
-      <CardBody>
-        <HStack justifyContent="space-between" marginBottom={3}>
-          <Heading fontSize="2xl">
+      <CardBody paddingBottom={1}>
+        <HStack
+          justifyContent="space-between"
+          marginBottom={{ base: 1, lg: 3 }}
+        >
+          <Heading fontSize={{ base: "md", md: "xl" }}>
             <Link to={"/products/" + product.slug}>{product.name}</Link>
           </Heading>
-          <Heading fontSize="2xl">
-            <Badge colorScheme="green" fontSize={"2xl"} px={3} rounded={5}>
-              $ {product.price}
-            </Badge>
-          </Heading>
+
+          <Badge
+            colorScheme="green"
+            fontSize={{ base: "md", md: "xl" }}
+            px={3}
+            rounded={5}
+          >
+            $ {product.price}
+          </Badge>
         </HStack>
 
-        <Text>
+        <Text fontSize="sm">
           {product.description.length >= 100
             ? product.description.substring(0, 100) + "..."
             : product.description}
         </Text>
-        <HStack marginTop={5} justifyContent="center">
-          <Button bg="none">
+        <HStack marginTop={{ base: 3, md: 3 }} justifyContent="center">
+          <Button bg="none" size={{ base: "xs", md: "sm", xl: "md" }}>
             <AddIcon color="blue.300" />
           </Button>
         </HStack>

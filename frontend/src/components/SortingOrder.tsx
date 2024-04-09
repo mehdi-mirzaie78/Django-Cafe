@@ -1,6 +1,6 @@
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Button, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import useProductQueryStore from "../store";
-import { ChevronDownIcon } from "@chakra-ui/icons";
 
 const orderingList = [
   { name: "Date Added (Earliest First)", filtering: "updated_at" },
@@ -18,7 +18,13 @@ const SortingOrder = () => {
 
   return (
     <Menu>
-      <MenuButton as={Button} variant="outline" rightIcon={<ChevronDownIcon />}>
+      <MenuButton
+        as={Button}
+        variant="outline"
+        size={{ base: "xs", md: "sm", xl: "md" }}
+        rightIcon={<ChevronDownIcon />}
+        overflow={"hidden"}
+      >
         {ordering ? orderingTitle : "Sorting"}
       </MenuButton>
       <MenuList>
