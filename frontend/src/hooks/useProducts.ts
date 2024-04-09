@@ -15,6 +15,7 @@ const useProducts = () => {
         params: {
           search: productQuery.searchText,
           ordering: productQuery.ordering,
+          categories: productQuery.categoryId,
         },
       }),
     initialData: products,

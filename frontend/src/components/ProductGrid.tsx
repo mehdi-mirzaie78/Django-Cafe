@@ -23,11 +23,7 @@ const ProductGrid = () => {
     );
 
   return (
-    <SimpleGrid
-      columns={{ base: 1, md: 2, lg: 3, xl: 4 }}
-      spacing={6}
-      padding="10px"
-    >
+    <SimpleGrid columns={{ base: 1, md: 2, lg: 3, xl: 4 }} spacing={6}>
       {data?.results.map((product) => (
         <ProductCardContainer key={product.id}>
           <ProductCard product={product} />
