@@ -1,9 +1,12 @@
-from rest_framework.routers import SimpleRouter
+from rest_framework.routers import DefaultRouter, SimpleRouter
 from . import views
 
-app_name = "products"
 
-router = SimpleRouter()
-router.register("", views.ProductViewset)
+router = DefaultRouter()
+
+router.register(r"products", views.ProductViewset)
+router.register(r"categories", views.CategoryViewset)
+
+app_name = "products"
 
 urlpatterns = router.urls

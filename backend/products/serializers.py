@@ -11,6 +11,9 @@ class MediaSerializer(BaseModelSerializer):
 
 class ProductSerializer(serializers.ModelSerializer):
     media = serializers.SerializerMethodField()
+    categories = serializers.SlugRelatedField(
+        many=True, read_only=True, slug_field="slug"
+    )
 
     class Meta:
         model = Product
