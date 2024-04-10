@@ -29,7 +29,11 @@ const SortingOrder = () => {
       </MenuButton>
       <MenuList>
         {orderingList.map((item) => (
-          <MenuItem key={item.name} onClick={() => setOrdering(item.filtering)}>
+          <MenuItem
+            fontSize={{ base: "xs", md: "sm", xl: "md" }}
+            key={item.name}
+            onClick={() => setOrdering(item.filtering)}
+          >
             {item.name}
           </MenuItem>
         ))}

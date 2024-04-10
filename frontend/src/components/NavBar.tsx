@@ -24,6 +24,7 @@ import { Link } from "react-router-dom";
 import logo from "../assets/logo.webp";
 import NavItem from "./NavItem";
 import SearchInput from "./SearchInput";
+import useRegisterQueryStore from "../store/registerStore";
 
 const Links = [
   { name: "Login", path: "login", icon: <BiLogIn size={20} /> },
@@ -36,7 +37,7 @@ const NavBar = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   return (
     <>
-      <Box bg={useColorModeValue("gray.100", "gray.700")} px={4} py={1}>
+      <Box bg={useColorModeValue("gray.50", "gray.700")} px={4} py={1}>
         <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
           <IconButton
             size={"md"}

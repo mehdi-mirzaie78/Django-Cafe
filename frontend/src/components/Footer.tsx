@@ -60,7 +60,7 @@ const Footer = () => {
   return (
     <Box
       marginTop={"auto"}
-      bg={useColorModeValue("gray.100", "gray.700")}
+      bg={useColorModeValue("gray.50", "gray.700")}
       color={useColorModeValue("gray.700", "gray.200")}
     >
       <Container
