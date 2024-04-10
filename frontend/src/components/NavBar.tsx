@@ -18,38 +18,26 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import { ReactNode } from "react";
+
+import { BiCart, BiLogIn, BiUser } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import logo from "../assets/logo.webp";
+import NavItem from "./NavItem";
 import SearchInput from "./SearchInput";
-
-interface Props {
-  children: ReactNode;
-}
+import {
+  BsCart,
+  BsCart2,
+  BsCart3,
+  BsCart4,
+  BsCartDash,
+  BsCartPlus,
+} from "react-icons/bs";
 
 const Links = [
-  { name: "Menu", path: "menu" },
-  { name: "Login", path: "login" },
-  { name: "Register", path: "register" },
+  { name: "Login", path: "login", icon: <BiLogIn size={20} /> },
+  { name: "Register", path: "register", icon: <BiUser size={20} /> },
+  { name: "cart", path: "cart", icon: <BiCart size={22} /> },
 ];
-
-const NavLink = (props: Props) => {
-  const { children } = props;
-
-  return (
-    <Box
-      px={2}
-      py={1}
-      rounded={"md"}
-      _hover={{
-        textDecoration: "none",
-        bg: useColorModeValue("gray.200", "gray.700"),
-      }}
-    >
-      {children}
-    </Box>
-  );
-};
 
 const NavBar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -84,13 +72,11 @@ const NavBar = () => {
             </HStack>
             <HStack
               as={"nav"}
-              spacing={4}
+              spacing={1}
               display={{ base: "none", md: "flex" }}
             >
               {Links.map((link) => (
-                <NavLink key={link.name}>
-                  <Link to={link.path}>{link.name}</Link>
-                </NavLink>
+                <NavItem name={link.name} path={link.path} icon={link.icon} />
               ))}
             </HStack>
           </HStack>
@@ -144,9 +130,7 @@ const NavBar = () => {
           <Box pb={4} display={{ md: "none" }}>
             <Stack as={"nav"} spacing={4}>
               {Links.map((link) => (
-                <NavLink key={link.name}>
-                  <Link to={link.path}>{link.name}</Link>
-                </NavLink>
+                <NavItem name={link.name} path={link.path} icon={link.icon} />
               ))}
             </Stack>
           </Box>

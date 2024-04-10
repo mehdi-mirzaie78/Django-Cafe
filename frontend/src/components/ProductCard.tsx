@@ -32,7 +32,7 @@ const ProductCard = ({ product }: Props) => {
         objectFit={"cover"}
         borderRadius={10}
       />
-      <CardBody paddingBottom={1}>
+      <CardBody paddingBottom={3}>
         <HStack
           justifyContent="space-between"
           marginBottom={{ base: 1, lg: 3 }}
@@ -57,8 +57,8 @@ const ProductCard = ({ product }: Props) => {
             : product.description}
         </Text>
         <HStack marginTop={{ base: 3, md: 3 }} justifyContent="center">
-          <Button bg="none" size={{ base: "xs", md: "sm", xl: "md" }}>
-            <AddIcon color="blue.300" />
+          <Button bg={useColorModeValue("blue.100", "blue.700")} size={{ base: "xs", md: "sm", xl: "md" }}>
+            <AddIcon me={2} /> Add to cart
           </Button>
         </HStack>
       </CardBody>
