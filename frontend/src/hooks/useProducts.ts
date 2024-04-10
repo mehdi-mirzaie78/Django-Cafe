@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import products from "../data/products";
 import Product from "../entities/Product";
 import APIClient from "../services/apiClient";
-import useProductQueryStore from "../store";
+import { useProductQueryStore } from "../store";
 const apiClient = new APIClient<Product>("/products/");
 
 const useProducts = () => {

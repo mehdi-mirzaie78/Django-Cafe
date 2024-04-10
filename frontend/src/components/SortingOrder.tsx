@@ -1,6 +1,6 @@
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Button, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
-import useProductQueryStore from "../store";
+import { useProductQueryStore } from "../store";
 
 const orderingList = [
   { name: "Date Added (Earliest First)", filtering: "updated_at" },

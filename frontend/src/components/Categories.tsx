@@ -1,6 +1,6 @@
 import { Button, Center, HStack } from "@chakra-ui/react";
 import useCategories from "../hooks/useCategories";
-import useProductQueryStore from "../store";
+import { useProductQueryStore } from "../store";
 import Loader from "./Loader";
 import Message from "./Message";
 

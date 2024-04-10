@@ -8,7 +8,7 @@ import {
 import { useRef } from "react";
 import { BsSearch } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
-import useProductQueryStore from "../store";
+import { useProductQueryStore } from "../store";
 
 const SearchInput = () => {
   const ref = useRef<HTMLInputElement>(null);
