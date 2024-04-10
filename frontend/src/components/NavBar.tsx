@@ -24,19 +24,11 @@ import { Link } from "react-router-dom";
 import logo from "../assets/logo.webp";
 import NavItem from "./NavItem";
 import SearchInput from "./SearchInput";
-import {
-  BsCart,
-  BsCart2,
-  BsCart3,
-  BsCart4,
-  BsCartDash,
-  BsCartPlus,
-} from "react-icons/bs";
 
 const Links = [
   { name: "Login", path: "login", icon: <BiLogIn size={20} /> },
   { name: "Register", path: "register", icon: <BiUser size={20} /> },
-  { name: "cart", path: "cart", icon: <BiCart size={22} /> },
+  { name: "Cart", path: "cart", icon: <BiCart size={22} /> },
 ];
 
 const NavBar = () => {
@@ -44,7 +36,7 @@ const NavBar = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   return (
     <>
-      <Box bg={useColorModeValue("gray.100", "gray.900")} px={4} py={1}>
+      <Box bg={useColorModeValue("gray.100", "gray.700")} px={4} py={1}>
         <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
           <IconButton
             size={"md"}
@@ -63,7 +55,7 @@ const NavBar = () => {
                   <Image
                     src={logo}
                     boxSize={{ base: "38px", md: "50px" }}
-                    rounded="5px"
+                    rounded={"50%"}
                     objectFit="cover"
                   />
                 </Link>
@@ -76,7 +68,12 @@ const NavBar = () => {
               display={{ base: "none", md: "flex" }}
             >
               {Links.map((link) => (
-                <NavItem name={link.name} path={link.path} icon={link.icon} />
+                <NavItem
+                  key={link.name}
+                  name={link.name}
+                  path={link.path}
+                  icon={link.icon}
+                />
               ))}
             </HStack>
           </HStack>
@@ -130,7 +127,12 @@ const NavBar = () => {
           <Box pb={4} display={{ md: "none" }}>
             <Stack as={"nav"} spacing={4}>
               {Links.map((link) => (
-                <NavItem name={link.name} path={link.path} icon={link.icon} />
+                <NavItem
+                  key={link.name}
+                  name={link.name}
+                  path={link.path}
+                  icon={link.icon}
+                />
               ))}
             </Stack>
           </Box>

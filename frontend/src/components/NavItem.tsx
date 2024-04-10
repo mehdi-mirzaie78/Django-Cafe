@@ -1,4 +1,4 @@
-import { Box, useColorModeValue, Text } from "@chakra-ui/react";
+import { Box, Text, useColorModeValue } from "@chakra-ui/react";
 import { ReactNode } from "react";
 import { Link } from "react-router-dom";
 
@@ -19,7 +19,7 @@ const NavLink = (props: NavLinkProps) => {
     <Box
       px={2}
       py={1}
-      rounded={"md"}
+      borderRadius={25}
       _hover={{
         textDecoration: "none",
         bg: useColorModeValue("gray.200", "gray.700"),
@@ -30,11 +30,14 @@ const NavLink = (props: NavLinkProps) => {
   );
 };
 
+const convertToTitle = (text: string) =>
+  text[0].toUpperCase() + text.substring(1);
+
 const NavItem = ({ name, path, icon }: NavItemProps) => {
   return (
     <NavLink key={name}>
       <Link to={path} style={{ display: "flex", alignItems: "center" }}>
-        {icon} <Text ps={2}>{name}</Text>
+        {icon} <Text ps={2}>{convertToTitle(name)}</Text>
       </Link>
     </NavLink>
   );
