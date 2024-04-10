@@ -40,6 +40,7 @@ class Product(BaseModel):
     class Meta:
         verbose_name = _("Product")
         verbose_name_plural = _("Products")
+        ordering = ["name"]
 
     categories = models.ManyToManyField(
         Category, related_name="products", verbose_name=_("Categories")

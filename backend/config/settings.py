@@ -24,7 +24,13 @@ ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split()
 # Application definition
 
 LOCAL_APPS = ["core", "home", "accounts", "actions", "products", "orders"]
-THIRD_PARTY_APPS = ["storages", "rest_framework", "corsheaders", "django_filters"]
+THIRD_PARTY_APPS = [
+    "storages",
+    "rest_framework",
+    "corsheaders",
+    "django_filters",
+    "debug_toolbar",
+]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -40,6 +46,8 @@ INSTALLED_APPS += THIRD_PARTY_APPS
 MIDDLEWARE = [
     # corsheaders middleware
     "corsheaders.middleware.CorsMiddleware",
+    # django debug toolbar
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -152,6 +160,13 @@ REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 10,
 }
+
+# DJANGO DEBUG TOOLBAR
+INTERNAL_IPS = [
+    # ...
+    "127.0.0.1",
+    # ...
+]
 
 # Arvan cloud boto3 settings
 DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"

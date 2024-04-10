@@ -8,7 +8,7 @@ from .serializers import CategorySerializer, ProductSerializer
 
 
 class ProductViewset(ReadOnlyModelViewSet):
-    queryset = Product.objects.all()
+    queryset = Product.objects.prefetch_related("categories", "medias").all()
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = ProductFilter
     search_fields = ["name", "description", "categories__name"]
