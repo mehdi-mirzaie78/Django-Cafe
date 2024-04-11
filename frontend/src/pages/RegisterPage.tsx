@@ -39,19 +39,6 @@ const RegisterPage = () => {
       </Center>
     );
 
-  if (error && error.response) {
-    const responseData = error.response.data as Record<string, unknown>;
-    return (
-      <>
-        {Object.keys(responseData).map((key: string) => (
-          <Message title="ERROR" status="error" key={key}>
-            {responseData[key]}
-          </Message>
-        ))}
-      </>
-    );
-  }
-
   return (
     <>
       <Flex
@@ -101,6 +88,15 @@ const RegisterPage = () => {
                     Send OTP
                   </Button>
                 </Stack>
+                {error &&
+                  error.response &&
+                  Object.values(
+                    error.response.data as { [key: string]: unknown }
+                  ).map((e, index) => (
+                    <Message key={index} title="Error" status="error">
+                      {e}
+                    </Message>
+                  ))}
               </form>
               <Stack pt={6}>
                 <Text align={"center"}>

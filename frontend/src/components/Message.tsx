@@ -14,7 +14,7 @@ interface Props {
 }
 const Message = ({ title, status, children }: Props) => {
   return (
-    <Alert status={status}>
+    <Alert status={status} marginY={2} rounded={"lg"}>
       <AlertIcon />
       <Box>
         <AlertTitle>{title}</AlertTitle>

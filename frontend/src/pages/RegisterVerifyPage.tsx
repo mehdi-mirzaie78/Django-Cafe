@@ -1,4 +1,5 @@
 import {
+  Alert,
   Box,
   Button,
   Center,
@@ -15,12 +16,13 @@ import {
 import { FormEvent } from "react";
 import useRegisterVerify from "../hooks/useRegisterVerify";
 import useRegisterQueryStore from "../store/registerStore";
+import Message from "../components/Message";
 
 const RegisterVerifyPage = () => {
   const { phone, otp } = useRegisterQueryStore((s) => s.registerQuery);
   const setOtp = useRegisterQueryStore((s) => s.setOtp);
 
-  const { mutate } = useRegisterVerify();
+  const { mutate, error, isPending } = useRegisterVerify();
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
@@ -35,13 +37,18 @@ const RegisterVerifyPage = () => {
     >
       <Stack spacing={4} w={"full"} maxW={"md"} rounded={"xl"} p={6} my={10}>
         <Center>
-          <Heading lineHeight={1.1} fontSize={{ base: "2xl", md: "3xl" }}>
-            Verify your Phone Number
+          <Heading
+            lineHeight={1.1}
+            fontSize={{ base: "2xl", md: "4xl" }}
+            marginBottom={3}
+          >
+            Verification
           </Heading>
         </Center>
 
         <Box
           boxShadow={"lg"}
+          rounded={"lg"}
           p={8}
           bg={useColorModeValue("gray.50", "gray.700")}
         >
@@ -50,7 +57,7 @@ const RegisterVerifyPage = () => {
             color={useColorModeValue("gray.800", "gray.400")}
             marginBottom={3}
           >
-            We have sent code to{" "}
+            We have sent a code to
             <Text
               ms={1}
               fontSize={{ base: "sm", sm: "md" }}
@@ -89,6 +96,15 @@ const RegisterVerifyPage = () => {
               </Stack>
             </Stack>
           </form>
+          {error &&
+            error.response &&
+            Object.values(
+              error.response.data as { [key: string]: unknown }
+            ).map((e, index) => (
+              <Message key={index} title="Error" status="error">
+                {e}
+              </Message>
+            ))}
         </Box>
       </Stack>
     </Flex>
