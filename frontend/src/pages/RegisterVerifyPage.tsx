@@ -17,6 +17,7 @@ import { FormEvent } from "react";
 import useRegisterVerify from "../hooks/useRegisterVerify";
 import useRegisterQueryStore from "../store/registerStore";
 import Message from "../components/Message";
+import CountdownTimer from "../components/CountdownTimer";
 
 const RegisterVerifyPage = () => {
   const { phone, otp } = useRegisterQueryStore((s) => s.registerQuery);
@@ -96,6 +97,9 @@ const RegisterVerifyPage = () => {
               </Stack>
             </Stack>
           </form>
+          
+          <CountdownTimer />
+
           {error &&
             error.response &&
             Object.values(
