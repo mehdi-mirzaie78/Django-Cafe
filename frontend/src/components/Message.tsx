@@ -10,7 +10,7 @@ import { ReactNode } from "react";
 interface Props {
   title: string;
   status: "success" | "error" | "info" | "warning";
-  children: ReactNode;
+  children: any;
 }
 const Message = ({ title, status, children }: Props) => {
   return (
