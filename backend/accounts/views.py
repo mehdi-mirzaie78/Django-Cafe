@@ -11,6 +11,7 @@ from .serializers import (
     UserLoginSerializer,
     RefreshTokenSerializer,
     UserSerializer,
+    UserSerializerWithTokens,
     VerifyRegisterSerializer,
     CompleteRegistrationSerializer,
 )
@@ -49,9 +50,13 @@ class CompleteRegistrationView(APIView):
     def post(self, request):
         serialized_data = self.serializer_class(data=request.data)
         serialized_data.is_valid(raise_exception=True)
-        serialized_data.save()
+        user = serialized_data.save()
+        user_serializer = UserSerializerWithTokens(user)
         return Response(
-            {"message": _("Registration has completed successfully.")},
+            {
+                "message": _("Registration has completed successfully."),
+                **user_serializer.data,
+            },
             status=status.HTTP_201_CREATED,
         )
 

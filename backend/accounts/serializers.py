@@ -3,7 +3,22 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 from accounts.models import User
 from core.validators import phone_regex_validator
-from .utils import OTPHandler
+from .utils import JWTHandler as JWT, OTPHandler
+
+
+class UserSerializerWithTokens(serializers.ModelSerializer):
+    access_token = serializers.SerializerMethodField()
+    refresh_token = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ["first_name", "last_name", "access_token", "refresh_token"]
+
+    def get_access_token(self, obj: User):
+        return JWT.generate_access_token(obj)
+
+    def get_refresh_token(self, obj: User):
+        return JWT.generate_refresh_token(obj)
 
 
 class UserRegisterSerializer(serializers.Serializer):
