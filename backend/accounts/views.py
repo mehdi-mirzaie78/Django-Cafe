@@ -44,7 +44,6 @@ class VerifyRegisterView(APIView):
 
 
 class CompleteRegistrationView(APIView):
-    parser_classes = [MultiPartParser, JSONParser]
     serializer_class = CompleteRegistrationSerializer
 
     def post(self, request):
