@@ -21,31 +21,18 @@ import useRegister from "../hooks/useRegister";
 import useRegisterQueryStore from "../store/registerStore";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
-
-const schema = z.object({
-  phone: z
-    .string()
-    .regex(new RegExp("^09+[0-9]*"), {
-      message: "Phone number must be in this format 09XXXXXXXXX",
-    })
-    .min(11, { message: "Phone number must be 11 digits" })
-    .max(11, { message: "Phone number must be 11 digits" }),
-});
-
-type RegisterFormData = z.infer<typeof schema>;
+import RegisterForm, { RegisterFormData } from "../components/RegisterForm";
+import ErrorMessage from "../components/ErrorMessage";
 
 const RegisterPage = () => {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<RegisterFormData>({ resolver: zodResolver(schema) });
-
   const setPhone = useRegisterQueryStore((s) => s.setPhone);
 
   const { mutate, error, isLoading } = useRegister();
 
+  const submitHandler = (data: RegisterFormData) => {
+    setPhone(data.phone);
+    mutate(data.phone);
+  };
   if (isLoading)
     return (
       <Center marginTop={20}>
@@ -76,54 +63,10 @@ const RegisterPage = () => {
             p={8}
           >
             <Stack spacing={4}>
-              <form
-                onSubmit={handleSubmit((data) => {
-                  setPhone(data.phone);
-                  mutate(data.phone);
-                  reset();
-                })}
-              >
-                <FormControl id="phone" isRequired>
-                  <FormLabel htmlFor="phone">Phone Number</FormLabel>
-                  <Input
-                    maxLength={11}
-                    placeholder="09XXXXXXXXX"
-                    {...register("phone")}
-                    type="text"
-                    size={{ base: "sm", md: "md", xl: "lg" }}
-                    textAlign={"center"}
-                  />
-                  {errors.phone && (
-                    <Message title="" status="error" marginTop={5}>
-                      {errors.phone.message}
-                    </Message>
-                  )}
-                </FormControl>
+              <RegisterForm onSubmit={submitHandler} />
 
-                <Stack spacing={10} pt={2} marginTop={3}>
-                  <Button
-                    type="submit"
-                    loadingText="Submitting"
-                    size={{ base: "sm", md: "md", xl: "lg" }}
-                    bg={"blue.400"}
-                    color={"white"}
-                    _hover={{
-                      bg: "blue.500",
-                    }}
-                  >
-                    Send OTP
-                  </Button>
-                </Stack>
-                {error &&
-                  error.response &&
-                  Object.values(
-                    error.response.data as { [key: string]: unknown }
-                  ).map((e, index) => (
-                    <Message key={index} status="error">
-                      {e}
-                    </Message>
-                  ))}
-              </form>
+              <ErrorMessage error={error} />
+
               <Stack pt={6}>
                 <Text align={"center"}>
                   Already a user? <Link color={"blue.400"}>Login</Link>

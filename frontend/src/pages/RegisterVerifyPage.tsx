@@ -18,6 +18,8 @@ import useRegisterVerify from "../hooks/useRegisterVerify";
 import useRegisterQueryStore from "../store/registerStore";
 import Message from "../components/Message";
 import CountdownTimer from "../components/CountdownTimer";
+import RegisterVerifyForm from "../components/RegisterVerifyForm";
+import ErrorMessage from "../components/ErrorMessage";
 
 const RegisterVerifyPage = () => {
   const { phone, otp } = useRegisterQueryStore((s) => s.registerQuery);
@@ -69,46 +71,14 @@ const RegisterVerifyPage = () => {
             </Text>
           </Center>
 
-          <form onSubmit={handleSubmit}>
-            <Stack spacing={4}>
-              <FormControl>
-                <Center>
-                  <HStack>
-                    <PinInput otp onComplete={(value) => setOtp(value)}>
-                      {[...Array(6)].map((i, index) => (
-                        <PinInputField key={index} required />
-                      ))}
-                    </PinInput>
-                  </HStack>
-                </Center>
-              </FormControl>
-              <Stack spacing={6}>
-                <Button
-                  disabled={!otp}
-                  type="submit"
-                  bg={"blue.400"}
-                  color={"white"}
-                  _hover={{
-                    bg: "blue.500",
-                  }}
-                >
-                  Verify
-                </Button>
-              </Stack>
-            </Stack>
-          </form>
+          <RegisterVerifyForm
+            setOtp={setOtp}
+            handleSubmit={handleSubmit}
+            otp={otp}
+          />
+          <ErrorMessage error={error} marginY={3} />
 
           <CountdownTimer />
-
-          {error &&
-            error.response &&
-            Object.values(
-              error.response.data as { [key: string]: unknown }
-            ).map((e, index) => (
-              <Message key={index} title="Error" status="error">
-                {e}
-              </Message>
-            ))}
         </Box>
       </Stack>
     </Flex>
