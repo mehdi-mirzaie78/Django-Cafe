@@ -23,7 +23,7 @@ const RegisterVerifyPage = () => {
   const { phone, otp } = useRegisterQueryStore((s) => s.registerQuery);
   const setOtp = useRegisterQueryStore((s) => s.setOtp);
 
-  const { mutate, error, isPending } = useRegisterVerify();
+  const { mutate, error, isLoading } = useRegisterVerify();
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
@@ -76,7 +76,7 @@ const RegisterVerifyPage = () => {
                   <HStack>
                     <PinInput otp onComplete={(value) => setOtp(value)}>
                       {[...Array(6)].map((i, index) => (
-                        <PinInputField key={index} />
+                        <PinInputField key={index} required />
                       ))}
                     </PinInput>
                   </HStack>
@@ -97,7 +97,7 @@ const RegisterVerifyPage = () => {
               </Stack>
             </Stack>
           </form>
-          
+
           <CountdownTimer />
 
           {error &&

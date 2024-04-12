@@ -22,7 +22,7 @@ const RegisterPage = () => {
   const ref = useRef<HTMLInputElement>(null);
   const setPhone = useRegisterQueryStore((s) => s.setPhone);
 
-  const { mutate, error, isPending } = useRegister();
+  const { mutate, error, isLoading } = useRegister();
 
   const submitHandler = (event: FormEvent) => {
     event.preventDefault();
@@ -32,7 +32,7 @@ const RegisterPage = () => {
       mutate(phone);
     }
   };
-  if (isPending)
+  if (isLoading)
     return (
       <Center marginTop={20}>
         <Loader />
