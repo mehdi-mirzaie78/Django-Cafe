@@ -22,11 +22,11 @@ import {
 import { BiCart, BiLogIn, BiUser } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import logo from "../assets/logo.webp";
+import useAuthQueryStore from "../store/authStore";
 import NavItem from "./NavItem";
 import SearchInput from "./SearchInput";
-import useRegisterQueryStore from "../store/registerStore";
 
-const Links = [
+let Links = [
   { name: "Login", path: "login", icon: <BiLogIn size={20} /> },
   { name: "Register", path: "register", icon: <BiUser size={20} /> },
   { name: "Cart", path: "cart", icon: <BiCart size={22} /> },
@@ -35,6 +35,14 @@ const Links = [
 const NavBar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { colorMode, toggleColorMode } = useColorMode();
+  const { firstName, lastName, accessToken } = useAuthQueryStore(
+    (s) => s.authQuery
+  );
+  if (accessToken)
+    Links = Links.filter(
+      (item) => item.name !== "Login" && item.name !== "Register"
+    );
+
   return (
     <>
       <Box bg={useColorModeValue("gray.50", "gray.700")} px={4} py={1}>
@@ -89,38 +97,41 @@ const NavBar = () => {
               {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
             </Button>
 
-            <Menu>
-              <MenuButton
-                as={Button}
-                rounded={"full"}
-                variant={"link"}
-                cursor={"pointer"}
-                minW={0}
-              >
-                <Avatar
-                  size={{ base: "sm", md: "md" }}
-                  src={"https://avatars.dicebear.com/api/male/username.svg"}
-                />
-              </MenuButton>
-              <MenuList alignItems={"center"}>
-                <br />
-                <Center>
+            {accessToken && (
+              <Menu>
+                <MenuButton
+                  as={Button}
+                  rounded={"full"}
+                  variant={"link"}
+                  cursor={"pointer"}
+                  minW={0}
+                >
                   <Avatar
-                    size={{ base: "xl", md: "2xl" }}
+                    size={{ base: "sm", md: "md" }}
                     src={"https://avatars.dicebear.com/api/male/username.svg"}
                   />
-                </Center>
-                <br />
-                <Center>
-                  <p>Username</p>
-                </Center>
-                <br />
-                <MenuDivider />
-                <MenuItem>Your Servers</MenuItem>
-                <MenuItem>Account Settings</MenuItem>
-                <MenuItem>Logout</MenuItem>
-              </MenuList>
-            </Menu>
+                </MenuButton>
+                <MenuList alignItems={"center"}>
+                  <br />
+                  <Center>
+                    <Avatar
+                      size={{ base: "xl", md: "2xl" }}
+                      src={"https://avatars.dicebear.com/api/male/username.svg"}
+                    />
+                  </Center>
+                  <br />
+                  <Center>
+                    <p>
+                      {firstName} {lastName}
+                    </p>
+                  </Center>
+                  <br />
+                  <MenuDivider />
+                  <MenuItem>Profile</MenuItem>
+                  <MenuItem>Logout</MenuItem>
+                </MenuList>
+              </Menu>
+            )}
           </HStack>
         </Flex>
 
