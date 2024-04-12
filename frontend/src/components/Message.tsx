@@ -2,19 +2,22 @@ import {
   Alert,
   AlertDescription,
   AlertIcon,
+  AlertProps,
   AlertTitle,
   Box,
 } from "@chakra-ui/react";
 import { ReactNode } from "react";
 
-interface Props {
-  title: string;
+interface Props extends AlertProps {
+  title?: string;
   status: "success" | "error" | "info" | "warning";
   children: any;
+  [key: string]: any;
 }
-const Message = ({ title, status, children }: Props) => {
+
+const Message = ({ title = "", status, children, ...props }: Props) => {
   return (
-    <Alert status={status} marginY={2} rounded={"lg"}>
+    <Alert status={status} rounded={"lg"} {...props}>
       <AlertIcon />
       <Box>
         <AlertTitle>{title}</AlertTitle>
