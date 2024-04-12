@@ -1,12 +1,14 @@
-import { Center, SimpleGrid } from "@chakra-ui/react";
+import { Center, HStack, SimpleGrid, Spinner } from "@chakra-ui/react";
 import useProducts from "../hooks/useProducts";
+import InfiniteScroll from "react-infinite-scroll-component";
 import Loader from "./Loader";
 import Message from "./Message";
 import ProductCard from "./ProductCard";
 import ProductCardContainer from "./ProductCardContainer";
+import { Fragment } from "react/jsx-runtime";
 
 const ProductGrid = () => {
-  const { data, isLoading, error } = useProducts();
+  const { data, isLoading, error, fetchNextPage, hasNextPage } = useProducts();
 
   if (isLoading)
     return (
@@ -22,14 +24,41 @@ const ProductGrid = () => {
       </Message>
     );
 
+  // total number of items we have fetched so far
+  const fetchedProductsCount =
+    data?.pages.reduce((total, page) => total + page.results.length, 0) || 0;
+
   return (
-    <SimpleGrid columns={{ base: 1, md: 2, lg: 3, xl: 5 }} spacing={6}>
-      {data?.results.map((product) => (
-        <ProductCardContainer key={product.id}>
-          <ProductCard product={product} />
-        </ProductCardContainer>
-      ))}
-    </SimpleGrid>
+    <InfiniteScroll
+      style={{ overflowY: "hidden" }}
+      dataLength={fetchedProductsCount}
+      hasMore={!!hasNextPage} // !! converts undefined to boolean
+      next={() => fetchNextPage()}
+      loader={
+        <HStack marginY={5} justifyContent="center">
+          <Spinner
+            justifyContent="center"
+            thickness="4px"
+            speed="0.65s"
+            emptyColor="gray.200"
+            color="blue.500"
+            size="xl"
+          />
+        </HStack>
+      }
+    >
+      <SimpleGrid columns={{ base: 1, md: 2, lg: 3, xl: 5 }} spacing={6}>
+        {data?.pages.map((page, index) => (
+          <Fragment key={index}>
+            {page?.results.map((product) => (
+              <ProductCardContainer key={product.id}>
+                <ProductCard product={product} />
+              </ProductCardContainer>
+            ))}
+          </Fragment>
+        ))}
+      </SimpleGrid>
+    </InfiniteScroll>
   );
 };
 

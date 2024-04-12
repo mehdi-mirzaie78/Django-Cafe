@@ -27,7 +27,7 @@ const SearchInput = () => {
         <InputGroup>
           <InputLeftElement children={<BsSearch size="15px" />} />
           <Input
-            bg={useColorModeValue("gray.50", "gray.800")}
+            bg={useColorModeValue("white", "gray.800")}
             ref={ref}
             fontSize={{ base: "13px", md: "md" }}
             borderRadius={25}
