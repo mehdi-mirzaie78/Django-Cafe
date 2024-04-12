@@ -48,6 +48,8 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     # django debug toolbar
     "debug_toolbar.middleware.DebugToolbarMiddleware",
+    # django rest framework camel case
+    "djangorestframework_camel_case.middleware.CamelCaseMiddleWare",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -159,6 +161,15 @@ AUTH_HEADER_TYPES = ("Bearer",)
 REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 10,
+    "DEFAULT_RENDERER_CLASSES": (
+        "djangorestframework_camel_case.render.CamelCaseJSONRenderer",
+        "djangorestframework_camel_case.render.CamelCaseBrowsableAPIRenderer",
+    ),
+    "DEFAULT_PARSER_CLASSES": (
+        "djangorestframework_camel_case.parser.CamelCaseFormParser",
+        "djangorestframework_camel_case.parser.CamelCaseMultiPartParser",
+        "djangorestframework_camel_case.parser.CamelCaseJSONParser",
+    ),
 }
 
 # DJANGO DEBUG TOOLBAR
