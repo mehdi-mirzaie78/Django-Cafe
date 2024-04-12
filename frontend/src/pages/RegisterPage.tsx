@@ -1,28 +1,18 @@
 import {
-  Alert,
   Box,
-  Button,
   Center,
   Flex,
-  FormControl,
-  FormLabel,
   Heading,
-  Input,
   Link,
   Stack,
   Text,
-  useColorModeValue,
+  useColorModeValue
 } from "@chakra-ui/react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FormEvent, useRef } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import ErrorMessage from "../components/ErrorMessage";
+import Loader from "../components/Loader";
+import RegisterForm, { RegisterFormData } from "../components/RegisterForm";
 import useRegister from "../hooks/useRegister";
 import useRegisterQueryStore from "../store/registerStore";
-import Loader from "../components/Loader";
-import Message from "../components/Message";
-import RegisterForm, { RegisterFormData } from "../components/RegisterForm";
-import ErrorMessage from "../components/ErrorMessage";
 
 const RegisterPage = () => {
   const setPhone = useRegisterQueryStore((s) => s.setPhone);

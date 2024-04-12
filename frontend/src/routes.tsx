@@ -6,6 +6,7 @@ import ProductDetailPage from "./pages/ProductDetailPage";
 import CartPage from "./pages/CartPage";
 import RegisterPage from "./pages/RegisterPage";
 import RegisterVerifyPage from "./pages/RegisterVerifyPage";
+import RegisterCompletePage from "./pages/RegisterCompletePage";
 
 const router = createBrowserRouter([
   {
@@ -18,7 +19,8 @@ const router = createBrowserRouter([
         path: "register/",
         children: [
           { path: "", element: <RegisterPage /> },
-          { path: "verify/", element: <RegisterVerifyPage /> },
+          { path: "verify", element: <RegisterVerifyPage /> },
+          { path: "complete", element: <RegisterCompletePage /> },
         ],
       },
       { path: "products/:slug", element: <ProductDetailPage /> },

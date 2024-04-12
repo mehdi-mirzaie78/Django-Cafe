@@ -1,26 +1,8 @@
-import {
-  Alert,
-  Box,
-  Button,
-  Center,
-  Flex,
-  FormControl,
-  FormLabel,
-  Heading,
-  Input,
-  Link,
-  Stack,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Button, FormControl, FormLabel, Input, Stack } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FormEvent, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import useRegister from "../hooks/useRegister";
-import useRegisterQueryStore from "../store/registerStore";
-import Loader from "../components/Loader";
-import Message from "../components/Message";
+import FormErrors from "./FormErrors";
 
 const schema = z.object({
   phone: z
@@ -75,10 +57,7 @@ const RegisterForm = ({ onSubmit }: Props) => {
         >
           Send OTP
         </Button>
-
-        {errors.phone && (
-          <Message status="error">{errors.phone.message}</Message>
-        )}
+        <FormErrors errors={errors} />
       </Stack>
     </form>
   );

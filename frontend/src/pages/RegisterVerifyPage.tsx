@@ -1,25 +1,18 @@
 import {
-  Alert,
   Box,
-  Button,
   Center,
   Flex,
-  FormControl,
-  HStack,
   Heading,
-  PinInput,
-  PinInputField,
   Stack,
   Text,
-  useColorModeValue,
+  useColorModeValue
 } from "@chakra-ui/react";
 import { FormEvent } from "react";
+import CountdownTimer from "../components/CountdownTimer";
+import ErrorMessage from "../components/ErrorMessage";
+import RegisterVerifyForm from "../components/RegisterVerifyForm";
 import useRegisterVerify from "../hooks/useRegisterVerify";
 import useRegisterQueryStore from "../store/registerStore";
-import Message from "../components/Message";
-import CountdownTimer from "../components/CountdownTimer";
-import RegisterVerifyForm from "../components/RegisterVerifyForm";
-import ErrorMessage from "../components/ErrorMessage";
 
 const RegisterVerifyPage = () => {
   const { phone, otp } = useRegisterQueryStore((s) => s.registerQuery);

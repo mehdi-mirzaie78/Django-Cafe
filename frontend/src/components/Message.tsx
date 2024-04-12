@@ -6,6 +6,7 @@ import {
   AlertTitle,
   Box,
   CloseButton,
+  HStack
 } from "@chakra-ui/react";
 import { useState } from "react";
 
@@ -26,18 +27,29 @@ const Message = ({
 }: Props) => {
   const [isClosed, setIsClosed] = useState<boolean>(false);
 
-  const handleClose = () => {
+  const onClose = () => {
     setIsClosed(true);
   };
 
   return !isClosed ? (
     <Alert status={status} rounded={"lg"} {...props}>
       <AlertIcon />
-      <Box flex="1">
-        <AlertTitle>{title}</AlertTitle>
-        <AlertDescription>{children}</AlertDescription>
-      </Box>
-      {isClosable && <CloseButton onClick={handleClose} />}
+      <HStack justifyContent={"space-between"} width={"full"}>
+        <Box display="row">
+          <AlertTitle>{title}</AlertTitle>
+          <AlertDescription>{children}</AlertDescription>
+        </Box>
+
+        {isClosable && (
+          <CloseButton
+            alignSelf="flex-start"
+            position="relative"
+            right={-1}
+            top={-1}
+            onClick={onClose}
+          />
+        )}
+      </HStack>
     </Alert>
   ) : null;
 };
