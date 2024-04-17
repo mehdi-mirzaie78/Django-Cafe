@@ -15,7 +15,9 @@ const ErrorMessage = ({ error, ...props }: Props) => {
         {Object.keys(responseData).map((key) => (
           <Message
             key={key}
-            title={key !== "nonFieldErrors" ? key : "Error"}
+            title={
+              key !== "nonFieldErrors" && key !== "message" ? key : "Error"
+            }
             status="error"
             isClosable
           >
