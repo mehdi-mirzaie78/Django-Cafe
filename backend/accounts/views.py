@@ -69,13 +69,14 @@ class LoginView(APIView):
         serialized_data.is_valid(raise_exception=True)
         user = authenticate(request, **serialized_data.validated_data)
         if user is not None:
-            data = JWT.generate_access_refresh_token(user)
+            user_serializer = UserSerializerWithTokens(user)
             return Response(
-                {"message": _("Logged in successfully"), **data},
+                {"message": _("Logged in successfully"), **user_serializer.data},
                 status=status.HTTP_200_OK,
             )
         return Response(
-            {"message": _("Invalid credentials")}, status=status.HTTP_400_BAD_REQUEST
+            {"message": _("Invalid credentials. Username or password is wrong")},
+            status=status.HTTP_400_BAD_REQUEST,
         )
 
 
@@ -111,7 +112,7 @@ class LogoutView(APIView):
                 {"message": _("Logged out successfully")}, status=status.HTTP_200_OK
             )
         except ValidationError as e:
-            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ProfileView(APIView):
