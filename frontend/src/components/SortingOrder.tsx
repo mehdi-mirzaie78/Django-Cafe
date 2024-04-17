@@ -3,10 +3,10 @@ import { Button, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
 import { useProductQueryStore } from "../store";
 
 const orderingList = [
-  { name: "Date Added (Earliest First)", filtering: "updated_at" },
-  { name: "Date Added (Latest First)", filtering: "-updated_at" },
-  { name: "Price (Low to High)", filtering: "price" },
-  { name: "Price (High to Low)", filtering: "-price" },
+  { name: "Earliest", filtering: "updated_at" },
+  { name: "Latest", filtering: "-updated_at" },
+  { name: "Lowest Price", filtering: "price" },
+  { name: "Highest Price", filtering: "-price" },
 ];
 
 const SortingOrder = () => {
