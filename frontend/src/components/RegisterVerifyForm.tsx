@@ -32,6 +32,7 @@ const RegisterVerifyForm = ({ handleSubmit, setOtp, otp }: Props) => {
         </FormControl>
         <Stack spacing={6}>
           <Button
+            marginTop={2}
             disabled={!otp}
             type="submit"
             bg={"blue.400"}

@@ -5,7 +5,7 @@ import {
   Heading,
   Stack,
   Text,
-  useColorModeValue
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { FormEvent } from "react";
 import CountdownTimer from "../components/CountdownTimer";
@@ -13,12 +13,13 @@ import ErrorMessage from "../components/ErrorMessage";
 import RegisterVerifyForm from "../components/RegisterVerifyForm";
 import useRegisterVerify from "../hooks/useRegisterVerify";
 import useRegisterQueryStore from "../store/registerStore";
+import AuthFormContainer from "../components/AuthFormContainer";
 
 const RegisterVerifyPage = () => {
   const { phone, otp } = useRegisterQueryStore((s) => s.registerQuery);
   const setOtp = useRegisterQueryStore((s) => s.setOtp);
 
-  const { mutate, error, isLoading } = useRegisterVerify();
+  const { mutate, error } = useRegisterVerify();
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
@@ -26,55 +27,33 @@ const RegisterVerifyPage = () => {
   };
 
   return (
-    <Flex
-      align={"center"}
-      justify={"center"}
-      bg={useColorModeValue("white", "gray.800")}
-    >
-      <Stack spacing={4} w={"full"} maxW={"md"} rounded={"xl"} p={6} my={10}>
-        <Center>
-          <Heading
-            lineHeight={1.1}
-            fontSize={{ base: "2xl", md: "4xl" }}
-            marginBottom={3}
-          >
-            Verification
-          </Heading>
-        </Center>
-
-        <Box
-          boxShadow={"lg"}
-          rounded={"lg"}
-          p={8}
-          bg={useColorModeValue("gray.50", "gray.700")}
+    <AuthFormContainer heading="Verification">
+      <Center
+        fontSize={{ base: "sm", sm: "md" }}
+        color={useColorModeValue("gray.800", "gray.400")}
+        marginBottom={1}
+      >
+        We have sent a code to
+        <Text
+          ms={1}
+          fontSize={{ base: "sm", sm: "md" }}
+          fontWeight="bold"
+          color={useColorModeValue("gray.800", "gray.400")}
         >
-          <Center
-            fontSize={{ base: "sm", sm: "md" }}
-            color={useColorModeValue("gray.800", "gray.400")}
-            marginBottom={3}
-          >
-            We have sent a code to
-            <Text
-              ms={1}
-              fontSize={{ base: "sm", sm: "md" }}
-              fontWeight="bold"
-              color={useColorModeValue("gray.800", "gray.400")}
-            >
-              {phone}
-            </Text>
-          </Center>
+          {phone}
+        </Text>
+      </Center>
 
-          <RegisterVerifyForm
-            setOtp={setOtp}
-            handleSubmit={handleSubmit}
-            otp={otp}
-          />
-          <ErrorMessage error={error} marginY={3} />
+      <RegisterVerifyForm
+        setOtp={setOtp}
+        handleSubmit={handleSubmit}
+        otp={otp}
+      />
 
-          <CountdownTimer />
-        </Box>
-      </Stack>
-    </Flex>
+      <ErrorMessage error={error} marginTop={3} />
+
+      <CountdownTimer />
+    </AuthFormContainer>
   );
 };
 
