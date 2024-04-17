@@ -22,6 +22,7 @@ import {
 import { BiCart, BiLogIn, BiUser } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import logo from "../assets/logo.webp";
+import useLogout from "../hooks/useLogout";
 import useAuthQueryStore from "../store/authStore";
 import NavItem from "./NavItem";
 import SearchInput from "./SearchInput";
@@ -35,11 +36,16 @@ let Links = [
 const NavBar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { colorMode, toggleColorMode } = useColorMode();
-  const { firstName, lastName, accessToken } = useAuthQueryStore(
-    (s) => s.authQuery
-  );
-  if (accessToken)
-    Links = Links.filter(
+  const authQuery = useAuthQueryStore((s) => s.authQuery);
+  const { firstName, lastName, accessToken } = authQuery;
+
+  const { mutate } = useLogout();
+  const logoutHandler = () => mutate();
+
+  let filteredLinks = Links;
+
+  if (authQuery.accessToken)
+    filteredLinks = Links.filter(
       (item) => item.name !== "Login" && item.name !== "Register"
     );
 
@@ -76,7 +82,7 @@ const NavBar = () => {
               spacing={1}
               display={{ base: "none", md: "flex" }}
             >
-              {Links.map((link) => (
+              {filteredLinks.map((link) => (
                 <NavItem
                   key={link.name}
                   name={link.name}
@@ -128,7 +134,7 @@ const NavBar = () => {
                   <br />
                   <MenuDivider />
                   <MenuItem>Profile</MenuItem>
-                  <MenuItem>Logout</MenuItem>
+                  <MenuItem onClick={logoutHandler}>Logout</MenuItem>
                 </MenuList>
               </Menu>
             )}
@@ -138,7 +144,7 @@ const NavBar = () => {
         {isOpen ? (
           <Box pb={4} display={{ md: "none" }}>
             <Stack as={"nav"} spacing={4}>
-              {Links.map((link) => (
+              {filteredLinks.map((link) => (
                 <NavItem
                   key={link.name}
                   name={link.name}
