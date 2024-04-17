@@ -1,27 +1,20 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
-import { RegisterCompleteFormData } from "../components/RegisterCompleteForm";
+import { LoginFormData } from "../components/LoginForm";
 import APIClient from "../services/apiClient";
 import useAuthQueryStore from "../store/authStore";
 
-const apiClient = new APIClient("accounts/auth/register/complete/");
+const apiClient = new APIClient("accounts/auth/login/");
 
-interface Data {
-  phone: string;
-}
-
-type RequestBody = RegisterCompleteFormData & Data;
-
-const useRegisterComplete = () => {
+const useLogin = () => {
   const navigate = useNavigate();
   const setAuthQuery = useAuthQueryStore((s) => s.setAuthQuery);
 
-  return useMutation<any, AxiosError, RequestBody>({
-    mutationKey: ["register-complete"],
+  return useMutation<any, AxiosError, LoginFormData>({
+    mutationKey: ["login"],
     mutationFn: (data) => apiClient.post(data),
     onSuccess: (data) => {
-      localStorage.removeItem("registerInfo");
       const { accessToken, refreshToken, firstName, lastName } = data;
       setAuthQuery({ accessToken, refreshToken, firstName, lastName });
       navigate("/");
@@ -29,4 +22,4 @@ const useRegisterComplete = () => {
   });
 };
 
-export default useRegisterComplete;
+export default useLogin;

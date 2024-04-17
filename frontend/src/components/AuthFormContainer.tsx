@@ -54,7 +54,7 @@ const AuthFormContainer = ({ heading, text, children, route }: Props) => {
                 <Text align={"center"}>
                   {route.text}{" "}
                   <Link to={route.path}>
-                    <Text display={"inline"} color={"blue.400"}>
+                    <Text as="span" display={"inline"} color={"blue.400"}>
                       {route.name}
                     </Text>
                   </Link>

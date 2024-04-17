@@ -1,11 +1,11 @@
 import { Center, HStack, SimpleGrid, Spinner } from "@chakra-ui/react";
-import useProducts from "../hooks/useProducts";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { Fragment } from "react/jsx-runtime";
+import useProducts from "../hooks/useProducts";
 import Loader from "./Loader";
 import Message from "./Message";
 import ProductCard from "./ProductCard";
 import ProductCardContainer from "./ProductCardContainer";
-import { Fragment } from "react/jsx-runtime";
 
 const ProductGrid = () => {
   const { data, isLoading, error, fetchNextPage, hasNextPage } = useProducts();
@@ -30,7 +30,7 @@ const ProductGrid = () => {
 
   return (
     <InfiniteScroll
-      style={{ overflowY: "hidden" }}
+      style={{ overflow: "hidden" }}
       dataLength={fetchedProductsCount}
       hasMore={!!hasNextPage} // !! converts undefined to boolean
       next={() => fetchNextPage()}
