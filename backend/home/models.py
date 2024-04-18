@@ -1,6 +1,7 @@
 from django.db import models
-from core.models import BaseModel, SingletonModel
+from django.core.validators import FileExtensionValidator as FileExtension
 from django.utils.translation import gettext_lazy as _
+from core.models import BaseModel, SingletonModel
 
 
 class Cafe(BaseModel, SingletonModel):
@@ -15,6 +16,11 @@ class Cafe(BaseModel, SingletonModel):
     about = models.TextField(null=True, blank=True, verbose_name=_("About"))
     logo = models.ImageField(verbose_name=_("Logo"), default="logo.png")
     icon = models.ImageField(verbose_name=_("Icon"), default="icon.png")
+    video = models.FileField(
+        default="video.mp4",
+        verbose_name=_("Video"),
+        validators=[FileExtension(["mp4"])],
+    )
 
     def __str__(self) -> str:
         return f"{self.title}'s Cafe"

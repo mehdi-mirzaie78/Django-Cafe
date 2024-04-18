@@ -17,4 +17,3 @@ class ContactView(APIView):
         contact = Contact.objects.last()
         serialized_data = ContactSerializer(contact)
         return Response(serialized_data.data, status=status.HTTP_200_OK)
-
