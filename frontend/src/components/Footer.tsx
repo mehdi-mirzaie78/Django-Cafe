@@ -9,11 +9,14 @@ import {
   useColorModeValue,
   VisuallyHidden,
 } from "@chakra-ui/react";
-import { FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
 import { ReactNode } from "react";
-import logo from "../assets/logo.webp";
+import { FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
+import useCafe from "../hooks/useCafe";
 
-const Logo = () => {
+interface LogoProps {
+  logo: string;
+}
+const Logo = ({ logo }: LogoProps) => {
   return (
     <HStack>
       <Image rounded={"50%"} height={10} src={logo} />
@@ -57,6 +60,9 @@ const SocialButton = ({
 };
 
 const Footer = () => {
+  const { data } = useCafe();
+  const cafe = data?.data;
+
   return (
     <Box
       marginTop={"auto"}
@@ -71,7 +77,7 @@ const Footer = () => {
         justify={"center"}
         align={"center"}
       >
-        <Logo />
+        <Logo logo={cafe?.logo || ""} />
         <Stack direction={"row"} spacing={6}>
           <Box as="a" href={"#"}>
             Home
@@ -99,7 +105,7 @@ const Footer = () => {
           justify={{ base: "center", md: "space-between" }}
           align={{ base: "center", md: "center" }}
         >
-          <Text>© 2024 Cuppa Cloud. All rights reserved</Text>
+          <Text>© 2024 {cafe?.title}. All rights reserved</Text>
           <Stack direction={"row"} spacing={6}>
             <SocialButton label={"Twitter"} href={"#"}>
               <FaTwitter />

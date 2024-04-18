@@ -21,7 +21,7 @@ const SearchInput = () => {
         onSubmit={(event) => {
           event.preventDefault();
           if (ref.current) setSearchText(ref.current.value);
-          navigate("/");
+          navigate("/home");
         }}
       >
         <InputGroup>

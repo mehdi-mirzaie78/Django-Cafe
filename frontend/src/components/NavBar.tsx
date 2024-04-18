@@ -19,15 +19,16 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 
-import { BiCart, BiLogIn, BiUser } from "react-icons/bi";
+import { BiCart, BiHome, BiLogIn, BiUser } from "react-icons/bi";
 import { Link } from "react-router-dom";
-import logo from "../assets/logo.webp";
+import useCafe from "../hooks/useCafe";
 import useLogout from "../hooks/useLogout";
 import useAuthQueryStore from "../store/authStore";
 import NavItem from "./NavItem";
 import SearchInput from "./SearchInput";
 
 let Links = [
+  { name: "Home", path: "home", icon: <BiHome size={20} /> },
   { name: "Login", path: "login", icon: <BiLogIn size={20} /> },
   { name: "Register", path: "register", icon: <BiUser size={20} /> },
   { name: "Cart", path: "cart", icon: <BiCart size={22} /> },
@@ -36,6 +37,10 @@ let Links = [
 const NavBar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { colorMode, toggleColorMode } = useColorMode();
+
+  const { data } = useCafe();
+  const cafe = data?.data;
+
   const authQuery = useAuthQueryStore((s) => s.authQuery);
   const { firstName, lastName, accessToken } = authQuery;
 
@@ -68,7 +73,7 @@ const NavBar = () => {
               >
                 <Link to="/">
                   <Image
-                    src={logo}
+                    src={cafe?.logo}
                     boxSize={{ base: "38px", md: "50px" }}
                     rounded={"50%"}
                     objectFit="cover"

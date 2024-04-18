@@ -22,7 +22,7 @@ const NavLink = (props: NavLinkProps) => {
       borderRadius={25}
       _hover={{
         textDecoration: "none",
-        bg: useColorModeValue("gray.200", "gray.700"),
+        bg: useColorModeValue("gray.150", "gray.650"),
       }}
     >
       {children}
