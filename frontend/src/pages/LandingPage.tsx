@@ -3,10 +3,8 @@ import { Link } from "react-router-dom";
 import useCafe from "../hooks/useCafe";
 
 const LandingPage = () => {
-  const { data, error } = useCafe();
+  const { data: cafe, error } = useCafe();
   if (error) throw error;
-
-  const cafe = data?.data;
 
   return (
     <Box height={"100vh"}>

@@ -1,13 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import ms from "ms";
+import cafe from "../data/cafe";
 import Cafe from "../entities/Cafe";
-import { axiosInstance } from "../services/apiClient";
+import APIClient from "../services/apiClient";
+
+const apiClient = new APIClient<Cafe>("/cafe/");
 
 const useCafe = () => {
   return useQuery({
     queryKey: ["cafe"],
-    queryFn: () => axiosInstance.get<Cafe>("/cafe/"),
+    queryFn: () => apiClient.get(),
     staleTime: ms("24h"),
+    initialData: cafe,
   });
 };
 

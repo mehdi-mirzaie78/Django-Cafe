@@ -38,8 +38,7 @@ const NavBar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { colorMode, toggleColorMode } = useColorMode();
 
-  const { data } = useCafe();
-  const cafe = data?.data;
+  const { data: cafe } = useCafe();
 
   const authQuery = useAuthQueryStore((s) => s.authQuery);
   const { firstName, lastName, accessToken } = authQuery;

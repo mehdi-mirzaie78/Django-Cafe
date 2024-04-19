@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import ms from "ms";
+import categories from "../data/categories";
 import Category from "../entities/Category";
 import APIClient from "../services/apiClient";
 
@@ -10,6 +11,7 @@ const useCategories = () =>
     queryKey: ["categories"],
     queryFn: () => apiClient.getAll(),
     staleTime: ms("24h"),
+    initialData: categories,
   });
 
 export default useCategories;
