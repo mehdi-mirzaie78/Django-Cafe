@@ -11,7 +11,8 @@ const useCafe = () => {
     queryKey: ["cafe"],
     queryFn: () => apiClient.get(),
     staleTime: ms("24h"),
-    initialData: cafe,
+    // initialData: cafe,
+    // TODO: CHECK THE EXPIRATION TIME OF LINKS
   });
 };
 

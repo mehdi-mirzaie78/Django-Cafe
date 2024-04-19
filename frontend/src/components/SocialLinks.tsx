@@ -15,8 +15,6 @@ interface Props {
 }
 
 const SocialLinks = ({ contact }: Props) => {
-  console.log(contact);
-  const keysOfProps = Object.keys(contact) as Array<keyof Contact>;
   const iconMapper: Record<string, { icon: JSX.Element; prefix: string }> = {
     phone: { icon: <PhoneIcon />, prefix: "tel:" },
     email: { icon: <EmailIcon />, prefix: "mailto:" },
@@ -25,6 +23,8 @@ const SocialLinks = ({ contact }: Props) => {
     whatsapp: { icon: <FaWhatsapp />, prefix: "https://wa.me/" },
     facebook: { icon: <FaFacebook />, prefix: "http://www.facebook.com/" },
   };
+
+  const keysOfProps = Object.keys(iconMapper) as Array<keyof Contact>;
 
   return (
     <Stack direction={"row"} spacing={6}>
