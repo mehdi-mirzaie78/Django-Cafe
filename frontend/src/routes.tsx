@@ -9,6 +9,7 @@ import ProductDetailPage from "./pages/ProductDetailPage";
 import RegisterCompletePage from "./pages/RegisterCompletePage";
 import RegisterPage from "./pages/RegisterPage";
 import RegisterVerifyPage from "./pages/RegisterVerifyPage";
+import ProfilePage from "./pages/ProfilePage";
 
 const router = createBrowserRouter([
   { path: "/", element: <LandingPage />, errorElement: <ErrorPage /> },
@@ -27,6 +28,8 @@ const router = createBrowserRouter([
         ],
       },
       { path: "login", element: <LoginPage /> },
+      { path: "profile", element: <ProfilePage /> },
+
       { path: "products/:slug", element: <ProductDetailPage /> },
       { path: "cart/", element: <CartPage /> },
     ],

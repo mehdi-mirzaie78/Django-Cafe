@@ -1,18 +1,12 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import PrivateAPIClient from "../services/privateApiClient";
+import PrivateAPIClient from "../services/privateAPIClient";
 import useAuthQueryStore from "../store/authStore";
 
 const useLogout = () => {
   const { authQuery, setAuthQuery } = useAuthQueryStore();
-  const config = {
-    headers: { Authorization: `Bearer ${authQuery.accessToken}` },
-  };
 
-  const privateAPIClient = new PrivateAPIClient(
-    "accounts/auth/logout/",
-    config
-  );
+  const privateAPIClient = new PrivateAPIClient("accounts/auth/logout/");
 
   return useMutation<any, AxiosError>({
     mutationKey: ["logout"],
