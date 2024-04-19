@@ -1,17 +1,15 @@
 import {
   Box,
-  chakra,
   Container,
   HStack,
   Image,
   Stack,
   Text,
   useColorModeValue,
-  VisuallyHidden,
 } from "@chakra-ui/react";
-import { ReactNode } from "react";
-import { FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
 import useCafe from "../hooks/useCafe";
+import useContact from "../hooks/useContact";
+import SocialLinks from "./SocialLinks";
 
 interface LogoProps {
   logo: string;
@@ -27,41 +25,9 @@ const Logo = ({ logo }: LogoProps) => {
   );
 };
 
-const SocialButton = ({
-  children,
-  label,
-  href,
-}: {
-  children: ReactNode;
-  label: string;
-  href: string;
-}) => {
-  return (
-    <chakra.button
-      bg={useColorModeValue("blackAlpha.100", "whiteAlpha.100")}
-      rounded={"full"}
-      w={8}
-      h={8}
-      cursor={"pointer"}
-      as={"a"}
-      href={href}
-      display={"inline-flex"}
-      alignItems={"center"}
-      justifyContent={"center"}
-      transition={"background 0.3s ease"}
-      _hover={{
-        bg: useColorModeValue("blackAlpha.200", "whiteAlpha.200"),
-      }}
-    >
-      <VisuallyHidden>{label}</VisuallyHidden>
-      {children}
-    </chakra.button>
-  );
-};
-
 const Footer = () => {
-  const { data } = useCafe();
-  const cafe = data?.data;
+  const { data: cafe } = useCafe();
+  const { data: contact } = useContact();
 
   return (
     <Box
@@ -106,17 +72,7 @@ const Footer = () => {
           align={{ base: "center", md: "center" }}
         >
           <Text>© 2024 {cafe?.title}. All rights reserved</Text>
-          <Stack direction={"row"} spacing={6}>
-            <SocialButton label={"Twitter"} href={"#"}>
-              <FaTwitter />
-            </SocialButton>
-            <SocialButton label={"YouTube"} href={"#"}>
-              <FaYoutube />
-            </SocialButton>
-            <SocialButton label={"Instagram"} href={"#"}>
-              <FaInstagram />
-            </SocialButton>
-          </Stack>
+          {contact && <SocialLinks contact={contact} />}
         </Container>
       </Box>
     </Box>
