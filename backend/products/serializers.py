@@ -28,6 +28,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "media",
             "categories",
             "stock",
+            "rating",
         ]
 
     def get_media(self, obj):

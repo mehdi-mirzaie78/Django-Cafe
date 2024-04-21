@@ -56,6 +56,12 @@ class Product(BaseModel):
     )
     price = models.PositiveIntegerField(verbose_name=_("Price"))
     stock = models.PositiveIntegerField(verbose_name=_("Stock"))
+    rating = models.DecimalField(
+        verbose_name=_("Rating"),
+        max_digits=3,
+        decimal_places=2,
+        validators=[Min(1), Max(5)],
+    )
 
     @property
     def is_available(self):
