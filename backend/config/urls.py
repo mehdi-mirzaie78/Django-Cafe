@@ -14,6 +14,6 @@ urlpatterns = [
     path(f"{prefix}/accounts/", include("accounts.urls", namespace="accounts")),
     path(f"{prefix}/actions/", include("actions.urls", namespace="actions")),
     path(f"{prefix}/", include("products.urls", namespace="products")),
-    path(f"{prefix}/orders/", include("orders.urls", namespace="orders")),
+    path(f"{prefix}/", include("orders.urls", namespace="orders")),
     path("__debug__/", include("debug_toolbar.urls")),
 ]
