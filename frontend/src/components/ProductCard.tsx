@@ -26,12 +26,15 @@ const ProductCard = ({ product }: Props) => {
       bg={useColorModeValue("gray.100", "gray.700")}
       color={useColorModeValue("gray.900", "gray.50")}
     >
-      <Image
-        src={product.media[0].file}
-        height="18rem"
-        objectFit={"cover"}
-        borderRadius={10}
-      />
+      <Link to={"/products/" + product.slug} style={{ height: "18rem" }}>
+        <Image
+          src={product.media[0].file}
+          height="100%"
+          width="100%"
+          objectFit={"cover"}
+          borderRadius={10}
+        />
+      </Link>
       <CardBody paddingBottom={3}>
         <HStack
           justifyContent="space-between"
@@ -57,7 +60,10 @@ const ProductCard = ({ product }: Props) => {
             : product.description}
         </Text>
         <HStack marginTop={{ base: 3, md: 3 }} justifyContent="center">
-          <Button bg={useColorModeValue("blue.100", "blue.700")} size={{ base: "xs", md: "sm", xl: "md" }}>
+          <Button
+            bg={useColorModeValue("blue.100", "blue.700")}
+            size={{ base: "xs", md: "sm", xl: "md" }}
+          >
             <AddIcon me={2} /> Add to cart
           </Button>
         </HStack>

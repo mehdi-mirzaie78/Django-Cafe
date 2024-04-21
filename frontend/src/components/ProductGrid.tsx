@@ -47,7 +47,11 @@ const ProductGrid = () => {
         </HStack>
       }
     >
-      <SimpleGrid columns={{ base: 1, md: 2, lg: 3, xl: 5 }} spacing={6}>
+      <SimpleGrid
+        columns={{ base: 1, md: 2, lg: 3, xl: 5 }}
+        spacing={6}
+        padding={2}
+      >
         {data?.pages.map((page, index) => (
           <Fragment key={index}>
             {page?.results.map((product) => (

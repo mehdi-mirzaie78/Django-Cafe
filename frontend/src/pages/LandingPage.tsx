@@ -38,9 +38,11 @@ const LandingPage = () => {
           <Text fontSize={{ base: "large", md: "x-large" }}>{cafe?.motto}</Text>
           <Text fontSize={{ base: "large", md: "x-large" }}>{cafe?.about}</Text>
         </Stack>
-        <Button bg={"blue.600"} _hover={{ bg: "blue.500" }}>
-          <Link to="/home">Continue</Link>
-        </Button>
+        <Link to="/home">
+          <Button bg={"blue.600"} _hover={{ bg: "blue.500" }}>
+            Continue
+          </Button>
+        </Link>
       </Stack>
     </Box>
   );
