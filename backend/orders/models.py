@@ -1,3 +1,4 @@
+from uuid import uuid4
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import MaxValueValidator as Max, MinValueValidator as Min
@@ -62,6 +63,31 @@ class Status(BaseModel):
 
     def __str__(self) -> str:
         return f"{self.pk}-{self.name}"
+
+
+class Cart(BaseModel):
+    id = models.UUIDField(primary_key=True, default=uuid4)
+
+
+class CartItem(BaseModel):
+    cart = models.ForeignKey(
+        Cart, verbose_name=_("Cart"), on_delete=models.CASCADE, related_name="items"
+    )
+    product = models.ForeignKey(
+        Product,
+        verbose_name=_("Product"),
+        on_delete=models.CASCADE,
+        related_name="items",
+    )
+    quantity = models.PositiveSmallIntegerField(
+        verbose_name=_("Quantity"), default=1, validators=[Min(1)]
+    )
+
+    class Meta:
+        unique_together = [["cart", "product"]]
+
+    def __str__(self):
+        return f"{self.cart}-{self.product}-{self.quantity}"
 
 
 class Order(BaseModel):

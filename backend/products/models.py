@@ -48,7 +48,12 @@ class Product(BaseModel):
     name = models.CharField(max_length=255, verbose_name=_("Name"))
     slug = models.SlugField(max_length=255, unique=True, verbose_name=_("Slug"))
     description = models.TextField(null=True, blank=True, verbose_name=_("Description"))
-    unit_price = models.PositiveIntegerField(verbose_name=_("Unit Price"))
+    unit_price = models.DecimalField(
+        verbose_name=_("Unit Price"),
+        max_digits=5,
+        decimal_places=2,
+        validators=[Min(1)],
+    )
     discount = models.PositiveIntegerField(
         default=0,
         verbose_name=_("Discount"),

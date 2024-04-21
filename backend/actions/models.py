@@ -23,7 +23,7 @@ class Like(BaseModel):
     )
 
     class Meta:
-        unique_together = ["user", "product"]
+        unique_together = [["user", "product"]]
         verbose_name = _("Like")
         verbose_name_plural = _("Likes")
 
@@ -58,7 +58,7 @@ class Review(BaseModel):
     is_approved = models.BooleanField(default=False, verbose_name=_("Is Approved"))
 
     class Meta:
-        unique_together = ["user", "product"]
+        unique_together = [["user", "product"]]
         verbose_name = _("Review")
         verbose_name_plural = _("Reviews")
 
