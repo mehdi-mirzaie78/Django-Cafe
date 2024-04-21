@@ -38,6 +38,7 @@ const theme = extendTheme({
       900: "#111",
       1000: "#1A202C",
     },
+    gold: "#f8e825",
   },
 });
 

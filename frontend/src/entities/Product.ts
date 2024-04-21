@@ -11,10 +11,11 @@ interface Product {
   name: string;
   slug: string;
   description: string;
-  unit_price: number;
+  unitPrice: number;
   discount: number;
   price: number;
   stock: number;
+  rating: number;
 }
 
 export default Product;
