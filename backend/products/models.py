@@ -54,7 +54,9 @@ class Product(BaseModel):
         verbose_name=_("Discount"),
         validators=[Min(0), Max(70)],
     )
-    price = models.PositiveIntegerField(verbose_name=_("Price"))
+    price = models.DecimalField(
+        verbose_name=_("Price"), max_digits=5, decimal_places=2, validators=[Min(1)]
+    )
     stock = models.PositiveIntegerField(verbose_name=_("Stock"))
     rating = models.DecimalField(
         verbose_name=_("Rating"),
