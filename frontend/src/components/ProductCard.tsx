@@ -4,18 +4,15 @@ import {
   Button,
   Card,
   CardBody,
-  Center,
   HStack,
   Heading,
   Image,
   Text,
-  useColorModeValue,
+  useColorModeValue
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import Product from "../entities/Product";
 import Rating from "./Rating";
-import { BiCart, BiStrikethrough } from "react-icons/bi";
-import { BsCart } from "react-icons/bs";
 
 interface Props {
   product: Product;
@@ -76,8 +73,8 @@ const ProductCard = ({ product }: Props) => {
             )}
             <Badge
               colorScheme="green"
-              fontSize={{ base: "md", md: "large", xl: "x-large" }}
-              px={3}
+              fontSize={{ base: "md", md: "large" }}
+              px={1}
               rounded={5}
             >
               $ {product.price}
@@ -98,7 +95,7 @@ const ProductCard = ({ product }: Props) => {
             bg={useColorModeValue("blue.100", "blue.700")}
             size={{ base: "xs", md: "sm", xl: "md" }}
           >
-            <AddIcon me={1} /> Add To Cart
+            <AddIcon me={1} /> Add
           </Button>
         </HStack>
       </CardBody>
