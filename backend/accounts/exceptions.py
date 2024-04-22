@@ -40,7 +40,7 @@ class UserNotFoundError(APIException):
 
 
 class AuthorizationHeaderError(APIException):
-    status_code = status.HTTP_404_NOT_FOUND
+    status_code = status.HTTP_400_BAD_REQUEST
     default_detail = _("Authorization Header Is Not Set In Request Header")
     default_code = "no_authorization_header"
 

@@ -28,7 +28,7 @@ class RegisterView(APIView):
         phone = serialized_data.validated_data["phone"]
         OTPHandler(phone).send_otp()
         return Response(
-            {"message": _("OTP code has been sent.")}, status=status.HTTP_200_OK
+            {"detail": _("OTP code has been sent.")}, status=status.HTTP_200_OK
         )
 
 
@@ -40,7 +40,7 @@ class VerifyRegisterView(APIView):
         serialized_data.is_valid(raise_exception=True)
         serialized_data.save()
         return Response(
-            {"message": _("Verified successfully.")}, status=status.HTTP_200_OK
+            {"detail": _("Verified successfully.")}, status=status.HTTP_200_OK
         )
 
 
@@ -54,7 +54,7 @@ class CompleteRegistrationView(APIView):
         user_serializer = UserSerializerWithTokens(user)
         return Response(
             {
-                "message": _("Registration has completed successfully."),
+                "detail": _("Registration has completed successfully."),
                 **user_serializer.data,
             },
             status=status.HTTP_201_CREATED,
@@ -71,11 +71,11 @@ class LoginView(APIView):
         if user is not None:
             user_serializer = UserSerializerWithTokens(user)
             return Response(
-                {"message": _("Logged in successfully"), **user_serializer.data},
+                {"detail": _("Logged in successfully"), **user_serializer.data},
                 status=status.HTTP_200_OK,
             )
         return Response(
-            {"message": _("Invalid credentials. Username or password is wrong")},
+            {"detail": _("Invalid credentials. Username or password is wrong")},
             status=status.HTTP_400_BAD_REQUEST,
         )
 
@@ -91,7 +91,7 @@ class RefreshTokenView(APIView):
         access_token = JWT.generate_access_token(user)
         return Response(
             {
-                "message": _("Access token refreshed successfully"),
+                "detail": _("Access token refreshed successfully"),
                 "access_token": access_token,
             },
             status=status.HTTP_200_OK,
@@ -109,10 +109,10 @@ class LogoutView(APIView):
             refresh_token = serialized_data.validated_data["refresh_token"]
             JWTAuthentication().logout(refresh_token)
             return Response(
-                {"message": _("Logged out successfully")}, status=status.HTTP_200_OK
+                {"detail": _("Logged out successfully")}, status=status.HTTP_200_OK
             )
         except ValidationError as e:
-            return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ProfileView(APIView):
@@ -122,10 +122,4 @@ class ProfileView(APIView):
     def get(self, request):
         user = request.user
         serialized_data = UserSerializer(instance=user)
-        return Response(
-            {
-                "message": _("Profile fetched successfully"),
-                "data": serialized_data.data,
-            },
-            status=status.HTTP_200_OK,
-        )
+        return Response(serialized_data.data, status=status.HTTP_200_OK)
