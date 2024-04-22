@@ -1,12 +1,19 @@
-import { useEffect } from "react";
-import { axiosInstance } from "../services/privateAPI";
+import { Box } from "@chakra-ui/react";
+import Loader from "../components/Loader";
+import useProfile from "../hooks/useProfile";
 
 const ProfilePage = () => {
-  useEffect(() => {
-    axiosInstance.get("/accounts/profile/");
-  }, []);
+  const { isLoading, data, error } = useProfile();
 
-  return <div>Profile Page</div>;
+  if (isLoading) return <Loader />;
+
+  if (error) throw error;
+
+  return (
+    <Box>
+      {data?.firstName} {data?.lastName}
+    </Box>
+  );
 };
 
 export default ProfilePage;

@@ -17,7 +17,7 @@ const useLogin = () => {
     onSuccess: (data) => {
       const { accessToken, refreshToken, firstName, lastName } = data;
       setAuthQuery({ accessToken, refreshToken, firstName, lastName });
-      navigate("/");
+      navigate("/home");
     },
   });
 };
