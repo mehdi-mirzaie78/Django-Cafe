@@ -10,6 +10,4 @@ class BaseModelSerializer(serializers.ModelSerializer):
             "updated_at",
             "is_deleted",
             "is_active",
-            "created_by",
-            "updated_by",
         ]
