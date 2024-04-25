@@ -20,7 +20,7 @@ class Table(BaseModel):
     is_available = models.BooleanField(default=True, verbose_name=_("Is Available"))
 
     def __str__(self) -> str:
-        return f"{self.name} - {self.capacity}"
+        return f"{self.name}"
 
 
 class Reservation(BaseModel):
@@ -62,7 +62,7 @@ class Status(BaseModel):
     description = models.TextField(null=True, blank=True, verbose_name=_("Description"))
 
     def __str__(self) -> str:
-        return f"{self.pk}-{self.name}"
+        return f"{self.name}"
 
 
 class Cart(BaseModel):
@@ -82,6 +82,10 @@ class CartItem(BaseModel):
     quantity = models.PositiveSmallIntegerField(
         verbose_name=_("Quantity"), default=1, validators=[Min(1)]
     )
+
+    @property
+    def total_price(self):
+        return self.quantity * self.product.price
 
     class Meta:
         unique_together = [["cart", "product"]]
@@ -118,15 +122,23 @@ class Order(BaseModel):
         null=True,
         blank=True,
     )
-    total_price = models.PositiveIntegerField(verbose_name=_("Total Price"))
+    total_price = models.DecimalField(
+        verbose_name=_("Total Price"),
+        max_digits=5,
+        decimal_places=2,
+    )
     is_paid = models.BooleanField(default=False, verbose_name=_("Is Paid"))
     discount = models.PositiveIntegerField(default=0, verbose_name=_("Discount"))
     address = models.TextField(null=True, blank=True, verbose_name=_("Address"))
     phone = models.CharField(
-        max_length=13, verbose_name=_("Phone"), validators=[phone_regex_validator]
+        null=True,
+        blank=True,
+        max_length=13,
+        verbose_name=_("Phone"),
+        validators=[phone_regex_validator],
     )
     transaction_code = models.CharField(
-        max_length=255, null=True, blank=True, verbose_name=_("Transaction Code")
+        max_length=255, verbose_name=_("Transaction Code")
     )
 
     class OrderType(models.TextChoices):
@@ -140,6 +152,11 @@ class Order(BaseModel):
         default=OrderType.DINEIN,
         verbose_name=_("Order Type"),
     )
+
+    def save(self, *args, **kwargs):
+        if self.discount:
+            self.total_price = (100 - self.discount) * self.total_price / 100
+        super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         return f"{self.pk}-{self.user}'s Order"
@@ -165,12 +182,12 @@ class OrderItem(BaseModel):
         verbose_name=_("Order"),
     )
     quantity = models.PositiveIntegerField(verbose_name=_("Quantity"))
-    unit_price = models.PositiveIntegerField(verbose_name=_("Unit Price"))
-    total_price = models.PositiveIntegerField(verbose_name=_("Total Price"))
-
-    def save(self, *args, **kwargs):
-        self.total_price = self.quantity * self.unit_price
-        super().save(*args, **kwargs)
+    unit_price = models.DecimalField(
+        verbose_name=_("Unit Price"), max_digits=5, decimal_places=2
+    )
+    total_price = models.DecimalField(
+        verbose_name=_("Total Price"), max_digits=5, decimal_places=2
+    )
 
     def __str__(self) -> str:
         return f"{self.pk}-{self.product}-{self.quantity}'s Order Item"
