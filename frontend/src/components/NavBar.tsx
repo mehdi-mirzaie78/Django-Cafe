@@ -26,12 +26,11 @@ import useLogout from "../hooks/useLogout";
 import useAuthQueryStore from "../store/authStore";
 import NavItem from "./NavItem";
 import SearchInput from "./SearchInput";
-
+let rightLinks = [{ name: "Cart", path: "cart", icon: <BiCart size={22} /> }];
 let Links = [
   { name: "Home", path: "home", icon: <BiHome size={20} /> },
   { name: "Login", path: "login", icon: <BiLogIn size={20} /> },
   { name: "Register", path: "register", icon: <BiUser size={20} /> },
-  { name: "Cart", path: "cart", icon: <BiCart size={22} /> },
 ];
 
 const NavBar = () => {
@@ -98,6 +97,20 @@ const NavBar = () => {
           </HStack>
 
           <HStack spacing={{ base: 2, sm: 3 }}>
+            <HStack
+              as={"nav"}
+              spacing={1}
+              display={{ base: "none", md: "flex" }}
+            >
+              {rightLinks.map((link) => (
+                <NavItem
+                  key={link.name}
+                  name={link.name}
+                  path={link.path}
+                  icon={link.icon}
+                />
+              ))}
+            </HStack>
             <Button
               onClick={toggleColorMode}
               padding={0}
@@ -151,6 +164,15 @@ const NavBar = () => {
           <Box pb={4} display={{ md: "none" }}>
             <Stack as={"nav"} spacing={4}>
               {filteredLinks.map((link) => (
+                <NavItem
+                  key={link.name}
+                  name={link.name}
+                  path={link.path}
+                  icon={link.icon}
+                />
+              ))}
+
+              {rightLinks.map((link) => (
                 <NavItem
                   key={link.name}
                   name={link.name}
