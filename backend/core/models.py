@@ -55,26 +55,6 @@ class BaseModel(models.Model):
         help_text=_("This indicates whether the object is active or not."),
     )
 
-    created_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.SET_NULL,
-        related_name="%(class)s_created_by",
-        null=True,
-        blank=True,
-        verbose_name=_("Created by"),
-        help_text=_("This is the user who created the object."),
-    )
-
-    updated_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        related_name="%(class)s_updated_by",
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        verbose_name=_("Updated by"),
-        help_text=_("This is the user who last updated the object."),
-    )
-
     def logical_delete(self, using=None, keep_parents=False):
         self.deleted_at = timezone.now()
         self.is_deleted = True
