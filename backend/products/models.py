@@ -67,7 +67,7 @@ class Product(BaseModel):
         verbose_name=_("Rating"),
         max_digits=3,
         decimal_places=2,
-        validators=[Min(1), Max(5)],
+        validators=[Min(0), Max(5)],
     )
 
     @property

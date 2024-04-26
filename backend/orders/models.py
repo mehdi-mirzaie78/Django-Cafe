@@ -68,6 +68,12 @@ class Status(BaseModel):
 class Cart(BaseModel):
     id = models.UUIDField(primary_key=True, default=uuid4)
 
+    def check_and_remove_items(self):
+        res = [
+            item.remove_if_stock_is_less_than_quantity() for item in self.items.all()
+        ]
+        return sum(res)
+
 
 class CartItem(BaseModel):
     cart = models.ForeignKey(
@@ -83,12 +89,16 @@ class CartItem(BaseModel):
         verbose_name=_("Quantity"), default=1, validators=[Min(1)]
     )
 
+    class Meta:
+        unique_together = [["cart", "product"]]
+
     @property
     def total_price(self):
         return self.quantity * self.product.price
 
-    class Meta:
-        unique_together = [["cart", "product"]]
+    def remove_if_stock_is_less_than_quantity(self):
+        if self.product.stock < self.quantity:
+            return self.delete()[0]
 
     def __str__(self):
         return f"{self.cart}-{self.product}-{self.quantity}"

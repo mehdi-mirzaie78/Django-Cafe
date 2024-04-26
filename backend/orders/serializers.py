@@ -48,6 +48,14 @@ class AddCartItemSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("No product with the given ID was found.")
         return value
 
+    def validate(self, data):
+        product = Product.objects.get(pk=data["product_id"])
+        if product.stock < data["quantity"]:
+            raise serializers.ValidationError(
+                f"Product {product.name}'s stock: {product.stock} is less than {data['quantity']}"
+            )
+        return data
+
     def save(self, **kwargs):
         cart_id = self.context["cart_id"]
         product_id = self.validated_data["product_id"]
@@ -74,6 +82,14 @@ class UpdateCartItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = CartItem
         fields = ["quantity"]
+
+    def validate(self, data):
+        product = self.instance.product
+        if product.stock < data["quantity"]:
+            raise serializers.ValidationError(
+                f"Quantity is more than {product.name}'s stock"
+            )
+        return data
 
 
 class OrderItemSerializer(serializers.ModelSerializer):

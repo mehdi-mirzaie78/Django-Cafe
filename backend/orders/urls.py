@@ -5,7 +5,7 @@ from . import views
 app_name = "orders"
 
 router = DefaultRouter()
-router.register("carts", views.CartViewSet)
+router.register("carts", views.CartViewSet, basename="carts")
 router.register("orders", views.OrderViewSet, basename="orders")
 
 # Nested routers

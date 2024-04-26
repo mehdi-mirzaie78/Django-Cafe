@@ -1,13 +1,11 @@
-from rest_framework.mixins import (
-    CreateModelMixin,
-    RetrieveModelMixin,
-    DestroyModelMixin,
-)
-from rest_framework.viewsets import GenericViewSet, ModelViewSet
+from django.db.models import F
+from django.utils.translation import gettext_lazy as _
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from accounts.auth import JWTAuthentication
+from core.viewsets import CreateRetrieveDestroyViewSet
 from .serializers import (
     AddCartItemSerializer,
     CartItemSerializer,
@@ -19,18 +17,24 @@ from .serializers import (
 from .models import Cart, CartItem, Order
 
 
-class CartViewSet(
-    CreateModelMixin, RetrieveModelMixin, DestroyModelMixin, GenericViewSet
-):
-    queryset = Cart.objects.prefetch_related("items__product").all()
+class CartViewSet(CreateRetrieveDestroyViewSet):
     serializer_class = CartSerializer
+
+    def get_queryset(self):
+        queryset = Cart.objects.prefetch_related("items__product").all()
+        qs = queryset.filter(items__quantity__gt=F("items__product__stock"))
+        if qs.exists():
+            count = sum([cart.check_and_remove_items() for cart in qs])
+            print(f"{count=}")
+
+        return queryset
 
 
 class CartItemViewSet(ModelViewSet):
     http_method_names = ["get", "post", "patch", "delete"]
 
     def get_serializer_context(self):
-        return {"cart_id": self.kwargs["cart_pk"]}
+        return {"cart_id": self.kwargs["cart_pk"], "pk": self.kwargs.get("pk")}
 
     def get_serializer_class(self):
         if self.request.method == "POST":
@@ -40,9 +44,15 @@ class CartItemViewSet(ModelViewSet):
         return CartItemSerializer
 
     def get_queryset(self):
-        return CartItem.objects.filter(cart_id=self.kwargs["cart_pk"]).select_related(
-            "product"
+        queryset = CartItem.objects.select_related("product").filter(
+            cart_id=self.kwargs["cart_pk"]
         )
+
+        qs = queryset.filter(quantity__gt=F("product__stock"))
+        if qs.exists():
+            qs.delete()
+
+        return queryset
 
 
 class OrderViewSet(ModelViewSet):
