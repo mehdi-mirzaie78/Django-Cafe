@@ -22,10 +22,12 @@ class CartViewSet(CreateRetrieveDestroyViewSet):
 
     def get_queryset(self):
         queryset = Cart.objects.prefetch_related("items__product").all()
-        qs = queryset.filter(items__quantity__gt=F("items__product__stock"))
-        if qs.exists():
-            count = sum([cart.check_and_remove_items() for cart in qs])
-            print(f"{count=}")
+
+        overstocked_carts = queryset.filter(
+            items__quantity__gt=F("items__product__stock")
+        )
+        if overstocked_carts.exists():
+            [cart.validate_stock_and_remove_items() for cart in overstocked_carts]
 
         return queryset
 
@@ -48,9 +50,9 @@ class CartItemViewSet(ModelViewSet):
             cart_id=self.kwargs["cart_pk"]
         )
 
-        qs = queryset.filter(quantity__gt=F("product__stock"))
-        if qs.exists():
-            qs.delete()
+        overstocked_items = queryset.filter(quantity__gt=F("product__stock"))
+        if overstocked_items.exists():
+            overstocked_items.delete()
 
         return queryset
 

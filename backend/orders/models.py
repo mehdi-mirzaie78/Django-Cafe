@@ -68,9 +68,9 @@ class Status(BaseModel):
 class Cart(BaseModel):
     id = models.UUIDField(primary_key=True, default=uuid4)
 
-    def check_and_remove_items(self):
+    def validate_stock_and_remove_items(self):
         res = [
-            item.remove_if_stock_is_less_than_quantity() for item in self.items.all()
+            item.check_and_remove_if_stock_insufficient() for item in self.items.all()
         ]
         return sum(res)
 
@@ -96,7 +96,7 @@ class CartItem(BaseModel):
     def total_price(self):
         return self.quantity * self.product.price
 
-    def remove_if_stock_is_less_than_quantity(self):
+    def check_and_remove_if_stock_insufficient(self):
         if self.product.stock < self.quantity:
             return self.delete()[0]
 
