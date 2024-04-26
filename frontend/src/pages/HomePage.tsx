@@ -1,19 +1,21 @@
-import { Box, HStack } from "@chakra-ui/react";
+import { Box, Heading } from "@chakra-ui/react";
 import Categories from "../components/Categories";
 import ProductGrid from "../components/ProductGrid";
-import SortingOrder from "../components/SortingOrder";
 
 const HomePage = () => {
   return (
     <Box padding="10px">
-      <HStack
-        marginBottom={8}
-        justifyContent="space-between"
-        alignItems={"start"}
+      <Heading
+        textAlign={"center"}
+        px={3}
+        mb={6}
+        fontSize={{ base: "large", md: "xx-large" }}
       >
-        <Categories />
-        <SortingOrder />
-      </HStack>
+        Categories
+      </Heading>
+
+      <Categories />
+
       <ProductGrid />
     </Box>
   );

@@ -1,17 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import ms from "ms";
-import categories from "../data/categories";
 import Category from "../entities/Category";
-import APIClient from "../services/apiClient";
+import APIClient, { FetchResponse } from "../services/apiClient";
 
 const apiClient = new APIClient<Category>("/categories/");
 
 const useCategories = () =>
-  useQuery({
+  useQuery<FetchResponse<Category>, AxiosError>({
     queryKey: ["categories"],
     queryFn: () => apiClient.getAll(),
     staleTime: ms("24h"),
-    initialData: categories,
   });
 
 export default useCategories;

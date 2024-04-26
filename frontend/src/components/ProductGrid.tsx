@@ -1,4 +1,4 @@
-import { Center, HStack, SimpleGrid, Spinner } from "@chakra-ui/react";
+import { Center, HStack, Heading, SimpleGrid, Spinner } from "@chakra-ui/react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Fragment } from "react/jsx-runtime";
 import useProducts from "../hooks/useProducts";
@@ -6,6 +6,7 @@ import Loader from "./Loader";
 import Message from "./Message";
 import ProductCard from "./ProductCard";
 import ProductCardContainer from "./ProductCardContainer";
+import SortingOrder from "./SortingOrder";
 
 const ProductGrid = () => {
   const { data, isLoading, error, fetchNextPage, hasNextPage } = useProducts();
@@ -47,6 +48,23 @@ const ProductGrid = () => {
         </HStack>
       }
     >
+      <HStack
+        alignItems={"center"}
+        justifyContent={"space-between"}
+        px={3}
+        mb={5}
+        spacing={3}
+      >
+        <Heading
+          fontSize={{ base: "md", md: "xx-large" }}
+          textAlign={"center"}
+          mb={5}
+          my={0}
+        >
+          Products
+        </Heading>
+        <SortingOrder />
+      </HStack>
       <SimpleGrid
         columns={{ base: 1, md: 2, lg: 3, xl: 5 }}
         spacing={6}

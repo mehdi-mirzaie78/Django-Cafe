@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Center } from "@chakra-ui/react";
 import { ReactNode } from "react";
 
 interface Props {
@@ -15,7 +15,7 @@ const ProductCardContainer = ({ children }: Props) => {
         transition: "transform .15s ease-in",
       }}
     >
-      {children}
+      <Center>{children}</Center>
     </Box>
   );
 };

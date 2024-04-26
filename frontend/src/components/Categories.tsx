@@ -1,6 +1,7 @@
-import { Button, Center, HStack } from "@chakra-ui/react";
+import { Center, HStack } from "@chakra-ui/react";
 import useCategories from "../hooks/useCategories";
 import { useProductQueryStore } from "../store";
+import CategoryCard from "./CategoryCard";
 import Loader from "./Loader";
 import Message from "./Message";
 
@@ -21,30 +22,22 @@ const Categories = () => {
       </Message>
     );
   return (
-    <HStack flexWrap={"wrap"}>
-      <Button
-        size={{ base: "xs", md: "sm", xl: "md" }}
-        colorScheme="blue"
-        variant="outline"
-        onClick={() => {
-          setCategoryId("");
-        }}
-        key={"all"}
-      >
-        All
-      </Button>
+    <HStack
+      spacing={{ base: 4, md: 8 }}
+      paddingY={5}
+      marginX={3}
+      mb={10}
+      overflowX={"auto"}
+      justifyContent={"center"}
+      borderRadius={5}
+      backgroundImage="https://plus.unsplash.com/premium_photo-1674476933026-aa7f5652af8a?q=80&w=2532&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    >
       {data?.results.map((category) => (
-        <Button
-          size={{ base: "xs", md: "sm", xl: "md" }}
-          colorScheme="blue"
-          variant="outline"
-          onClick={() => {
-            setCategoryId(category.slug);
-          }}
+        <CategoryCard
+          category={category}
+          setCategoryId={setCategoryId}
           key={category.id}
-        >
-          {category.name}
-        </Button>
+        />
       ))}
     </HStack>
   );
