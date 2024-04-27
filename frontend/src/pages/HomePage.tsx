@@ -1,8 +1,15 @@
 import { Box, Heading } from "@chakra-ui/react";
+import { useEffect } from "react";
 import Categories from "../components/Categories";
 import ProductGrid from "../components/ProductGrid";
+import useCreateCart from "../hooks/useCreateCart";
 
 const HomePage = () => {
+  const { mutate } = useCreateCart();
+  useEffect(() => {
+    mutate();
+  }, []);
+
   return (
     <Box padding="10px">
       <Heading

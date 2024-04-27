@@ -34,6 +34,11 @@ class APIClient<T> {
   post = async (data: object) => {
     return axiosInstance.post<T>(this.endpoint, data).then((res) => res.data);
   };
+  delete = async (id: number | string) => {
+    return axiosInstance
+      .delete<T>(this.endpoint + "/" + id + "/")
+      .then((res) => res.data);
+  };
 }
 
 export default APIClient;

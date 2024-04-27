@@ -1,22 +1,25 @@
-import { useMutation } from "@tanstack/react-query";
-import APIClient from "../services/apiClient";
+import { useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import useCartQueryStore from "../store/cartStore";
+import Cart from "../entities/Cart";
+import APIClient from "../services/apiClient";
+import useCartQueryStore, { CartQuery } from "../store/cartStore";
 
-const apiClient = new APIClient("/carts/");
-const useCart = () => {
-  const { cartQuery, setCartQuery } = useCartQueryStore();
+const useCart = (cartId: string | undefined, shouldFetch: boolean = true) => {
+  const { setCartQuery } = useCartQueryStore();
+  const apiClient = new APIClient<Cart>(`/carts/${cartId}/`);
 
-  return useMutation<any, AxiosError>({
-    mutationKey: ["AddToCart"],
-    mutationFn: async () => {
-      if (!cartQuery.id) return await apiClient.post({});
-      return cartQuery;
-    },
-    onSuccess: (data: any) => {
-      setCartQuery(data);
-    },
+  const queryInfo = useQuery<Cart, AxiosError>({
+    queryKey: ["cart", cartId],
+    queryFn: async () => apiClient.get(),
+    onSuccess: (data: Cart) => setCartQuery(data),
+    onError: (error) => setCartQuery({} as CartQuery),
+    enabled: shouldFetch && cartId !== undefined,
   });
+
+  return {
+    ...queryInfo,
+    refetch: queryInfo.refetch,
+  };
 };
 
 export default useCart;

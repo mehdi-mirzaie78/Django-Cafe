@@ -1,11 +1,14 @@
 interface SimpleProduct {
-  id: string;
+  id: number;
+  slug: string;
   name: string;
+  medias: string[];
 }
-interface CartItem {
-  id: string;
+export interface CartItem {
+  id: number;
   product: SimpleProduct;
   quantity: number;
+  totalPrice: number;
 }
 
 interface Cart {

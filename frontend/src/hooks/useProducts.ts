@@ -21,7 +21,7 @@ const useProducts = () => {
           page: pageParam,
         },
       }),
-    staleTime: ms("24h"),
+    staleTime: ms("1m"),
     getNextPageParam: (lastPage, allPages) => {
       return lastPage.next ? allPages.length + 1 : undefined;
     },

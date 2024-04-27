@@ -1,7 +1,10 @@
 import { create } from "zustand";
+import { CartItem } from "../entities/Cart";
 
-interface CartQuery {
+export interface CartQuery {
   id: string;
+  items: CartItem[];
+  totalPrice: number;
 }
 
 interface CartQueryStore {

@@ -13,12 +13,15 @@ import {
 import { Link } from "react-router-dom";
 import Product from "../entities/Product";
 import Rating from "./Rating";
+import useAddToCart from "../hooks/useAddToCart";
 
 interface Props {
   product: Product;
 }
 
 const ProductCard = ({ product }: Props) => {
+  const { mutate } = useAddToCart();
+
   return (
     <Card
       maxW="sm"
@@ -103,6 +106,7 @@ const ProductCard = ({ product }: Props) => {
             </Badge>
           ) : (
             <Button
+              onClick={() => mutate(product.id)}
               colorScheme="blue"
               // bg={useColorModeValue("blue.100", "blue.700")}
               size={{ base: "xs", md: "sm", xl: "md" }}
