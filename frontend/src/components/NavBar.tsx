@@ -19,14 +19,17 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 
-import { BiCart, BiHome, BiLogIn, BiUser } from "react-icons/bi";
+import { BiHome, BiLogIn, BiUser } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import useCafe from "../hooks/useCafe";
 import useLogout from "../hooks/useLogout";
 import useAuthQueryStore from "../store/authStore";
+import CartIcon from "./CartIcon";
 import NavItem from "./NavItem";
 import SearchInput from "./SearchInput";
-let rightLinks = [{ name: "Cart", path: "cart", icon: <BiCart size={22} /> }];
+
+let rightLinks = [{ name: "Cart", path: "cart", icon: <CartIcon /> }];
+
 let Links = [
   { name: "Home", path: "home", icon: <BiHome size={20} /> },
   { name: "Login", path: "login", icon: <BiLogIn size={20} /> },
