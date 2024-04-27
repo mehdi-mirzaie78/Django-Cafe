@@ -6,9 +6,14 @@ from .models import Cart, CartItem, Order, OrderItem
 
 
 class SimpleProductSerializer(serializers.ModelSerializer):
+    medias = serializers.SerializerMethodField()
+
     class Meta:
         model = Product
-        fields = ["id", "name", "price"]
+        fields = ["id", "slug", "name", "price", "medias"]
+
+    def get_medias(self, obj: Product):
+        return  [media.file.url for media in obj.medias.all()]
 
 
 class CartItemSerializer(serializers.ModelSerializer):
