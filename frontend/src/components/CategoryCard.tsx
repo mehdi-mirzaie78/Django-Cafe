@@ -14,6 +14,9 @@ interface Props {
 }
 
 const CategoryCard = ({ category, setCategoryId }: Props) => {
+  // checking if there's a category called all then we don't need to specify a slug for the requests
+  if (category.name.toLowerCase() === "all") category.slug = "";
+
   return (
     <Card
       key={category.id}

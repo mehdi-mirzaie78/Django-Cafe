@@ -8,7 +8,7 @@ import {
   Heading,
   Image,
   Text,
-  useColorModeValue
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import Product from "../entities/Product";
@@ -91,12 +91,25 @@ const ProductCard = ({ product }: Props) => {
         <HStack marginTop={{ base: 3, md: 3 }} justifyContent={"space-between"}>
           <Rating value={product.rating} />
 
-          <Button
-            bg={useColorModeValue("blue.100", "blue.700")}
-            size={{ base: "xs", md: "sm", xl: "md" }}
-          >
-            <AddIcon me={1} /> Add
-          </Button>
+          {product.stock === 0 ? (
+            <Badge
+              bg="none"
+              textOverflow={"ellipsis"}
+              p={{ base: 1, md: 2, xl: 3 }}
+              colorScheme="red"
+              borderRadius={5}
+            >
+              Out of Stock
+            </Badge>
+          ) : (
+            <Button
+              colorScheme="blue"
+              // bg={useColorModeValue("blue.100", "blue.700")}
+              size={{ base: "xs", md: "sm", xl: "md" }}
+            >
+              <AddIcon me={1} /> Add
+            </Button>
+          )}
         </HStack>
       </CardBody>
     </Card>
