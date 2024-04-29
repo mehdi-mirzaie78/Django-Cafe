@@ -108,7 +108,7 @@ const ProductCard = ({ product }: Props) => {
             <Badge
               bg="none"
               textOverflow={"ellipsis"}
-              p={{ base: 1, md: 2, xl: 3 }}
+              py="7px"
               colorScheme="red"
               borderRadius={5}
             >
