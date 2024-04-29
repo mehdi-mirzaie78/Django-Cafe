@@ -6,8 +6,6 @@ import {
   GridItem,
   HStack,
   Image,
-  Input,
-  InputGroup,
   Stack,
   Table,
   TableContainer,
@@ -17,19 +15,21 @@ import {
   Th,
   Thead,
   Tr,
-  useColorModeValue,
+  useColorModeValue
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { BiTrash } from "react-icons/bi";
+import ErrorMessage from "../components/ErrorMessage";
+import IncDecCartItem from "../components/IncDecCartItem";
 import useCart from "../hooks/useCart";
 import useCreateCart from "../hooks/useCreateCart";
 import useRemoveCartItem from "../hooks/useRemoveCartItem";
+import useUpdateCartItem from "../hooks/useUpdateCartItem";
 import useCartQueryStore from "../store/cartStore";
-import { BsArrowUp, BsArrowUpCircle, BsPlusCircleDotted } from "react-icons/bs";
-import { ArrowUpDownIcon, ArrowUpIcon, PlusSquareIcon } from "@chakra-ui/icons";
 
 const CartPage = () => {
   const cartQuery = useCartQueryStore((s) => s.cartQuery);
+  const { mutate: updateCartItem, error: updateError } = useUpdateCartItem();
 
   const { mutate: createCart, isLoading: isCreatingCart } = useCreateCart();
   const { data: cartData, refetch: refetchCart } = useCart(
@@ -47,10 +47,6 @@ const CartPage = () => {
 
   const { mutate: removeCartItem } = useRemoveCartItem();
 
-  const handleRemoveCartItem = (id: number) => {
-    removeCartItem(id);
-  };
-
   if (cartQuery?.items?.length === 0) {
     return (
       <Center>
@@ -63,6 +59,7 @@ const CartPage = () => {
   if (cartQuery?.items?.length > 0)
     return (
       <Box maxW={"100vw"}>
+        {updateError && <ErrorMessage error={updateError} paddingX={5} />}
         <Grid
           templateAreas={{ base: "'side' 'main'", lg: "'main side'" }}
           templateColumns={{ base: "100%", lg: "2fr 1fr" }}
@@ -121,34 +118,11 @@ const CartPage = () => {
                       </Td>
 
                       <Td>
-                        <HStack
-                          spacing={{ base: 2, md: 4 }}
-                          justifyContent={"center"}
-                        >
-                          <InputGroup>
-                            <Button
-                              colorScheme="red"
-                              size={{ base: "xs", md: "sm" }}
-                              variant="outline"
-                            >
-                              -
-                            </Button>
-
-                            <Text
-                              alignContent={"center"}
-                              paddingX={{ base: 2, md: 4 }}
-                            >
-                              {item.quantity}
-                            </Text>
-                            <Button
-                              colorScheme="green"
-                              size={{ base: "xs", md: "sm" }}
-                              variant="outline"
-                            >
-                              +
-                            </Button>
-                          </InputGroup>
-                        </HStack>
+                        <IncDecCartItem
+                          item={item}
+                          handleUpdateCartItem={updateCartItem}
+                          handleRemoveCartItem={removeCartItem}
+                        />
                       </Td>
                       <Td textAlign="center">
                         <Text>$ {item.totalPrice.toFixed(2)}</Text>
@@ -159,7 +133,7 @@ const CartPage = () => {
                           size={{ base: "xs", md: "sm" }}
                           variant={"outline"}
                           p={{ base: 1, md: 2 }}
-                          onClick={() => handleRemoveCartItem(item.id)}
+                          onClick={() => removeCartItem(item.id)}
                         >
                           <BiTrash />
                         </Button>

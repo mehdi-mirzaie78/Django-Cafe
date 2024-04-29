@@ -12,15 +12,26 @@ import {
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import Product from "../entities/Product";
-import Rating from "./Rating";
 import useAddToCart from "../hooks/useAddToCart";
+import useRemoveCartItem from "../hooks/useRemoveCartItem";
+import useUpdateCartItem from "../hooks/useUpdateCartItem";
+import useCartQueryStore from "../store/cartStore";
+import IncDecCartItem from "./IncDecCartItem";
+import Rating from "./Rating";
 
 interface Props {
   product: Product;
 }
 
 const ProductCard = ({ product }: Props) => {
-  const { mutate } = useAddToCart();
+  const cartQuery = useCartQueryStore((s) => s.cartQuery);
+  const { mutate: addToCart } = useAddToCart();
+  const { mutate: updateCartItem, error: updateError } = useUpdateCartItem();
+  const { mutate: removeCartItem } = useRemoveCartItem();
+
+  const productInCart = cartQuery.items.filter(
+    (item) => item.product.id === product.id
+  );
 
   return (
     <Card
@@ -93,7 +104,6 @@ const ProductCard = ({ product }: Props) => {
 
         <HStack marginTop={{ base: 3, md: 3 }} justifyContent={"space-between"}>
           <Rating value={product.rating} />
-
           {product.stock === 0 ? (
             <Badge
               bg="none"
@@ -104,16 +114,25 @@ const ProductCard = ({ product }: Props) => {
             >
               Out of Stock
             </Badge>
-          ) : (
+          ) : productInCart.length === 0 ? (
             <Button
-              onClick={() => mutate(product.id)}
+              onClick={() => addToCart(product.id)}
               colorScheme="blue"
-              // bg={useColorModeValue("blue.100", "blue.700")}
               size={{ base: "xs", md: "sm", xl: "md" }}
             >
-              <AddIcon me={1} /> Add
+              <HStack>
+                <AddIcon me={1} /> <Text>Add</Text>
+              </HStack>
             </Button>
+          ) : (
+            <IncDecCartItem
+              item={productInCart[0]}
+              handleUpdateCartItem={updateCartItem}
+              handleRemoveCartItem={removeCartItem}
+              justify="end"
+            />
           )}
+          )
         </HStack>
       </CardBody>
     </Card>
