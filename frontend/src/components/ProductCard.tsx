@@ -118,7 +118,7 @@ const ProductCard = ({ product }: Props) => {
             <Button
               onClick={() => addToCart(product.id)}
               colorScheme="blue"
-              size={{ base: "xs", md: "sm", xl: "md" }}
+              size={{ base: "xs", md: "sm" }}
             >
               <HStack>
                 <AddIcon me={1} /> <Text>Add</Text>
