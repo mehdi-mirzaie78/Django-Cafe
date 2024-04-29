@@ -6,24 +6,27 @@ import {
   GridItem,
   HStack,
   Image,
+  Input,
+  InputGroup,
   Stack,
   Table,
   TableContainer,
   Tbody,
   Td,
   Text,
-  Tfoot,
   Th,
   Thead,
   Tr,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { BiTrash } from "react-icons/bi";
 import useCart from "../hooks/useCart";
+import useCreateCart from "../hooks/useCreateCart";
 import useRemoveCartItem from "../hooks/useRemoveCartItem";
 import useCartQueryStore from "../store/cartStore";
-import useCreateCart from "../hooks/useCreateCart";
-import { useEffect } from "react";
+import { BsArrowUp, BsArrowUpCircle, BsPlusCircleDotted } from "react-icons/bs";
+import { ArrowUpDownIcon, ArrowUpIcon, PlusSquareIcon } from "@chakra-ui/icons";
 
 const CartPage = () => {
   const cartQuery = useCartQueryStore((s) => s.cartQuery);
@@ -57,14 +60,14 @@ const CartPage = () => {
       </Center>
     );
   }
-  if (cartQuery?.items)
+  if (cartQuery?.items?.length > 0)
     return (
       <Box maxW={"100vw"}>
         <Grid
-          templateAreas={{ base: "'side' 'main'", md: "'main side'" }}
-          templateColumns={{ base: "1fr", md: "2fr 1fr" }}
-          gap={10}
-          padding={5}
+          templateAreas={{ base: "'side' 'main'", lg: "'main side'" }}
+          templateColumns={{ base: "100%", lg: "2fr 1fr" }}
+          gap={{ base: 5, md: 10 }}
+          padding={{ base: 1, md: 5 }}
           maxWidth="100%"
           overflowX="auto"
         >
@@ -77,9 +80,10 @@ const CartPage = () => {
               bg={useColorModeValue("gray.50", "gray.800")}
             >
               <Table
+                className="cart-table"
                 variant="striped"
                 size={{ base: "sm", md: "md", lg: "lg" }}
-                fontSize={"large"}
+                fontSize={{ base: "sm", md: "md", lg: "large" }}
               >
                 <Thead>
                   <Tr>
@@ -93,32 +97,57 @@ const CartPage = () => {
                   {cartQuery.items.map((item) => (
                     <Tr key={item.id}>
                       <Td textAlign="center">
-                        <HStack spacing={5}>
+                        <HStack
+                          spacing={{ base: 2, md: 4 }}
+                          justifyContent={{ base: "center", md: "start" }}
+                        >
                           <Image
                             borderRadius={5}
-                            height={{ base: "3rem", md: "5rem" }}
-                            width={{ base: "3rem", md: "5rem" }}
+                            height={{ base: "2.5rem", md: "5rem" }}
+                            width={{ base: "2.5rem", md: "5rem" }}
                             objectFit={"cover"}
                             src={item.product.medias[0]}
                             alt={item.product.name}
                           />
-                          <Text>{item.product.name}</Text>
+                          <Text
+                            textAlign={"start"}
+                            me={{ base: 2, md: 8 }}
+                            whiteSpace={"wrap"}
+                            display={{ base: "none", md: "block" }}
+                          >
+                            {item.product.name}
+                          </Text>
                         </HStack>
                       </Td>
 
                       <Td>
-                        <HStack spacing={4} justifyContent={"center"}>
-                          <Button colorScheme="red" size="sm" variant="outline">
-                            -
-                          </Button>
-                          <Text>{item.quantity}</Text>
-                          <Button
-                            colorScheme="blue"
-                            size="sm"
-                            variant="outline"
-                          >
-                            +
-                          </Button>
+                        <HStack
+                          spacing={{ base: 2, md: 4 }}
+                          justifyContent={"center"}
+                        >
+                          <InputGroup>
+                            <Button
+                              colorScheme="red"
+                              size={{ base: "xs", md: "sm" }}
+                              variant="outline"
+                            >
+                              -
+                            </Button>
+
+                            <Text
+                              alignContent={"center"}
+                              paddingX={{ base: 2, md: 4 }}
+                            >
+                              {item.quantity}
+                            </Text>
+                            <Button
+                              colorScheme="green"
+                              size={{ base: "xs", md: "sm" }}
+                              variant="outline"
+                            >
+                              +
+                            </Button>
+                          </InputGroup>
                         </HStack>
                       </Td>
                       <Td textAlign="center">
@@ -127,11 +156,12 @@ const CartPage = () => {
                       <Td textAlign="center">
                         <Button
                           colorScheme="red"
+                          size={{ base: "xs", md: "sm" }}
                           variant={"outline"}
-                          p={2}
+                          p={{ base: 1, md: 2 }}
                           onClick={() => handleRemoveCartItem(item.id)}
                         >
-                          <BiTrash size={22} />
+                          <BiTrash />
                         </Button>
                       </Td>
                     </Tr>
@@ -151,16 +181,21 @@ const CartPage = () => {
               bg={useColorModeValue("gray.50", "gray.700")}
             >
               <Stack spacing={5}>
-                <Text fontSize={"x-large"} fontWeight={"bold"}>
+                <Text
+                  fontSize={{ base: "large", md: "x-large" }}
+                  fontWeight={"bold"}
+                >
                   Cart Summary
                 </Text>
-                <Text fontSize={"large"}>
+                <Text fontSize={{ base: "md", md: "large" }}>
                   Total Items: {cartQuery.items.length}
                 </Text>
-                <Text fontSize={"large"}>
+                <Text fontSize={{ base: "md", md: "large" }}>
                   Total: $ {cartQuery.totalPrice.toFixed(2)}
                 </Text>
-                <Button colorScheme="green">Proceed</Button>
+                <Button colorScheme="blue" size={{ base: "sm", md: "lg" }}>
+                  Proceed
+                </Button>
               </Stack>
             </Box>
           </GridItem>
