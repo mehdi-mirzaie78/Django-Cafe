@@ -12,7 +12,7 @@ const CartIcon = () => {
         <Box
           position={"absolute"}
           top={-1}
-          right={-2}
+          right={-1}
           m={0}
           p={0}
           boxSize={4}
