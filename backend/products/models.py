@@ -82,7 +82,7 @@ class Product(BaseModel):
         super().save(*args, **kwargs)
 
     def __str__(self) -> str:
-        return self.name
+        return f"{self.id}-{self.name}"
 
 
 class Media(BaseModel):

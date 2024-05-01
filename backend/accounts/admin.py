@@ -16,7 +16,7 @@ class UserAdmin(BaseUserAdmin):
         "last_name",
         "gender",
         "is_active",
-        "is_admin",
+        "is_staff",
         "role",
         "image_tag",
     )
@@ -48,6 +48,7 @@ class UserAdmin(BaseUserAdmin):
                     (
                         "is_active",
                         "is_admin",
+                        "is_staff",
                         "is_superuser",
                     ),
                     "groups",
