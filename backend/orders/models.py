@@ -132,11 +132,6 @@ class Order(BaseModel):
         null=True,
         blank=True,
     )
-    total_price = models.DecimalField(
-        verbose_name=_("Total Price"),
-        max_digits=5,
-        decimal_places=2,
-    )
     is_paid = models.BooleanField(default=False, verbose_name=_("Is Paid"))
     discount = models.PositiveIntegerField(default=0, verbose_name=_("Discount"))
     address = models.TextField(null=True, blank=True, verbose_name=_("Address"))
@@ -162,6 +157,44 @@ class Order(BaseModel):
         default=OrderType.DINEIN,
         verbose_name=_("Order Type"),
     )
+
+    @property
+    def total_price(self):
+        return sum([item.total_price for item in self.order_items.all()])
+
+    @staticmethod
+    def __update_order_items(items_to_update: dict):
+        OrderItem.objects.bulk_update(
+            [OrderItem(pk=key, **value) for key, value in items_to_update.items()],
+            fields=["unit_price"],
+        )
+
+    def are_items_price_changed(self):
+        order_items_to_update = {}
+
+        for item in self.order_items.all():
+            if item.unit_price != item.product.price:
+                order_items_to_update[item.id] = {
+                    "unit_price": item.product.price,
+                    "total_price": item.quantity * item.product.price,
+                }
+
+        if order_items_to_update:
+            self.__update_order_items(order_items_to_update)
+            return True
+        return False
+
+    def remove_items_with_insufficient_quantity(self):
+        items_to_remove = []
+
+        for item in self.order_items.all():
+            if item.quantity > item.product.stock:
+                items_to_remove.append(item.id)
+
+        if items_to_remove:
+            self.order_items.filter(id__in=items_to_remove).delete()
+            return True
+        return False
 
     def save(self, *args, **kwargs):
         if self.discount:

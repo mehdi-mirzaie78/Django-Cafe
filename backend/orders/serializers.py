@@ -1,3 +1,4 @@
+from operator import is_
 from django.db import transaction
 from rest_framework import serializers
 from core.validators import phone_regex_validator
@@ -13,7 +14,7 @@ class SimpleProductSerializer(serializers.ModelSerializer):
         fields = ["id", "slug", "name", "price", "medias"]
 
     def get_medias(self, obj: Product):
-        return  [media.file.url for media in obj.medias.all()]
+        return [media.file.url for media in obj.medias.all()]
 
 
 class CartItemSerializer(serializers.ModelSerializer):
@@ -146,22 +147,6 @@ class CreateOrderSerializer(serializers.Serializer):
                 cart_id=cart_id
             )
 
-            products_to_update = {}
-            for item in cart_items:
-                if item.quantity > item.product.stock:
-                    raise serializers.ValidationError(
-                        "Insufficient stock for one or more products"
-                    )
-                products_to_update[item.product.id] = item.product.stock - item.quantity
-
-            Product.objects.bulk_update(
-                [
-                    Product(pk=product_id, stock=updated_stock)
-                    for product_id, updated_stock in products_to_update.items()
-                ],
-                fields=["stock"],
-            )
-
             order_items = [
                 OrderItem(
                     order=order,
@@ -172,9 +157,51 @@ class CreateOrderSerializer(serializers.Serializer):
                 )
                 for item in cart_items
             ]
-            order.total_price = sum([item.total_price for item in cart_items])
 
             order.save()
             OrderItem.objects.bulk_create(order_items)
             Cart.objects.filter(pk=cart_id).delete()
+            return order
+
+
+class OrderPaymentSerializer(serializers.ModelSerializer):
+    payment_status = serializers.BooleanField(write_only=True)
+
+    class Meta:
+        model = Order
+        fields = ["id", "payment_status", "transaction_code"]
+
+    def validate(self, data):
+        if self.instance.is_paid:
+            raise serializers.ValidationError("This order is already paid")
+        return data
+
+    def save(self, **kwargs):
+        with transaction.atomic():
+            order: Order = self.instance
+
+            products_to_update = {}
+            for item in order.order_items.all():
+                if item.quantity > item.product.stock:
+                    products_to_update[item.product.id] = {
+                        "stock": 0,
+                        "refill_quantity": item.quantity - item.product.stock,
+                    }
+
+                else:
+                    products_to_update[item.product.id] = {
+                        "stock": item.product.stock - item.quantity
+                    }
+
+            Product.objects.bulk_update(
+                [
+                    Product(pk=product_id, **data)
+                    for product_id, data in products_to_update.items()
+                ],
+                fields=["stock", "refill_quantity"],
+            )
+
+            order.is_paid = True
+            order.transaction_code = self.validated_data["transaction_code"]
+            order.save()
             return order

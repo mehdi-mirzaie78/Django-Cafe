@@ -1,20 +1,27 @@
 from django.db.models import F
 from django.utils.translation import gettext_lazy as _
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from accounts.auth import JWTAuthentication
 from core.viewsets import CreateRetrieveDestroyViewSet
+from .exceptions import (
+    OrderChangedException,
+    OrderItemRemovedException,
+    OrderNotFoundException,
+)
 from .serializers import (
     AddCartItemSerializer,
     CartItemSerializer,
     CartSerializer,
     CreateOrderSerializer,
+    OrderPaymentSerializer,
     OrderSerializer,
     UpdateCartItemSerializer,
 )
-from .models import Cart, CartItem, Order
+from .models import Cart, CartItem, Order, OrderItem
 
 
 class CartViewSet(CreateRetrieveDestroyViewSet):
@@ -84,4 +91,41 @@ class OrderViewSet(ModelViewSet):
         serializer.is_valid(raise_exception=True)
         order = serializer.save()
         serializer = OrderSerializer(order)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class OrderPaymentView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+
+    def get_queryset(self):
+        return (
+            Order.objects.select_related("user", "status", "table")
+            .filter(is_paid=False)
+            .all()
+        )
+
+    def get_object(self, pk):
+        queryset = self.get_queryset()
+        if not queryset.filter(pk=pk).exists():
+            raise OrderNotFoundException()
+        return self.get_queryset().get(pk=pk)
+
+    def get(self, request, pk):
+        order = self.get_object(pk)
+
+        if order.are_items_price_changed():
+            raise OrderChangedException()
+
+        if order.remove_items_with_insufficient_quantity():
+            raise OrderItemRemovedException()
+
+        serializer = OrderSerializer(order)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def patch(self, request, pk):
+        order = self.get_object(pk)
+        serializer = OrderPaymentSerializer(order, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)

@@ -63,6 +63,9 @@ class Product(BaseModel):
         verbose_name=_("Price"), max_digits=5, decimal_places=2, validators=[Min(1)]
     )
     stock = models.PositiveIntegerField(verbose_name=_("Stock"))
+    refill_quantity = models.PositiveIntegerField(
+        verbose_name=_("Stock to Refill"), default=0
+    )
     rating = models.DecimalField(
         verbose_name=_("Rating"),
         max_digits=3,
