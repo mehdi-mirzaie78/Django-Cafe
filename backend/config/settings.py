@@ -30,6 +30,8 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     "django_filters",
     "debug_toolbar",
+    "drf_spectacular",
+    "drf_spectacular_sidecar",
 ]
 
 INSTALLED_APPS = [
@@ -170,6 +172,7 @@ REST_FRAMEWORK = {
         "djangorestframework_camel_case.parser.CamelCaseMultiPartParser",
         "djangorestframework_camel_case.parser.CamelCaseJSONParser",
     ),
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 # DJANGO DEBUG TOOLBAR
@@ -220,3 +223,16 @@ SUPERUSER_EMAIL = str(os.getenv("SUPERUSER_EMAIL"))
 SUPERUSER_PASSWORD = str(os.getenv("SUPERUSER_PASSWORD"))
 SUPERUSER_FIRST_NAME = str(os.getenv("SUPERUSER_FIRST_NAME"))
 SUPERUSER_LAST_NAME = str(os.getenv("SUPERUSER_LAST_NAME"))
+
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Cuppa Cloud API",
+    "DESCRIPTION": "Beckend of an online cafe",
+    "VERSION": "1.0.0",
+    # "SERVE_INCLUDE_SCHEMA": False,
+    "SERVE_INCLUDE_SCHEMA": True,
+    # shorthand to use the sidecar instead
+    "SWAGGER_UI_DIST": "SIDECAR",
+    "SWAGGER_UI_FAVICON_HREF": "SIDECAR",
+    "REDOC_DIST": "SIDECAR",
+}

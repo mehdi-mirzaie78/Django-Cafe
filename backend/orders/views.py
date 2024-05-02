@@ -102,6 +102,7 @@ class OrderViewSet(ModelViewSet):
 class OrderPaymentView(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
+    serializer_class = OrderSerializer
 
     def get_queryset(self):
         return (
@@ -129,7 +130,7 @@ class OrderPaymentView(APIView):
             order.delete()
             raise OrderNotFoundException()
 
-        serializer = OrderSerializer(order)
+        serializer = self.serializer_class(order)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def patch(self, request, pk):
