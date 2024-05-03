@@ -143,6 +143,12 @@ class OrderViewSet(ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+class OrderTypeListView(APIView):
+    def get(self, request):
+        response = dict(Order.OrderType.choices)
+        return Response(response, status=status.HTTP_200_OK)
+
+
 class OrderPaymentView(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]

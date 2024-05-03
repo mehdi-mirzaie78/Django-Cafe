@@ -15,10 +15,11 @@ carts_router = routers.NestedDefaultRouter(router, "carts", lookup="cart")
 carts_router.register("items", views.CartItemViewSet, basename="cart-items")
 
 url_patterns = [
+    path("order-types/", views.OrderTypeListView.as_view(), name="order-type-list"),
     path(
         "orders/<int:pk>/payment/",
         views.OrderPaymentView.as_view(),
         name="order-payment",
-    )
+    ),
 ]
 urlpatterns = router.urls + carts_router.urls + url_patterns
