@@ -1,4 +1,7 @@
+from typing import List
 from rest_framework import serializers
+from drf_spectacular.utils import extend_schema_field
+from drf_spectacular.types import OpenApiTypes
 from .models import Product, Category, Media
 from core.serializers import BaseModelSerializer
 
@@ -31,6 +34,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "rating",
         ]
 
+    @extend_schema_field(List[dict])
     def get_media(self, obj):
         return MediaSerializer(obj.medias.all(), many=True).data
 

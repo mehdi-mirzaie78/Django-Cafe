@@ -1,6 +1,8 @@
-from operator import is_
+from typing import List
 from django.db import transaction
 from rest_framework import serializers
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema_field
 from core.validators import phone_regex_validator
 from products.models import Product
 from .models import Cart, CartItem, Order, OrderItem
@@ -13,6 +15,7 @@ class SimpleProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = ["id", "slug", "name", "price", "medias"]
 
+    @extend_schema_field(List[OpenApiTypes.URI])
     def get_medias(self, obj: Product):
         return [media.file.url for media in obj.medias.all()]
 
@@ -25,6 +28,7 @@ class CartItemSerializer(serializers.ModelSerializer):
         model = CartItem
         fields = ["id", "product", "quantity", "total_price"]
 
+    @extend_schema_field(OpenApiTypes.DECIMAL)
     def get_total_price(self, obj: CartItem):
         return obj.quantity * obj.product.price
 
@@ -38,6 +42,7 @@ class CartSerializer(serializers.ModelSerializer):
         model = Cart
         fields = ["id", "items", "total_price"]
 
+    @extend_schema_field(OpenApiTypes.DECIMAL)
     def get_total_price(self, obj: Cart):
         return sum([item.product.price * item.quantity for item in obj.items.all()])
 
@@ -129,7 +134,6 @@ class OrderSerializer(serializers.ModelSerializer):
             "address",
             "transaction_code",
         ]
-
 
 
 class CreateOrderSerializer(serializers.Serializer):

@@ -5,6 +5,8 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework import status
+from drf_spectacular.utils import extend_schema, OpenApiParameter, extend_schema_view
+from drf_spectacular.types import OpenApiTypes
 from accounts.auth import JWTAuthentication
 from core.viewsets import CreateRetrieveDestroyViewSet
 from .exceptions import (
@@ -39,6 +41,48 @@ class CartViewSet(CreateRetrieveDestroyViewSet):
         return queryset
 
 
+@extend_schema(
+    parameters=[
+        OpenApiParameter(
+            name="cart_pk",
+            location=OpenApiParameter.PATH,
+            type=OpenApiTypes.UUID,
+            description="The UUID of the cart",
+        )
+    ]
+)
+@extend_schema_view(
+    retrieve=extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="id",
+                description="ID of the cart item",
+                type=OpenApiTypes.INT64,
+                location=OpenApiParameter.PATH,
+            )
+        ]
+    ),
+    update=extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="id",
+                description="ID of the cart item",
+                type=OpenApiTypes.INT64,
+                location=OpenApiParameter.PATH,
+            )
+        ]
+    ),
+    destroy=extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="id",
+                description="ID of the cart item",
+                type=OpenApiTypes.INT64,
+                location=OpenApiParameter.PATH,
+            )
+        ]
+    ),
+)
 class CartItemViewSet(ModelViewSet):
     http_method_names = ["get", "post", "patch", "delete"]
 

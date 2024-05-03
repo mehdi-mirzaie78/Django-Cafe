@@ -1,3 +1,4 @@
+from decimal import Decimal
 from uuid import uuid4
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -159,7 +160,7 @@ class Order(BaseModel):
     )
 
     @property
-    def total_price(self):
+    def total_price(self) -> Decimal:
         return sum([item.total_price for item in self.order_items.all()])
 
     @staticmethod
