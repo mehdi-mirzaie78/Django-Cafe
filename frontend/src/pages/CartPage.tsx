@@ -6,6 +6,10 @@ import {
   GridItem,
   HStack,
   Image,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   Stack,
   Table,
   TableContainer,
@@ -17,7 +21,7 @@ import {
   Tr,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { BiTrash } from "react-icons/bi";
 import ErrorMessage from "../components/ErrorMessage";
 import IncDecCartItem from "../components/IncDecCartItem";
@@ -26,6 +30,8 @@ import useCreateCart from "../hooks/useCreateCart";
 import useRemoveCartItem from "../hooks/useRemoveCartItem";
 import useUpdateCartItem from "../hooks/useUpdateCartItem";
 import useCartQueryStore from "../store/cartStore";
+import { ChevronDownIcon } from "@chakra-ui/icons";
+import useOrderTypes from "../hooks/useOrderTypes";
 
 const CartPage = () => {
   const cartQuery = useCartQueryStore((s) => s.cartQuery);
@@ -36,6 +42,9 @@ const CartPage = () => {
     cartQuery.id,
     !isCreatingCart
   );
+
+  const [selectedOrderType, setSelectedOrderType] = useState("");
+  const { data: orderTypes } = useOrderTypes();
 
   useEffect(() => {
     if (!cartQuery.id && !isCreatingCart) {
@@ -167,6 +176,19 @@ const CartPage = () => {
               <Text fontSize={{ base: "md", md: "large" }}>
                 Total: $ {cartQuery.totalPrice.toFixed(2)}
               </Text>
+              <Menu matchWidth>
+                <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                  {selectedOrderType ? selectedOrderType : "Order Type"}
+                </MenuButton>
+                <MenuList>
+                  {orderTypes &&
+                    Object.keys(orderTypes).map((t) => (
+                      <MenuItem key={t} onClick={() => setSelectedOrderType(t)}>
+                        {t}
+                      </MenuItem>
+                    ))}
+                </MenuList>
+              </Menu>
               <Button colorScheme="blue" size={{ base: "sm", md: "lg" }}>
                 Proceed
               </Button>
