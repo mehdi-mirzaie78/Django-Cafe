@@ -28,12 +28,17 @@ class JWTAuthentication(BaseAuthentication):
 
     def authenticate(self, request: Request):
         header = self.get_and_validate_header(request)
+        if header is None:
+            return None
         payload = self.validate_access_token(header)
         user = self.get_user(payload)
         return user, payload
 
     def get_and_validate_header(self, request):
         header = request.headers.get(self.AUTH_HEADER_NAME)
+        if header is None:
+            return None
+
         self._validate_header(header)
         try:
             header = header.split()[1]
@@ -58,8 +63,8 @@ class JWTAuthentication(BaseAuthentication):
         return payload
 
     def _validate_header(self, header):
-        if header is None:
-            raise AuthorizationHeaderError
+        # if header is None:
+        #     raise AuthorizationHeaderError
         if not any(header.startswith(prefix) for prefix in self.AUTH_HEADER_TYPES):
             raise NotFoundPrefixError
 
