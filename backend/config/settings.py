@@ -152,7 +152,7 @@ CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS").split()
 
 # JWT SETTINGS
 ALGORITHM = os.getenv("ALGORITHM")
-ACCESS_TOKEN_EXPIRATION_MINUTES = 60 * 10
+ACCESS_TOKEN_EXPIRATION_MINUTES = 60 * 60 * 2
 REFRESH_TOKEN_EXPIRATION_MINUTES = 60 * 24 * 7
 
 # JWT AUTHENTICATION SETTINGS
@@ -168,11 +168,11 @@ REST_FRAMEWORK = {
         "djangorestframework_camel_case.render.CamelCaseBrowsableAPIRenderer",
     ),
     "DEFAULT_PARSER_CLASSES": (
-        "djangorestframework_camel_case.parser.CamelCaseFormParser",
         "djangorestframework_camel_case.parser.CamelCaseMultiPartParser",
         "djangorestframework_camel_case.parser.CamelCaseJSONParser",
     ),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_AUTHENTICATION_CLASSES": ["accounts.auth.JWTAuthentication"],
 }
 
 # DJANGO DEBUG TOOLBAR
