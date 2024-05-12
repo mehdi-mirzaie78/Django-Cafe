@@ -24,7 +24,7 @@ const useRegisterComplete = () => {
       localStorage.removeItem("registerInfo");
       const { accessToken, refreshToken, firstName, lastName } = data;
       setAuthQuery({ accessToken, refreshToken, firstName, lastName });
-      navigate("/");
+      navigate("/home");
     },
   });
 };

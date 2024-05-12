@@ -12,7 +12,7 @@ const useLogout = () => {
     mutationKey: ["logout"],
     mutationFn: () =>
       privateAPIClient.post({ refreshToken: authQuery.refreshToken }),
-    onSuccess: () => {
+    onSettled: () => {
       setAuthQuery({});
     },
   });
