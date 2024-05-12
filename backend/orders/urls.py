@@ -9,6 +9,7 @@ app_name = "orders"
 router = DefaultRouter()
 router.register("carts", views.CartViewSet, basename="carts")
 router.register("orders", views.OrderViewSet, basename="orders")
+router.register("tables", views.TableViewSet, basename="tables")
 
 # Nested routers
 carts_router = routers.NestedDefaultRouter(router, "carts", lookup="cart")

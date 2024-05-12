@@ -2,7 +2,7 @@ from django.db.models import F
 from django.utils.translation import gettext_lazy as _
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 from drf_spectacular.utils import extend_schema, OpenApiParameter, extend_schema_view
@@ -21,11 +21,13 @@ from .serializers import (
     CreateOrderSerializer,
     OrderPaymentSerializer,
     OrderSerializer,
+    TableSerializer,
     UpdateCartItemSerializer,
 )
-from .models import Cart, CartItem, Order, OrderItem
+from .models import Cart, CartItem, Order, Table
 
 
+@extend_schema(auth=[{}])
 class CartViewSet(CreateRetrieveDestroyViewSet):
     serializer_class = CartSerializer
 
@@ -49,7 +51,8 @@ class CartViewSet(CreateRetrieveDestroyViewSet):
             type=OpenApiTypes.UUID,
             description="The UUID of the cart",
         )
-    ]
+    ],
+    auth=[{}],
 )
 @extend_schema_view(
     retrieve=extend_schema(
@@ -57,7 +60,7 @@ class CartViewSet(CreateRetrieveDestroyViewSet):
             OpenApiParameter(
                 name="id",
                 description="ID of the cart item",
-                type=OpenApiTypes.INT64,
+                type=OpenApiTypes.INT,
                 location=OpenApiParameter.PATH,
             )
         ]
@@ -108,6 +111,18 @@ class CartItemViewSet(ModelViewSet):
         return queryset
 
 
+class TableViewSet(ModelViewSet):
+    http_method_names = ['get', 'post', 'patch', 'delete']
+    authentication_classes = [JWTAuthentication]
+    queryset = Table.objects.all()
+    serializer_class = TableSerializer
+
+    def get_permissions(self):
+        if self.request.method in ["POST", "PATCH", "DELETE"]:
+            return [IsAdminUser()]
+        return [AllowAny()]
+
+
 class OrderViewSet(ModelViewSet):
     http_method_names = ["get", "post", "patch", "delete", "options"]
     authentication_classes = [JWTAuthentication]
@@ -143,6 +158,7 @@ class OrderViewSet(ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+@extend_schema(auth=[{}])
 class OrderTypeListView(APIView):
     def get(self, request):
         response = dict(Order.OrderType.choices)

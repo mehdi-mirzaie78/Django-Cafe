@@ -5,7 +5,7 @@ from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema_field
 from core.validators import phone_regex_validator
 from products.models import Product
-from .models import Cart, CartItem, Order, OrderItem
+from .models import Cart, CartItem, Order, OrderItem, Table
 
 
 class SimpleProductSerializer(serializers.ModelSerializer):
@@ -101,6 +101,12 @@ class UpdateCartItemSerializer(serializers.ModelSerializer):
                 f"Quantity is more than {product.name}'s stock"
             )
         return data
+
+
+class TableSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Table
+        fields = ["name", "capacity", "is_available"]
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
