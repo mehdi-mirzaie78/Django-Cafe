@@ -1,12 +1,11 @@
 from django.contrib.auth import authenticate
 from django.utils.translation import gettext_lazy as _
-from drf_spectacular.utils import OpenApiParameter, extend_schema
+from drf_spectacular.utils import extend_schema
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
-from rest_framework.parsers import MultiPartParser, JSONParser
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from .serializers import (
     UserRegisterSerializer,
     UserLoginSerializer,
@@ -20,19 +19,10 @@ from .utils import JWTHandler as JWT, OTPHandler
 from .auth import JWTAuthentication
 
 
+@extend_schema(auth=[{}])
 class RegisterView(APIView):
     serializer_class = UserRegisterSerializer
 
-    @extend_schema(
-        parameters=[
-            OpenApiParameter(
-                name="phone",
-                description=("Phone number for registeration"),
-                type=str,
-            )
-        ],
-        auth=[],
-    )
     def post(self, request):
         serialized_data = self.serializer_class(data=request.data)
         serialized_data.is_valid(raise_exception=True)
@@ -43,6 +33,7 @@ class RegisterView(APIView):
         )
 
 
+@extend_schema(auth=[{}])
 class VerifyRegisterView(APIView):
     serializer_class = VerifyRegisterSerializer
 
@@ -55,6 +46,7 @@ class VerifyRegisterView(APIView):
         )
 
 
+@extend_schema(auth=[{}])
 class CompleteRegistrationView(APIView):
     serializer_class = CompleteRegistrationSerializer
 
@@ -72,6 +64,7 @@ class CompleteRegistrationView(APIView):
         )
 
 
+@extend_schema(auth=[{}])
 class LoginView(APIView):
     serializer_class = UserLoginSerializer
 
@@ -92,6 +85,7 @@ class LoginView(APIView):
 
 
 class RefreshTokenView(APIView):
+    permission_classes = [AllowAny]
     serializer_class = RefreshTokenSerializer
 
     def post(self, request):
@@ -111,7 +105,6 @@ class RefreshTokenView(APIView):
 
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [JWTAuthentication]
     serializer_class = RefreshTokenSerializer
 
     def post(self, request):
@@ -129,7 +122,6 @@ class LogoutView(APIView):
 
 class ProfileView(APIView):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [JWTAuthentication]
     serializer_class = UserSerializer
 
     def get(self, request):
