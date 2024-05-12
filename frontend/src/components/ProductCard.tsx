@@ -9,6 +9,7 @@ import {
   Image,
   Text,
   useColorModeValue,
+  useToast,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import Product from "../entities/Product";
@@ -18,6 +19,7 @@ import useUpdateCartItem from "../hooks/useUpdateCartItem";
 import useCartQueryStore from "../store/cartStore";
 import IncDecCartItem from "./IncDecCartItem";
 import Rating from "./Rating";
+import { BiCart } from "react-icons/bi";
 
 interface Props {
   product: Product;
@@ -32,6 +34,12 @@ const ProductCard = ({ product }: Props) => {
   const productInCart = cartQuery.items.filter(
     (item) => item.product.id === product.id
   );
+
+  const toast = useToast({
+    position: "bottom",
+    isClosable: true,
+    icon: <BiCart size={20} />,
+  });
 
   return (
     <Card
@@ -116,7 +124,13 @@ const ProductCard = ({ product }: Props) => {
             </Badge>
           ) : productInCart.length === 0 ? (
             <Button
-              onClick={() => addToCart(product.id)}
+              onClick={() => {
+                toast({
+                  title: `${product.name} added to your cart`,
+                  status: "success",
+                });
+                addToCart(product.id);
+              }}
               colorScheme="blue"
               size={{ base: "xs", md: "sm" }}
             >
@@ -127,6 +141,7 @@ const ProductCard = ({ product }: Props) => {
           ) : (
             <IncDecCartItem
               item={productInCart[0]}
+              name={product.name}
               handleUpdateCartItem={updateCartItem}
               handleRemoveCartItem={removeCartItem}
               justify="end"

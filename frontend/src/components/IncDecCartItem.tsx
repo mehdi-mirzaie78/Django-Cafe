@@ -1,4 +1,5 @@
-import { InputGroup, Button, Text } from "@chakra-ui/react";
+import { InputGroup, Button, Text, useToast } from "@chakra-ui/react";
+import { BiCart } from "react-icons/bi";
 
 interface Item {
   id: number;
@@ -11,6 +12,7 @@ interface ItemInput {
 }
 interface Props {
   item: Item;
+  name: string;
   handleUpdateCartItem: (data: ItemInput) => void;
   handleRemoveCartItem: (id: number) => void;
   justify?: string;
@@ -18,10 +20,17 @@ interface Props {
 
 const IncDecCartItem = ({
   item,
+  name,
   handleUpdateCartItem,
   handleRemoveCartItem,
   justify = "center",
 }: Props) => {
+  const toast = useToast({
+    position: "bottom",
+    isClosable: true,
+    icon: <BiCart size={20} />,
+  });
+
   return (
     <InputGroup justifyContent={justify}>
       <Button
@@ -29,8 +38,14 @@ const IncDecCartItem = ({
         size={{ base: "xs", md: "sm" }}
         variant="outline"
         onClick={() => {
-          if (item.quantity === 1) handleRemoveCartItem(item.id);
-          else
+          if (item.quantity === 1) {
+            toast({
+              title: `${name} removed from your cart`,
+              status: "error",
+            });
+
+            handleRemoveCartItem(item.id);
+          } else
             handleUpdateCartItem({
               itemId: item.id,
               quantity: item.quantity - 1,
