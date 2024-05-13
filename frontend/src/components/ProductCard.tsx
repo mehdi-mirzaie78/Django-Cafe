@@ -31,7 +31,7 @@ const ProductCard = ({ product }: Props) => {
   const { mutate: updateCartItem, error: updateError } = useUpdateCartItem();
   const { mutate: removeCartItem } = useRemoveCartItem();
 
-  const productInCart = cartQuery.items.filter(
+  const productInCart = cartQuery.items?.filter(
     (item) => item.product.id === product.id
   );
 
@@ -122,7 +122,7 @@ const ProductCard = ({ product }: Props) => {
             >
               Out of Stock
             </Badge>
-          ) : productInCart.length === 0 ? (
+          ) : productInCart?.length === 0 ? (
             <Button
               onClick={() => {
                 toast({
@@ -139,13 +139,16 @@ const ProductCard = ({ product }: Props) => {
               </HStack>
             </Button>
           ) : (
-            <IncDecCartItem
-              item={productInCart[0]}
-              name={product.name}
-              handleUpdateCartItem={updateCartItem}
-              handleRemoveCartItem={removeCartItem}
-              justify="end"
-            />
+            
+            productInCart?.length > 0 && (
+              <IncDecCartItem
+                item={productInCart[0]}
+                name={product.name}
+                handleUpdateCartItem={updateCartItem}
+                handleRemoveCartItem={removeCartItem}
+                justify="end"
+              />
+            )
           )}
           )
         </HStack>
