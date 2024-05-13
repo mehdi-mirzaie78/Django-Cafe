@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { Outlet, useNavigate } from "react-router-dom";
 
+import { BiLogOut } from "react-icons/bi";
 import {
   MdFavorite,
   MdLocationOn,
@@ -19,10 +20,12 @@ import {
   MdRateReview,
   MdShoppingCart,
 } from "react-icons/md";
+import useLogout from "../hooks/useLogout";
 
 const ProfilePage = () => {
   const navigate = useNavigate();
   const { isLoading, data } = useProfile();
+  const { mutate: logout } = useLogout();
 
   if (isLoading) return <Loader />;
   return (
@@ -43,6 +46,8 @@ const ProfilePage = () => {
               variant="ghost"
               onClick={() => navigate("")}
               leftIcon={<MdPerson />}
+              width={"100%"}
+              justifyContent={"start"}
             >
               User Info
             </Button>
@@ -50,6 +55,8 @@ const ProfilePage = () => {
               variant="ghost"
               onClick={() => navigate("favorite-products")}
               leftIcon={<MdFavorite />}
+              width={"full"}
+              justifyContent={"start"}
             >
               Favorite Products
             </Button>
@@ -57,6 +64,8 @@ const ProfilePage = () => {
               variant="ghost"
               onClick={() => navigate("orders")}
               leftIcon={<MdShoppingCart />}
+              width={"full"}
+              justifyContent={"start"}
             >
               Orders
             </Button>
@@ -64,6 +73,8 @@ const ProfilePage = () => {
               variant="ghost"
               onClick={() => navigate("reviews")}
               leftIcon={<MdRateReview />}
+              width={"full"}
+              justifyContent={"start"}
             >
               Reviews
             </Button>
@@ -71,8 +82,19 @@ const ProfilePage = () => {
               variant="ghost"
               onClick={() => navigate("addresses")}
               leftIcon={<MdLocationOn />}
+              width={"full"}
+              justifyContent={"start"}
             >
               Addresses
+            </Button>
+            <Button
+              variant="ghost"
+              onClick={() => logout()}
+              leftIcon={<BiLogOut />}
+              width={"full"}
+              justifyContent={"start"}
+            > 
+              Logout
             </Button>
           </VStack>
         </Box>
