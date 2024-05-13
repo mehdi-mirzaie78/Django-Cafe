@@ -8,7 +8,13 @@ const ErrorPage = () => {
   return (
     <>
       <NavBar />
-      <Box marginTop={5} padding={5} textAlign={"center"}>
+      <Box
+        marginTop={0}
+        padding={5}
+        textAlign={"center"}
+        top={20}
+        position={"relative"}
+      >
         <Heading>Oops</Heading>
         <Text marginY={3}>
           {isRouteErrorResponse(error)
