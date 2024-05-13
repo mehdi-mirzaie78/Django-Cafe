@@ -151,9 +151,9 @@ const NavBar = () => {
                 </Center>
                 <br />
                 <MenuDivider />
-                <MenuItem>
-                  <Link to="/profile">Profile</Link>
-                </MenuItem>
+                <Link to="/profile">
+                  <MenuItem>Profile</MenuItem>
+                </Link>
                 <MenuItem onClick={logoutHandler}>Logout</MenuItem>
               </MenuList>
             </Menu>
