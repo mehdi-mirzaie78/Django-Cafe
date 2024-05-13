@@ -63,8 +63,6 @@ class JWTAuthentication(BaseAuthentication):
         return payload
 
     def _validate_header(self, header):
-        # if header is None:
-        #     raise AuthorizationHeaderError
         if not any(header.startswith(prefix) for prefix in self.AUTH_HEADER_TYPES):
             raise NotFoundPrefixError
 

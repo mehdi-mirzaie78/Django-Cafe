@@ -85,8 +85,8 @@ class LoginView(APIView):
 
 
 class RefreshTokenView(APIView):
-    permission_classes = [AllowAny]
     serializer_class = RefreshTokenSerializer
+    authentication_classes = []
 
     def post(self, request):
         serialized_data = self.serializer_class(data=request.data)
