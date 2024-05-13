@@ -26,6 +26,7 @@ const ProfilePage = () => {
   const navigate = useNavigate();
   const { isLoading, data } = useProfile();
   const { mutate: logout } = useLogout();
+  const border = useColorModeValue("1px solid #e2e8f0", "1px solid #2d3748");
 
   if (isLoading) return <Loader />;
   return (
@@ -34,7 +35,7 @@ const ProfilePage = () => {
         colSpan={1}
         p={4}
         height={"80vh"}
-        border={useColorModeValue("1px solid #e2e8f0", "1px solid #2d3748")}
+        border={border}
         borderRadius={5}
       >
         <Box mb={6}>
@@ -93,19 +94,14 @@ const ProfilePage = () => {
               leftIcon={<BiLogOut />}
               width={"full"}
               justifyContent={"start"}
-            > 
+            >
               Logout
             </Button>
           </VStack>
         </Box>
       </GridItem>
 
-      <GridItem
-        colSpan={4}
-        p={8}
-        border={useColorModeValue("1px solid #e2e8f0", "1px solid #2d3748")}
-        borderRadius={5}
-      >
+      <GridItem colSpan={4} p={8} border={border} borderRadius={5}>
         <Outlet />
       </GridItem>
     </Grid>
