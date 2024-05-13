@@ -15,13 +15,17 @@ const useProfile = () => {
     queryKey: ["profile"],
     queryFn: () => privateAPIClient.get(),
     onError(err) {
-      if (err.response?.status === 401 || err.response?.status === 400) {
+      if (
+        err.response?.status === 401 ||
+        err.response?.status === 403 ||
+        err.response?.status === 400
+      ) {
         setAuthQuery({});
         navigate("/login");
       }
     },
     staleTime: ms("5m"),
-    retry: 3,
+    retry: 1,
   });
 };
 

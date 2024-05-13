@@ -10,6 +10,11 @@ import RegisterCompletePage from "./pages/RegisterCompletePage";
 import RegisterPage from "./pages/RegisterPage";
 import RegisterVerifyPage from "./pages/RegisterVerifyPage";
 import ProfilePage from "./pages/ProfilePage";
+import UserInfoPage from "./pages/Profile/UserInfoPage";
+import FavoriteProductsPage from "./pages/Profile/FavoriteProductsPage";
+import OrdersPage from "./pages/Profile/OrdersPage";
+import ReviewsPage from "./pages/Profile/ReviewsPage";
+import AddressesPage from "./pages/Profile/AddressesPage";
 
 const router = createBrowserRouter([
   { path: "/", element: <LandingPage />, errorElement: <ErrorPage /> },
@@ -28,7 +33,17 @@ const router = createBrowserRouter([
         ],
       },
       { path: "login", element: <LoginPage /> },
-      { path: "profile", element: <ProfilePage /> },
+      {
+        path: "profile",
+        element: <ProfilePage />,
+        children: [
+          { path: "", element: <UserInfoPage /> },
+          { path: "favorite-products", element: <FavoriteProductsPage /> },
+          { path: "orders", element: <OrdersPage /> },
+          { path: "reviews", element: <ReviewsPage /> },
+          { path: "addresses", element: <AddressesPage /> },
+        ],
+      },
 
       { path: "products/:slug", element: <ProductDetailPage /> },
       { path: "cart/", element: <CartPage /> },
