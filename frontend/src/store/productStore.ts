@@ -20,8 +20,14 @@ const useProductQueryStore = create<ProductQueryStore>((set) => ({
     set((store) => ({
       productQuery: { ...store.productQuery, ordering },
     })),
-  setCategoryId: (categoryId) =>
-    set((store) => ({ productQuery: { ...store.productQuery, categoryId } })),
+  setCategoryId: (categoryId) =>  
+    set((store) => ({
+      productQuery: {
+        ...store.productQuery,
+        categoryId,
+        searchText: undefined,
+      },
+    })),
 }));
 
 export default useProductQueryStore;
