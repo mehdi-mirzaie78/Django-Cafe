@@ -28,12 +28,12 @@ import CartIcon from "./CartIcon";
 import NavItem from "./NavItem";
 import SearchInput from "./SearchInput";
 
-let rightLinks = [{ name: "Cart", path: "cart", icon: <CartIcon /> }];
+let rightLinks = [{ name: "Cart", path: "/checkout/cart", icon: <CartIcon /> }];
 
 let Links = [
-  { name: "Home", path: "home", icon: <BiHome size={20} /> },
-  { name: "Login", path: "login", icon: <BiLogIn size={20} /> },
-  { name: "Register", path: "register", icon: <BiUser size={20} /> },
+  { name: "Home", path: "/home", icon: <BiHome size={20} /> },
+  { name: "Login", path: "/login", icon: <BiLogIn size={20} /> },
+  { name: "Register", path: "/register", icon: <BiUser size={20} /> },
 ];
 
 const NavBar = () => {

@@ -12,7 +12,6 @@ interface ItemInput {
 }
 interface Props {
   item: Item;
-  name: string;
   handleUpdateCartItem: (data: ItemInput) => void;
   handleRemoveCartItem: (id: number) => void;
   justify?: string;
@@ -20,7 +19,6 @@ interface Props {
 
 const IncDecCartItem = ({
   item,
-  name,
   handleUpdateCartItem,
   handleRemoveCartItem,
   justify = "center",

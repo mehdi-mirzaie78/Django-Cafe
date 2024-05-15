@@ -139,11 +139,9 @@ const ProductCard = ({ product }: Props) => {
               </HStack>
             </Button>
           ) : (
-            
             productInCart?.length > 0 && (
               <IncDecCartItem
                 item={productInCart[0]}
-                name={product.name}
                 handleUpdateCartItem={updateCartItem}
                 handleRemoveCartItem={removeCartItem}
                 justify="end"
