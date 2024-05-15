@@ -31,6 +31,10 @@ export class PrivateAPIClient<T> {
   post = async (data: object) => {
     return this.axios.post<T>(this.endpoint, data).then((res) => res.data);
   };
+
+  patch = async (data: object) => {
+    return this.axios.patch<T>(this.endpoint, data).then((res) => res.data);
+  };
 }
 
 export default PrivateAPIClient;

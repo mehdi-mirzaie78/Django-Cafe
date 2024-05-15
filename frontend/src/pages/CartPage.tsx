@@ -1,3 +1,4 @@
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -21,30 +22,41 @@ import {
   Tr,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { BiTrash } from "react-icons/bi";
+import { Link } from "react-router-dom";
 import ErrorMessage from "../components/ErrorMessage";
 import IncDecCartItem from "../components/IncDecCartItem";
+import Loader from "../components/Loader";
 import useCart from "../hooks/useCart";
 import useCreateCart from "../hooks/useCreateCart";
-import useRemoveCartItem from "../hooks/useRemoveCartItem";
-import useUpdateCartItem from "../hooks/useUpdateCartItem";
-import useCartQueryStore from "../store/cartStore";
-import { ChevronDownIcon } from "@chakra-ui/icons";
+import useCreateOrder from "../hooks/useCreateOrder";
 import useOrderTypes from "../hooks/useOrderTypes";
+import useRemoveCartItem from "../hooks/useRemoveCartItem";
+import useTables from "../hooks/useTables";
+import useUpdateCartItem from "../hooks/useUpdateCartItem";
+import useAuthQueryStore from "../store/authStore";
+import useCartQueryStore from "../store/cartStore";
+import useOrderQueryStore from "../store/orderStore";
 
 const CartPage = () => {
+  const bg = useColorModeValue("gray.50", "gray.800");
+  const authQuery = useAuthQueryStore((s) => s.authQuery);
   const cartQuery = useCartQueryStore((s) => s.cartQuery);
   const { mutate: updateCartItem, error: updateError } = useUpdateCartItem();
 
   const { mutate: createCart, isLoading: isCreatingCart } = useCreateCart();
+  
   const { data: cartData, refetch: refetchCart } = useCart(
     cartQuery.id,
     !isCreatingCart
   );
 
-  const [selectedOrderType, setSelectedOrderType] = useState("");
-  const { data: orderTypes } = useOrderTypes();
+  const { orderQuery, setOrderType, setTable } = useOrderQueryStore();
+  const { data: orderTypes, isLoading: isOrderTypeLoading } = useOrderTypes();
+  const { data: tables, isLoading: isTablesLoading } = useTables();
+  const { mutate: removeCartItem } = useRemoveCartItem();
+  const { mutate: createOrder } = useCreateOrder();
 
   useEffect(() => {
     if (!cartQuery.id && !isCreatingCart) {
@@ -53,8 +65,6 @@ const CartPage = () => {
       refetchCart();
     }
   }, [cartQuery, createCart, refetchCart, cartData]);
-
-  const { mutate: removeCartItem } = useRemoveCartItem();
 
   if (cartQuery?.items?.length === 0) {
     return (
@@ -65,6 +75,7 @@ const CartPage = () => {
       </Center>
     );
   }
+  if (isTablesLoading || isOrderTypeLoading) return <Loader />;
 
   return (
     <Box maxW={"100vw"}>
@@ -83,7 +94,7 @@ const CartPage = () => {
             shadow="md"
             borderWidth="1px"
             borderRadius={5}
-            bg={useColorModeValue("gray.50", "gray.800")}
+            bg={bg}
           >
             <Table
               className="cart-table"
@@ -161,7 +172,7 @@ const CartPage = () => {
             flex="1"
             borderRadius="md"
             textAlign={"center"}
-            bg={useColorModeValue("gray.50", "gray.700")}
+            bg={bg}
           >
             <Stack spacing={5}>
               <Text
@@ -178,20 +189,77 @@ const CartPage = () => {
               </Text>
               <Menu matchWidth>
                 <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-                  {selectedOrderType ? selectedOrderType : "Order Type"}
+                  {orderQuery.orderType
+                    ? orderQuery.orderType.toUpperCase()
+                    : "Order Type"}
                 </MenuButton>
                 <MenuList>
                   {orderTypes &&
                     Object.keys(orderTypes).map((t) => (
-                      <MenuItem key={t} onClick={() => setSelectedOrderType(t)}>
-                        {t}
+                      <MenuItem
+                        justifyContent={"center"}
+                        key={t}
+                        onClick={() => setOrderType(t)}
+                      >
+                        {t.toUpperCase()}
                       </MenuItem>
                     ))}
                 </MenuList>
               </Menu>
-              <Button colorScheme="blue" size={{ base: "sm", md: "lg" }}>
-                Proceed
-              </Button>
+
+              {orderQuery?.orderType === "dinein" && (
+                <Menu matchWidth>
+                  <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                    {orderQuery.table
+                      ? `${orderQuery.table.name} - Capacity: ${orderQuery.table.capacity}`
+                      : "Select Table"}
+                  </MenuButton>
+                  <MenuList>
+                    {tables &&
+                      tables.results.map((table) => (
+                        <MenuItem
+                          justifyContent={"center"}
+                          key={table.id}
+                          onClick={() => {
+                            setTable(table);
+                          }}
+                        >
+                          {table.name} - Capacity: {table.capacity}
+                        </MenuItem>
+                      ))}
+                  </MenuList>
+                </Menu>
+              )}
+              {authQuery.accessToken &&
+              orderQuery.orderType === "dinein" &&
+              orderQuery.table ? (
+                <Button
+                  colorScheme="blue"
+                  size={{ base: "sm", md: "lg" }}
+                  onClick={() =>
+                    createOrder({
+                      cartId: cartQuery.id,
+                      orderType: orderQuery.orderType,
+                      tableId: orderQuery.table?.id,
+                    })
+                  }
+                >
+                  Place Order
+                </Button>
+              ) : (
+                !authQuery.accessToken && (
+                  <Link to="/login?redirect=/checkout/cart">
+                    <Button
+                      color={"blue.500"}
+                      _hover={{ color: "blue.400" }}
+                      variant={"ghost"}
+                      size={{ base: "sm", md: "lg" }}
+                    >
+                      To proceed login please
+                    </Button>
+                  </Link>
+                )
+              )}
             </Stack>
           </Box>
         </GridItem>

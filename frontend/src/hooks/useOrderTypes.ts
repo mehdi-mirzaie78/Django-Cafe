@@ -1,10 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import APIClient from "../services/apiClient";
 import ms from "ms";
-
-interface OrderTypes {
-  [key: string]: string;
-}
+import OrderTypes from "../entities/OrderTypes";
+import APIClient from "../services/apiClient";
 
 const apiClient = new APIClient<OrderTypes>("/order-types/");
 const useOrderTypes = () =>
