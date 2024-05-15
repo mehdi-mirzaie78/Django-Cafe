@@ -21,7 +21,7 @@ const useProfile = () => {
         err.response?.status === 400
       ) {
         setAuthQuery({});
-        navigate("/login");
+        navigate("/login?redirect=/profile");
       }
     },
     staleTime: ms("5m"),
