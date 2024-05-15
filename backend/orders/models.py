@@ -127,11 +127,7 @@ class Order(BaseModel):
         blank=True,
     )
     status = models.ForeignKey(
-        Status,
-        on_delete=models.CASCADE,
-        verbose_name=_("Status"),
-        null=True,
-        blank=True,
+        Status, on_delete=models.CASCADE, verbose_name=_("Status"), default=1
     )
     is_paid = models.BooleanField(default=False, verbose_name=_("Is Paid"))
     discount = models.PositiveIntegerField(default=0, verbose_name=_("Discount"))
