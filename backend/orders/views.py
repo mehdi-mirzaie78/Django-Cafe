@@ -112,9 +112,9 @@ class CartItemViewSet(ModelViewSet):
 
 
 class TableViewSet(ModelViewSet):
-    http_method_names = ['get', 'post', 'patch', 'delete']
+    http_method_names = ["get", "post", "patch", "delete"]
     authentication_classes = [JWTAuthentication]
-    queryset = Table.objects.all()
+    queryset = Table.objects.filter(is_available=True)
     serializer_class = TableSerializer
 
     def get_permissions(self):
@@ -203,5 +203,6 @@ class OrderPaymentView(APIView):
         order = self.get_object(pk)
         serializer = OrderPaymentSerializer(order, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        order = serializer.save()
+        serializer = OrderSerializer(order)
         return Response(serializer.data, status=status.HTTP_200_OK)

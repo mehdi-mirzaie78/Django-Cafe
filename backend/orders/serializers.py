@@ -106,7 +106,7 @@ class UpdateCartItemSerializer(serializers.ModelSerializer):
 class TableSerializer(serializers.ModelSerializer):
     class Meta:
         model = Table
-        fields = ["name", "capacity", "is_available"]
+        fields = ["id", "name", "capacity", "is_available"]
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
@@ -144,6 +144,8 @@ class OrderSerializer(serializers.ModelSerializer):
 
 class CreateOrderSerializer(serializers.Serializer):
     cart_id = serializers.UUIDField(write_only=True)
+    order_type = serializers.CharField(max_length=20)
+    table_id = serializers.IntegerField(required=False)
     phone = serializers.CharField(
         max_length=13, validators=[phone_regex_validator], required=False
     )
@@ -159,8 +161,10 @@ class CreateOrderSerializer(serializers.Serializer):
         with transaction.atomic():
             user_id = self.context["user_id"]
             cart_id = self.validated_data["cart_id"]
+            order_type = self.validated_data["order_type"]
+            table_id = self.validated_data.get("table_id")
 
-            order = Order(user_id=user_id)
+            order = Order(user_id=user_id, order_type=order_type, table_id=table_id)
             cart_items = CartItem.objects.select_related("product").filter(
                 cart_id=cart_id
             )
