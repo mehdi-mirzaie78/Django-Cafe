@@ -7,8 +7,8 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import useCafe from "../hooks/useCafe";
-import useContact from "../hooks/useContact";
+import useCafe from "../hooks/product/useCafe";
+import useContact from "../hooks/product/useContact";
 import SocialLinks from "./SocialLinks";
 
 interface LogoProps {

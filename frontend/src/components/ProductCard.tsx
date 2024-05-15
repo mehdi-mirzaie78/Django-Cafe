@@ -13,9 +13,9 @@ import {
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import Product from "../entities/Product";
-import useAddToCart from "../hooks/useAddToCart";
-import useRemoveCartItem from "../hooks/useRemoveCartItem";
-import useUpdateCartItem from "../hooks/useUpdateCartItem";
+import useAddToCart from "../hooks/order/useAddToCart";
+import useRemoveCartItem from "../hooks/order/useRemoveCartItem";
+import useUpdateCartItem from "../hooks/order/useUpdateCartItem";
 import useCartQueryStore from "../store/cartStore";
 import IncDecCartItem from "./IncDecCartItem";
 import Rating from "./Rating";

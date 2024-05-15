@@ -1,7 +1,7 @@
 import { Center, HStack, Heading, SimpleGrid, Spinner } from "@chakra-ui/react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Fragment } from "react/jsx-runtime";
-import useProducts from "../hooks/useProducts";
+import useProducts from "../hooks/product/useProducts";
 import Loader from "./Loader";
 import Message from "./Message";
 import ProductCard from "./ProductCard";

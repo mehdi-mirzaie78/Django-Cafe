@@ -21,8 +21,8 @@ import {
 
 import { BiHome, BiLogIn, BiUser } from "react-icons/bi";
 import { Link } from "react-router-dom";
-import useCafe from "../hooks/useCafe";
-import useLogout from "../hooks/useLogout";
+import useCafe from "../hooks/product/useCafe";
+import useLogout from "../hooks/auth/useLogout";
 import useAuthQueryStore from "../store/authStore";
 import CartIcon from "./CartIcon";
 import NavItem from "./NavItem";

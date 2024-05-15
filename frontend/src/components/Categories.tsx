@@ -1,5 +1,5 @@
 import { Center, HStack } from "@chakra-ui/react";
-import useCategories from "../hooks/useCategories";
+import useCategories from "../hooks/product/useCategories";
 import { useProductQueryStore } from "../store";
 import CategoryCard from "./CategoryCard";
 import Loader from "./Loader";

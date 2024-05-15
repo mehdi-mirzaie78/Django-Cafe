@@ -1,6 +1,6 @@
 import { Box, Button, Heading, Image, Stack, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import useCafe from "../hooks/useCafe";
+import useCafe from "../hooks/product/useCafe";
 
 const LandingPage = () => {
   const { data: cafe, error } = useCafe();
