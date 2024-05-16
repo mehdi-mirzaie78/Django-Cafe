@@ -15,6 +15,7 @@ const SideBarButton = ({ basepath, pathname, leftIcon, children }: Props) => {
   return (
     <Button
       variant="ghost"
+      size={{ base: "sm", lg: "md", xl: "lg" }}
       onClick={() => navigate(path)}
       leftIcon={leftIcon}
       width={"100%"}

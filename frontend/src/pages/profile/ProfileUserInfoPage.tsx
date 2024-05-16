@@ -17,7 +17,7 @@ const ProfileUserInfoPage = () => {
   const { authQuery, setAuthQuery } = useAuthQueryStore();
   const border = useColorModeValue("1px solid #e2e8f0", "1px solid #2d3748");
   return (
-    <Box border={border} borderRadius={5} h="100%" p={5}>
+    <Box border={border} borderRadius={5} h="100%" w="100%" p={5}>
       <Flex flexDirection="column" align="center">
         <Avatar
           size="xl"

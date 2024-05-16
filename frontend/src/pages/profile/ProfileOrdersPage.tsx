@@ -20,7 +20,7 @@ const ProfileOrdersPage = () => {
   const [order, setOrder] = useState("");
   const border = useColorModeValue("1px solid #e2e8f0", "1px solid #2d3748");
   return (
-    <Box border={border} borderRadius={5} h="100%" p={5}>
+    <Box border={border} borderRadius={5} h="100%" w="100%" p={5}>
       <Tabs position="relative" variant="unstyled">
         <TabList justifyContent={"center"}>
           <Tab onClick={() => setOrder("In Progress Orders")}>In Progress</Tab>

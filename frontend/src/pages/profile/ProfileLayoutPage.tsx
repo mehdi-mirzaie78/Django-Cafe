@@ -7,6 +7,7 @@ import {
   Grid,
   GridItem,
   HStack,
+  Stack,
   Text,
   VStack,
   useColorModeValue,
@@ -25,101 +26,106 @@ import SideBarButton from "../../components/SideBarButton";
 import useLogout from "../../hooks/auth/useLogout";
 
 const ProfileLayoutPage = () => {
-  const navigate = useNavigate();
   const { isLoading, data } = useProfile();
   const { mutate: logout } = useLogout();
   const border = useColorModeValue("1px solid #e2e8f0", "1px solid #2d3748");
 
   if (isLoading) return <Loader />;
+
   return (
-    <Grid templateColumns="repeat(5, 1fr)" gap={4}>
-      <GridItem
-        colSpan={1}
+    <Stack
+      direction={{ base: "column-reverse", md: "row" }}
+      w={{ base: "95%", md: "100%" }}
+      spacing={4}
+      mx={"auto"}
+    >
+      <VStack
         p={4}
-        height={"80vh"}
+        height={"fit-content"}
         border={border}
         borderRadius={5}
+        w={{ base: "100%", md: "31%", xl: "20%", "2xl": "16%" }}
+        mx={"auto"}
+        align={"start"}
       >
-        <Box mb={6}>
-          <HStack p={3} mb={5} justifyContent={"space-between"}>
-            <Box>
-              <Text fontWeight="bold">
-                {data?.firstName} {data?.lastName}
-              </Text>
-              <Text color={"gray"}>{data?.phone}</Text>
-            </Box>
-            <Link to="/profile/user-info">
-              <Button variant={"ghost"} p={0}>
-                <BiEdit size={26} />
-              </Button>
-            </Link>
-          </HStack>
-          <VStack align="start">
-            <SideBarButton
-              basepath="/profile"
-              pathname=""
-              leftIcon={<BiHome />}
-            >
-              Home
-            </SideBarButton>
-
-            <SideBarButton
-              basepath="/profile"
-              pathname="/favorite-products"
-              leftIcon={<MdFavorite />}
-            >
-              Favorite Products
-            </SideBarButton>
-
-            <SideBarButton
-              basepath="/profile"
-              pathname="/orders"
-              leftIcon={<MdShoppingCart />}
-            >
-              Orders
-            </SideBarButton>
-
-            <SideBarButton
-              basepath="/profile"
-              pathname="/reviews"
-              leftIcon={<MdRateReview />}
-            >
-              Reviews
-            </SideBarButton>
-
-            <SideBarButton
-              basepath="/profile"
-              pathname="/user-info"
-              leftIcon={<MdPerson />}
-            >
-              User Info
-            </SideBarButton>
-
-            <SideBarButton
-              basepath="/profile"
-              pathname="/addresses"
-              leftIcon={<MdLocationOn />}
-            >
-              Addresses
-            </SideBarButton>
-
-            <Button
-              variant="ghost"
-              onClick={() => logout()}
-              leftIcon={<BiLogOut />}
-              width={"full"}
-              justifyContent={"start"}
-            >
-              Logout
+        <HStack p={3} justifyContent={"space-between"} mx={"auto"} w={"100%"}>
+          <Box>
+            <Text fontWeight="bold">
+              {data?.firstName} {data?.lastName}
+            </Text>
+            <Text color={"gray"}>{data?.phone}</Text>
+          </Box>
+          <Link to="/profile/user-info">
+            <Button variant={"ghost"} p={0}>
+              <BiEdit size={22} />
             </Button>
-          </VStack>
-        </Box>
-      </GridItem>
+          </Link>
+        </HStack>
 
-      <GridItem colSpan={4}>
+        <VStack align="start" w={"100%"}>
+          <SideBarButton basepath="/profile" pathname="" leftIcon={<BiHome />}>
+            Home
+          </SideBarButton>
+
+          <SideBarButton
+            basepath="/profile"
+            pathname="/favorite-products"
+            leftIcon={<MdFavorite />}
+          >
+            Favorite Products
+          </SideBarButton>
+
+          <SideBarButton
+            basepath="/profile"
+            pathname="/orders"
+            leftIcon={<MdShoppingCart />}
+          >
+            Orders
+          </SideBarButton>
+
+          <SideBarButton
+            basepath="/profile"
+            pathname="/reviews"
+            leftIcon={<MdRateReview />}
+          >
+            Reviews
+          </SideBarButton>
+
+          <SideBarButton
+            basepath="/profile"
+            pathname="/user-info"
+            leftIcon={<MdPerson />}
+          >
+            User Info
+          </SideBarButton>
+
+          <SideBarButton
+            basepath="/profile"
+            pathname="/addresses"
+            leftIcon={<MdLocationOn />}
+          >
+            Addresses
+          </SideBarButton>
+
+          <Button
+            variant="ghost"
+            onClick={() => logout()}
+            leftIcon={<BiLogOut />}
+            width={"full"}
+            justifyContent={"start"}
+          >
+            Logout
+          </Button>
+        </VStack>
+      </VStack>
+
+      <VStack
+        w={{ base: "100%", md: "69%", xl: "80%", "2xl": "84%" }}
+        mx={"auto"}
+      >
         <Outlet />
-      </GridItem>
-    </Grid>
+      </VStack>
+    </Stack>
   );
 };
 
