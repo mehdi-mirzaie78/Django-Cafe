@@ -121,7 +121,7 @@ const NavBar = () => {
             {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
           </Button>
 
-          {accessToken && (
+          {accessToken && authQuery.image && (
             <Menu>
               <MenuButton
                 as={Button}
@@ -130,17 +130,14 @@ const NavBar = () => {
                 cursor={"pointer"}
                 minW={0}
               >
-                <Avatar
-                  size={{ base: "sm", md: "md" }}
-                  src={"https://avatars.dicebear.com/api/male/username.svg"}
-                />
+                <Avatar size={{ base: "sm", md: "md" }} src={authQuery.image} />
               </MenuButton>
               <MenuList alignItems={"center"}>
                 <br />
                 <Center>
                   <Avatar
                     size={{ base: "xl", md: "2xl" }}
-                    src={"https://avatars.dicebear.com/api/male/username.svg"}
+                    src={authQuery.image}
                   />
                 </Center>
                 <br />

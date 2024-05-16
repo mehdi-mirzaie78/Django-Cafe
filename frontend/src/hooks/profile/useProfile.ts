@@ -8,7 +8,7 @@ import useAuthQueryStore from "../../store/authStore";
 
 const useProfile = () => {
   const navigate = useNavigate();
-  const setAuthQuery = useAuthQueryStore((s) => s.setAuthQuery);
+  const { authQuery, setAuthQuery } = useAuthQueryStore();
   const privateAPIClient = new PrivateAPIClient<Profile>("/accounts/profile/");
 
   return useQuery<Profile, AxiosError>({
@@ -24,7 +24,10 @@ const useProfile = () => {
         navigate("/login?redirect=/profile");
       }
     },
-    staleTime: ms("5m"),
+    onSuccess(data) {
+      setAuthQuery({ ...authQuery, ...data });
+    },
+    staleTime: ms("2m"),
     retry: 1,
   });
 };

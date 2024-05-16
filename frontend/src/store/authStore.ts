@@ -3,8 +3,18 @@ import { create } from "zustand";
 interface AuthQuery {
   accessToken?: string;
   refreshToken?: string;
+  phone?: string;
+  email?: string;
   firstName?: string;
   lastName?: string;
+  image?: string;
+  gender?: string;
+  isActive?: boolean;
+  isAdmin?: boolean;
+  isStaff?: boolean;
+  isSuperuser?: boolean;
+  groups?: string[];
+  userPermissions?: string[];
 }
 
 interface AuthQueryStore {

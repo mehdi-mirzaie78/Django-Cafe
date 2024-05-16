@@ -17,8 +17,9 @@ const useLogin = () => {
     mutationKey: ["login"],
     mutationFn: (data) => apiClient.post(data),
     onSuccess: (data) => {
-      const { accessToken, refreshToken, firstName, lastName } = data;
-      setAuthQuery({ accessToken, refreshToken, firstName, lastName });
+      delete data.detail; // remove detail key from data
+
+      setAuthQuery({ ...data });
       navigate(redirectUrl || "/home");
     },
   });
