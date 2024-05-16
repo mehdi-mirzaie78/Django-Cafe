@@ -12,7 +12,23 @@ class UserSerializerWithTokens(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["first_name", "last_name", "access_token", "refresh_token"]
+        fields = [
+            "access_token",
+            "refresh_token",
+            "phone",
+            "email",
+            "first_name",
+            "last_name",
+            "image",
+            "gender",
+            "is_active",
+            "is_admin",
+            "is_staff",
+            "is_superuser",
+            "last_login",
+            "groups",
+            "user_permissions",
+        ]
 
     def get_access_token(self, obj: User):
         return JWT.generate_access_token(obj)
@@ -102,4 +118,18 @@ class LogoutSerializer(serializers.Serializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = "__all__"
+        fields = [
+            "phone",
+            "email",
+            "first_name",
+            "last_name",
+            "image",
+            "gender",
+            "is_active",
+            "is_admin",
+            "is_staff",
+            "is_superuser",
+            "last_login",
+            "groups",
+            "user_permissions",
+        ]

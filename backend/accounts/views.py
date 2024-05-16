@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate
 from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
 from drf_spectacular.utils import extend_schema
 from rest_framework.views import APIView
 from rest_framework import status
@@ -73,6 +74,8 @@ class LoginView(APIView):
         serialized_data.is_valid(raise_exception=True)
         user = authenticate(request, **serialized_data.validated_data)
         if user is not None:
+            user.last_login = timezone.now()
+            user.save()
             user_serializer = UserSerializerWithTokens(user)
             return Response(
                 {"detail": _("Logged in successfully"), **user_serializer.data},
