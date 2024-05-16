@@ -21,9 +21,10 @@ import {
   Thead,
   Tr,
   useColorModeValue,
+  useToast,
 } from "@chakra-ui/react";
 import { useEffect } from "react";
-import { BiTrash } from "react-icons/bi";
+import { BiCart, BiTrash } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import ErrorMessage from "../../components/ErrorMessage";
 import IncDecCartItem from "../../components/IncDecCartItem";
@@ -57,6 +58,12 @@ const CartPage = () => {
   const { data: tables, isLoading: isTablesLoading } = useTables();
   const { mutate: removeCartItem } = useRemoveCartItem();
   const { mutate: createOrder } = useCreateOrder();
+
+  const toast = useToast({
+    position: "bottom",
+    isClosable: true,
+    icon: <BiCart size={20} />,
+  });
 
   useEffect(() => {
     if (!cartQuery.id && !isCreatingCart) {
@@ -153,7 +160,13 @@ const CartPage = () => {
                         size={{ base: "xs", md: "sm" }}
                         variant={"outline"}
                         p={{ base: 1, md: 2 }}
-                        onClick={() => removeCartItem(item.id)}
+                        onClick={() => {
+                          toast({
+                            title: `${item.product.name} removed from your cart`,
+                            status: "error",
+                          });
+                          removeCartItem(item.id);
+                        }}
                       >
                         <BiTrash />
                       </Button>

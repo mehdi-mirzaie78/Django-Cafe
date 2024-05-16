@@ -3,6 +3,9 @@ import { BiCart } from "react-icons/bi";
 
 interface Item {
   id: number;
+  product: {
+    name: string;
+  };
   quantity: number;
 }
 
@@ -37,8 +40,9 @@ const IncDecCartItem = ({
         variant="outline"
         onClick={() => {
           if (item.quantity === 1) {
+            console.log("item", item);
             toast({
-              title: `${name} removed from your cart`,
+              title: `${item.product.name} removed from your cart`,
               status: "error",
             });
 

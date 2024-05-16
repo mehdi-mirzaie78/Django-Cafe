@@ -10,9 +10,12 @@ const useDeleteCartItem = () => {
     mutationKey: ["deleteCartItem"],
     mutationFn: async (id: number) => apiClient.delete(id),
     onSuccess: (data, variables) => {
+      const items = cartQuery.items.filter((item) => item.id !== variables);
+      const totalPrice = items.reduce((acc, item) => acc + item.totalPrice, 0);
       setCartQuery({
         ...cartQuery,
-        items: cartQuery.items.filter((item) => item.id !== variables),
+        items: items,
+        totalPrice: totalPrice,
       });
     },
   });
