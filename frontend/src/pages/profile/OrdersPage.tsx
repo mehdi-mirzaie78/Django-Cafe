@@ -1,16 +1,21 @@
 import {
   Center,
+  HStack,
+  List,
+  ListItem,
   Tab,
   TabIndicator,
   TabList,
   TabPanel,
   TabPanels,
   Tabs,
-  useColorModeValue
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import useOrders from "../../hooks/order/useOrders";
 
 const OrdersPage = () => {
+  const { data: orders } = useOrders();
   const [order, setOrder] = useState("");
   return (
     <Center>
@@ -28,7 +33,21 @@ const OrdersPage = () => {
         />
         <TabPanels>
           <TabPanel>
-            <p>{order}</p>
+            <List>
+              {orders?.results.map((order) => (
+                <ListItem key={order.id}>
+                  <HStack>
+                    <p>{order.id}</p>
+                    <p>{order.orderType}</p>
+                    <p>{order.status}</p>
+                    <p>{order.totalPrice}</p>
+                    <p>{order.createdAt}</p>
+                    <p>{order.isPaid}</p>
+                    <p>{order.table}</p>
+                  </HStack>
+                </ListItem>
+              ))}
+            </List>
           </TabPanel>
           <TabPanel>
             <p>{order}</p>
