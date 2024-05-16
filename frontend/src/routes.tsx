@@ -8,15 +8,16 @@ import LoginPage from "./pages/auth/LoginPage";
 import OrderPayment from "./pages/order/OrderPayment";
 import OrderPaymentSuccess from "./pages/order/OrderPaymentSuccess";
 import ProductDetailPage from "./pages/product/ProductDetailPage";
-import AddressesPage from "./pages/profile/AddressesPage";
-import FavoriteProductsPage from "./pages/profile/FavoriteProductsPage";
-import OrdersPage from "./pages/profile/OrdersPage";
-import ReviewsPage from "./pages/profile/ReviewsPage";
-import UserInfoPage from "./pages/profile/UserInfoPage";
-import ProfilePage from "./pages/profile/ProfilePage";
+import AddressesPage from "./pages/profile/ProfileAddressesPage";
+import ProfileFavoriteProductsPage from "./pages/profile/ProfileFavoriteProductsPage";
+import ProfileOrdersPage from "./pages/profile/ProfileOrdersPage";
+import ProfileReviewsPage from "./pages/profile/ProfileReviewsPage";
+import ProfileUserInfoPage from "./pages/profile/ProfileUserInfoPage";
+import ProfileLayoutPage from "./pages/profile/ProfileLayoutPage";
 import RegisterCompletePage from "./pages/auth/RegisterCompletePage";
 import RegisterPage from "./pages/auth/RegisterPage";
 import RegisterVerifyPage from "./pages/auth/RegisterVerifyPage";
+import ProfileHomePage from "./pages/profile/ProfileHomePage";
 
 const router = createBrowserRouter([
   { path: "/", element: <LandingPage />, errorElement: <ErrorPage /> },
@@ -37,12 +38,16 @@ const router = createBrowserRouter([
       { path: "login", element: <LoginPage /> },
       {
         path: "profile",
-        element: <ProfilePage />,
+        element: <ProfileLayoutPage />,
         children: [
-          { path: "", element: <UserInfoPage /> },
-          { path: "favorite-products", element: <FavoriteProductsPage /> },
-          { path: "orders", element: <OrdersPage /> },
-          { path: "reviews", element: <ReviewsPage /> },
+          { path: "", element: <ProfileHomePage /> },
+          { path: "user-info", element: <ProfileUserInfoPage /> },
+          {
+            path: "favorite-products",
+            element: <ProfileFavoriteProductsPage />,
+          },
+          { path: "orders", element: <ProfileOrdersPage /> },
+          { path: "reviews", element: <ProfileReviewsPage /> },
           { path: "addresses", element: <AddressesPage /> },
         ],
       },

@@ -1,4 +1,5 @@
 import {
+  Box,
   Center,
   HStack,
   List,
@@ -14,13 +15,14 @@ import {
 import { useState } from "react";
 import useOrders from "../../hooks/order/useOrders";
 
-const OrdersPage = () => {
+const ProfileOrdersPage = () => {
   const { data: orders } = useOrders();
   const [order, setOrder] = useState("");
+  const border = useColorModeValue("1px solid #e2e8f0", "1px solid #2d3748");
   return (
-    <Center>
+    <Box border={border} borderRadius={5} h="100%" p={5}>
       <Tabs position="relative" variant="unstyled">
-        <TabList>
+        <TabList justifyContent={"center"}>
           <Tab onClick={() => setOrder("In Progress Orders")}>In Progress</Tab>
           <Tab onClick={() => setOrder("Completed Orders")}>Completed</Tab>
           <Tab onClick={() => setOrder("Cancelled Orders")}>Cancelled</Tab>
@@ -57,8 +59,8 @@ const OrdersPage = () => {
           </TabPanel>
         </TabPanels>
       </Tabs>
-    </Center>
+    </Box>
   );
 };
 
-export default OrdersPage;
+export default ProfileOrdersPage;

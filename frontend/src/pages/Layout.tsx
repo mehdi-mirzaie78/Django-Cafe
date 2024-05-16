@@ -12,7 +12,7 @@ const Layout = () => {
       justifyContent={"flex-start"}
     >
       <NavBar />
-      <Box padding={5} marginTop={20}>
+      <Box padding={5} marginTop={20} w={"95%"} mx={"auto"}>
         <Outlet />
       </Box>
       <Footer />
