@@ -17,7 +17,7 @@ const useCreateOrder = () => {
   const navigate = useNavigate();
   const resetCartQuery = useCartQueryStore((s) => s.resetCartQuery);
   const setPaymentQuery = usePaymentQueryStore((s) => s.setPaymentQuery);
-  const privateApiClient = new PrivateAPIClient("orders/");
+  const privateApiClient = new PrivateAPIClient("/orders/");
 
   return useMutation<any, AxiosError, CreatOrder>({
     mutationKey: ["createOrder"],

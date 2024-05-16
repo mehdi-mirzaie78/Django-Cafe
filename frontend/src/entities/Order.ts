@@ -16,10 +16,14 @@ interface OrderItem {
 interface Order {
   id: number;
   user: number;
+  orderType: string;
+  table: string;
   createdAt: string;
   status: string | null;
   payment: number;
   orderItems: OrderItem[];
+  totalPrice: string;
+  isPaid: boolean;
 }
 
 export default Order;

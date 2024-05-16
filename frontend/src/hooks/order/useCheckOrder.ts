@@ -3,7 +3,7 @@ import Order from "../../entities/Order";
 import PrivateAPIClient from "../../services/privateAPIClient";
 
 const useCheckOrder = (orderId: number) => {
-  const privateApiClient = new PrivateAPIClient<Order>(`orders`);
+  const privateApiClient = new PrivateAPIClient<Order>(`/orders`);
 
   return useQuery({
     queryKey: ["order", orderId],
