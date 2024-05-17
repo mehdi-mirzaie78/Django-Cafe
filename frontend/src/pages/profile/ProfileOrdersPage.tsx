@@ -19,18 +19,42 @@ const ProfileOrdersPage = () => {
   const { data: orders } = useOrders();
   const [order, setOrder] = useState("");
   const border = useColorModeValue("1px solid #e2e8f0", "1px solid #2d3748");
+  const bg = useColorModeValue("blue.500", "blue.200");
+
   return (
     <Box border={border} borderRadius={5} h="100%" w="100%" p={5}>
-      <Tabs position="relative" variant="unstyled">
-        <TabList justifyContent={"center"}>
-          <Tab onClick={() => setOrder("In Progress Orders")}>In Progress</Tab>
-          <Tab onClick={() => setOrder("Completed Orders")}>Completed</Tab>
-          <Tab onClick={() => setOrder("Cancelled Orders")}>Cancelled</Tab>
+      <Tabs
+        position="relative"
+        variant="unstyled"
+        fontSize={{ base: "small", lg: "medium" }}
+      >
+        <TabList justifyContent={"center"} gap={{ base: 4, md: 8 }}>
+          <Tab
+            p={1}
+            fontSize={{ base: "small", lg: "medium", xl: "large" }}
+            onClick={() => setOrder("In Progress Orders")}
+          >
+            In Progress
+          </Tab>
+          <Tab
+            p={1}
+            fontSize={{ base: "small", lg: "medium", xl: "large" }}
+            onClick={() => setOrder("Completed Orders")}
+          >
+            Completed
+          </Tab>
+          <Tab
+            p={1}
+            fontSize={{ base: "small", lg: "medium", xl: "large" }}
+            onClick={() => setOrder("Cancelled Orders")}
+          >
+            Cancelled
+          </Tab>
         </TabList>
         <TabIndicator
           mt="-1.5px"
-          height="0.3rem"
-          bg={useColorModeValue("blue.500", "blue.200")}
+          height={"0.3rem"}
+          bg={bg}
           borderRadius="1px"
         />
         <TabPanels>
