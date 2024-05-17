@@ -17,9 +17,10 @@ interface AuthQuery {
   userPermissions?: string[];
 }
 
-interface AuthQueryStore {
+export interface AuthQueryStore {
   authQuery: AuthQuery;
   setAuthQuery: (authQuery: AuthQuery) => void;
+  resetAuthQuery: () => void;
 }
 
 const useAuthQueryStore = create<AuthQueryStore>((set) => ({
@@ -27,6 +28,12 @@ const useAuthQueryStore = create<AuthQueryStore>((set) => ({
   setAuthQuery: (authQuery: AuthQuery) =>
     set((store) => {
       store.authQuery = authQuery;
+      localStorage.setItem("userInfo", JSON.stringify(store.authQuery));
+      return { authQuery: store.authQuery };
+    }),
+  resetAuthQuery: () =>
+    set((store) => {
+      store.authQuery = {};
       localStorage.setItem("userInfo", JSON.stringify(store.authQuery));
       return { authQuery: store.authQuery };
     }),

@@ -20,7 +20,6 @@ const useProfile = () => {
         err.response?.status === 403 ||
         err.response?.status === 400
       ) {
-        setAuthQuery({});
         navigate("/login?redirect=/profile");
       }
     },

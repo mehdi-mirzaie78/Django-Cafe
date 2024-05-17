@@ -1,15 +1,23 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import useAuthQueryStore from "../store/authStore";
 
 const baseURL = "http://127.0.0.1:8000/api/v1";
 export const axiosInstance = axios.create({ baseURL: baseURL });
 
 const usePrivateAxios = () => {
-  const { authQuery, setAuthQuery } = useAuthQueryStore();
+  const { authQuery, setAuthQuery, resetAuthQuery } = useAuthQueryStore();
+  let { accessToken, refreshToken } = authQuery;
 
   axiosInstance.interceptors.request.use(
     (config) => {
-      const accessToken = authQuery.accessToken;
+      let local_accessToken = JSON.parse(
+        localStorage.getItem("userInfo") || "{}"
+      ).accessToken;
+
+      accessToken =
+        authQuery.accessToken !== local_accessToken
+          ? local_accessToken
+          : accessToken;
 
       if (accessToken) {
         config.headers.Authorization = `Bearer ${accessToken}`;
@@ -30,8 +38,9 @@ const usePrivateAxios = () => {
         originalRequest._retry = true;
 
         try {
-          const refreshToken = authQuery.refreshToken;
-
+          refreshToken =
+            refreshToken ||
+            JSON.parse(localStorage.getItem("userInfo") || "{}").refreshToken;
           const response = await axiosInstance.post(
             "/accounts/auth/refresh-token/",
             {
@@ -39,14 +48,18 @@ const usePrivateAxios = () => {
             }
           );
           const { accessToken } = response.data;
-          const newAuth = { ...authQuery, accessToken: accessToken };
-
-          setAuthQuery(newAuth);
+          setAuthQuery({ ...authQuery, accessToken: accessToken });
 
           // Retry the original request with the new token
           originalRequest.headers.Authorization = `Bearer ${accessToken}`;
           return axios(originalRequest);
-        } catch (error) {}
+        } catch (error: AxiosError | any) {
+          if ([400, 401, 403].includes(error.response?.status)) {
+            console.log("resetting auth query");
+            resetAuthQuery();
+          }
+          console.log("error", error);
+        }
       }
 
       return Promise.reject(error);
