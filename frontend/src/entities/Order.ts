@@ -2,6 +2,7 @@ interface Product {
   id: number;
   slug: string;
   name: string;
+  price: string;
   medias: string[];
 }
 
@@ -15,15 +16,18 @@ interface OrderItem {
 
 interface Order {
   id: number;
-  user: number;
+  user: string;
+  createdAt: string;
+  status: string;
+  orderItems: OrderItem[];
+  discount: number;
+  totalPrice: 66.0;
+  isPaid: boolean;
   orderType: string;
   table: string;
-  createdAt: string;
-  status: string | null;
-  payment: number;
-  orderItems: OrderItem[];
-  totalPrice: string;
-  isPaid: boolean;
+  phone: string | null;
+  address: string | null;
+  transactionCode: string;
 }
 
 export default Order;
