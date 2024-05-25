@@ -1,4 +1,4 @@
-import { AxiosInstance } from "axios";
+import { AxiosInstance, AxiosRequestConfig } from "axios";
 import usePrivateAxios from "./privateAPIHook";
 
 export interface FetchResponse<T> {
@@ -14,9 +14,9 @@ export class PrivateAPIClient<T> {
     this.axios = usePrivateAxios();
   }
 
-  getAll = async () => {
+  getAll = async (config: AxiosRequestConfig = {}) => {
     return this.axios
-      .get<FetchResponse<T>>(this.endpoint)
+      .get<FetchResponse<T>>(this.endpoint, config)
       .then((res) => res.data);
   };
 
