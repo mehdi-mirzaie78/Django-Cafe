@@ -1,6 +1,9 @@
-import { Box, Button, Heading, Text } from "@chakra-ui/react";
+import { Button, Divider, HStack, VStack } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import ErrorMessage from "../../components/ErrorMessage";
+import Loader from "../../components/Loader";
+import OrderPreview from "../../components/OrderPreview";
 import useCheckOrder from "../../hooks/order/useCheckOrder";
 import usePayOrder from "../../hooks/order/usePayOrder";
 import useAuthQueryStore from "../../store/authStore";
@@ -18,27 +21,38 @@ const OrderPayment = () => {
       navigate("/checkout/cart");
     }
   }, []);
-  const { data, isLoading, error } = useCheckOrder(orderId);
+  const { data: order, isLoading, error } = useCheckOrder(orderId);
   const { mutate: payOrder } = usePayOrder(orderId);
 
+  if (isLoading) return <Loader />;
+
+  if (error) return <ErrorMessage error={error} />;
+
   return (
-    <Box display={"flex"} flexDir={"column"} alignItems={"center"}>
-      <Heading as="h2" size="xl" marginY={5}>
-        Order Payment
-      </Heading>
-      <Text color={"gray.500"} marginBottom={5}>
-        This page is not implemented yet
-      </Text>
-      <Button
-        colorScheme="green"
-        width={"25%"}
-        onClick={() =>
-          payOrder({ paymentStatus: true, transactionCode: "10000" })
-        }
-      >
-        Pay
-      </Button>
-    </Box>
+    <VStack w={"90%"} mx={"auto"}>
+      <OrderPreview order={order} />
+
+      <Divider w={"90%"} my={5} />
+
+      <HStack spacing={4} my={5} justifyContent={"center"} w="90%">
+        <Button
+          w="20%"
+          colorScheme="red"
+          onClick={() => console.log("Canceled")}
+        >
+          Cancel
+        </Button>
+        <Button
+          w="20%"
+          colorScheme="green"
+          onClick={() =>
+            payOrder({ paymentStatus: true, transactionCode: "10000" })
+          }
+        >
+          Pay
+        </Button>
+      </HStack>
+    </VStack>
   );
 };
 
