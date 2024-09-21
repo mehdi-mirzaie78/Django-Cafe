@@ -1,6 +1,13 @@
 # Django-Cafe (Cuppa Cloud)
 Online Cafe with Django and React
 
+## Demo
+
+
+https://github.com/user-attachments/assets/30c0abbd-a07f-430e-bf33-ec9981bd3a61
+
+
+
 ## Some of views
 ### Langing Page
 ![landing](https://github.com/mehdi-mirzaie78/Django-Cafe/assets/107181484/8263b7d1-35d6-4bf8-9a18-f8bcb4de3c37)
